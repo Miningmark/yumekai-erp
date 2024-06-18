@@ -2,8 +2,6 @@ import NextAuth from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import userData from "@/dummy.json";
-
 export const {
   handlers: { GET, POST },
   auth,
@@ -12,41 +10,65 @@ export const {
 
   providers: [
     CredentialsProvider({
+      name: "credentials",
       credentials: {
         username: {},
         password: {},
       },
 
-      async authorize(credentials) {
-        const username = credentials.username;
-        const password = credentials.password;
+      async authorize(credentials, req) {
+        if (!credentials.username || !credentials.password) {
+          throw new Error("Username and password are required");
+        }
 
-        console.log(username);
-        console.log(password);
+        const url = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-        for (var index in userData.users) {
-          let record = userData.users[index];
-          var user = {};
-          var flag = false;
+        try {
+          const response = await fetch(`${url}/api/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: credentials.username,
+              password: credentials.password,
+            }),
+          });
 
-          if (record.username == username) {
-            if (record.password == password) {
-              user = {
-                id: record.id,
-                name: record.username,
-              };
-              flag = true;
-              break;
-            }
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
           }
-        }
 
-        if (flag) {
-          return user;
-        }
+          const user = await response.json();
 
-        return null;
+          return user || null;
+        } catch (error) {
+          console.error("Error during authentication", error);
+          throw new Error("Internal server error");
+        }
       },
     }),
   ],
+  /*
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.role = token.role;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      return session;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  */
 });
