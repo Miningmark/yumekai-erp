@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const {
   handlers: { GET, POST },
   auth,
+  update,
 } = NextAuth({
   session: { strategy: "jwt" },
 
@@ -50,7 +51,7 @@ export const {
       },
     }),
   ],
-  /*
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -58,6 +59,12 @@ export const {
         token.email = user.email;
         token.name = user.name;
       }
+      /*
+      if (trigger === "update" && session) {
+        token = { ...token, user: session };
+        return token;
+      }
+        */
       return token;
     },
     async session({ session, token }) {
@@ -67,9 +74,4 @@ export const {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
-  */
 });

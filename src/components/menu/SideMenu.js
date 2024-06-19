@@ -1,10 +1,9 @@
+"use client";
+
 import styled from "styled-components";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { auth } from "@/auth";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // Import SVG icons
 import IconLogo from "/public/assets/icons/yumekai_color_font.svg";
@@ -181,11 +180,7 @@ const SideMenuButton = styled.button`
 `;
 
 export default function SideMenu({ sideMenuOpen, session }) {
-  const router = useRouter();
-  const { pathname } = router;
-
-  console.log("session: ", session);
-  console.log("pathname: ", router);
+  const pathname = usePathname();
 
   return (
     <Sidebar className={!sideMenuOpen && "close"}>

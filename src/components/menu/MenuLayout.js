@@ -19,7 +19,6 @@ const Content = styled.div`
 export default function MenuLayout({ children }) {
   const [sideMenuOpen, setSideMenuOpen] = useState(true);
   const { data: session, update } = useSession();
-  console.log("session: ", session);
 
   return (
     <>

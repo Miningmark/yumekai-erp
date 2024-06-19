@@ -1,4 +1,4 @@
-export const privateRoutes = ["/dashboard", "/priv"];
+export const privateRoutes = ["/dashboard", "/priv", "/profile"];
 
 export const authRoutes = ["/login", "/api/auth/signin"];
 
