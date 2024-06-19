@@ -49,7 +49,7 @@ export default function UserListModal({ handleClose }) {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("/api/users");
+        const response = await fetch("/api/users/userList");
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -67,8 +67,15 @@ export default function UserListModal({ handleClose }) {
 
   async function handleConfirmDelete() {
     try {
-      const response = await fetch(`/api/users/${userToDelete.id}`, {
+      const name = userToDelete.name;
+      const response = await fetch(`/api/users/editUser`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+        }),
       });
 
       if (!response.ok) {

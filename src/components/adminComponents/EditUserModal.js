@@ -38,6 +38,7 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
   const [role, setRole] = useState(user.role);
   const [color, setColor] = useState(user.color);
   const [error, setError] = useState("");
+  const [id, setId] = useState(user.id);
 
   async function handleSubmit() {
     // Check if the new name is unique
@@ -51,12 +52,13 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
 
     // Update the user
     try {
-      const response = await fetch(`/api/users/${user.id}`, {
+      const response = await fetch(`/api/users/editUser`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id,
           name,
           email,
           role,
