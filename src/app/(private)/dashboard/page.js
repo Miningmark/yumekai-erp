@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import Logout from "@/components/Logout";
 
 export default async function DashBoard() {
   const session = await auth();

@@ -11,7 +11,6 @@ const connection = mysql.createPool({
 
 export async function POST(req) {
   const session = await auth();
-  console.log("session: ", session);
 
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

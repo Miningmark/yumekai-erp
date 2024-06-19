@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
+import bcrypt from "bcryptjs";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -17,24 +18,31 @@ export async function POST(req) {
 
   try {
     const [rows] = await connection.execute(
-      "SELECT role, email, name FROM users WHERE name = ? AND password = ?",
-      [name, password]
+      "SELECT id, role, email, name, password FROM users WHERE name = ?",
+      [name]
     );
 
-    if (rows.length > 0) {
-      const user = rows[0];
-      return NextResponse.json(
-        {
-          message: "Login successful",
-          role: user.role,
-          email: user.email,
-          name: user.name,
-        },
-        { status: 200 }
-      );
-    } else {
+    if (rows.length === 0) {
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
+
+    const user = rows[0];
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
+    }
+
+    return NextResponse.json(
+      {
+        message: "Login successful",
+        role: user.role,
+        email: user.email,
+        name: user.name,
+        id: user.id,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

@@ -42,7 +42,7 @@ const LoginListItem = styled.li`
 `;
 
 export default function Home() {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [email, setEmail] = useState(session?.user?.email || "");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -91,11 +91,6 @@ export default function Home() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to update email");
       }
-
-      //console.log("ALT session from profile: ", session);
-      //update({ ...session.user, email: email });
-      //console.log("sollte: ", { ...session.user, email: email });
-      //console.log("NEU session from profile: ", session);
 
       alert("E-Mail erfolgreich aktualisiert");
       signOut();
