@@ -8,11 +8,7 @@ export default async function DashBoard() {
 
   return (
     <>
-      <h1>Dashboard Page</h1>
-      <span>Welcome </span>
-      <div>
-        <Logout />
-      </div>
+      <h1>Dashboard</h1>
     </>
   );
 }

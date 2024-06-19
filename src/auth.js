@@ -40,6 +40,7 @@ export const {
           }
 
           const user = await response.json();
+          console.log("User from auth: ", user);
 
           return user || null;
         } catch (error) {
