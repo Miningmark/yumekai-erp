@@ -6,7 +6,7 @@ import TaskPreview from "@/components/kanbanComponents/TaskPreview";
 const ColumnDiv = styled.div`
   position: relative;
   width: 250px;
-  height: calc(100vh - 163px - 40px);
+  height: calc(100vh - 163px - 45px);
   gap: 10px;
   background: var(--light);
   padding: 10px 0 10px 0;
@@ -136,7 +136,12 @@ export default function Column({
         <Droppable droppableId={droppableId}>
           {(droppableProvider) => (
             <div
-              style={{ display: `flex`, flexDirection: `column`, gap: `10px` }}
+              style={{
+                display: `flex`,
+                flexDirection: `column`,
+                gap: `10px`,
+                minHeight: `200px`,
+              }}
               ref={droppableProvider.innerRef}
               {...droppableProvider.droppableProps}
             >
