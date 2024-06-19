@@ -210,8 +210,8 @@ export default function SideMenu({ sideMenuOpen, session }) {
           </SideMenuLink>
         </SideMenuItem>
         {session.user.role == "admin" && (
-          <SideMenuItem className={pathname === "/admin" ? "active" : ""}>
-            <SideMenuLink href="/admin">
+          <SideMenuItem className={pathname === "/adminPage" ? "active" : ""}>
+            <SideMenuLink href="/adminPage">
               <Icon3 />
               admin
             </SideMenuLink>
