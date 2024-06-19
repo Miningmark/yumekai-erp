@@ -1,4 +1,8 @@
-export const privateRoutes = ["/dashboard", "/priv", "/profile"];
+export const privateRoutes = [
+  { path: "/dashboard", roles: ["user", "orga", "admin"] },
+  { path: "/profile", roles: ["user", "orga", "admin"] },
+  { path: "/adminPage", roles: ["admin"] },
+];
 
 export const authRoutes = ["/login", "/api/auth/signin"];
 
@@ -7,3 +11,6 @@ export const DEFAULT_REDIRECT_LOGIN_URL = "/login";
 
 // When user is logged in and tries to access login page redirect to dashboard
 export const DEFAULT_REDIRECT_HOME_URL = "/dashboard";
+
+// When user is logged in and has no access to page redirect to forbidden
+export const DEFAULT_REDIRECT_FORBIDDEN_URL = "/forbidden";

@@ -1,51 +1,68 @@
-import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 import {
   privateRoutes,
   authRoutes,
   DEFAULT_REDIRECT_LOGIN_URL,
   DEFAULT_REDIRECT_HOME_URL,
+  DEFAULT_REDIRECT_FORBIDDEN_URL,
 } from "@/routes";
 
-export default auth((req) => {
-  const url = req.nextUrl;
-  const route = req.nextUrl.pathname;
+const secret = process.env.NEXTAUTH_SECRET;
+
+export async function middleware(req) {
+  const token = await getToken({ req, secret });
+
+  if (token) {
+    console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
+    req.auth = {
+      role: token.role,
+      email: token.email,
+      name: token.name,
+      id: token.id,
+    };
+  } else {
+    req.auth = null;
+  }
+
+  const url = req.nextUrl.clone();
+  const route = url.pathname;
 
   const isLoggedIn = !!req.auth;
+  const userRole = req.auth?.role;
 
-  console.log(route);
+  console.log("Route from middleware:", route);
+  console.log("Is Logged In from middleware:", isLoggedIn);
+  console.log("User Role from middleware:", userRole);
 
   function checkAuthRoute(authRoute) {
-    if (route.startsWith(authRoute)) {
-      return true;
-    }
-    return null;
+    return route.startsWith(authRoute);
   }
 
-  console.log(!!authRoutes.filter(checkAuthRoute).length);
-
-  if (!!authRoutes.filter(checkAuthRoute).length) {
+  if (authRoutes.some(checkAuthRoute)) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_REDIRECT_HOME_URL, url));
+      return NextResponse.redirect(new URL(DEFAULT_REDIRECT_HOME_URL, url));
     }
-    return null;
+    return NextResponse.next();
   }
 
-  if (route.startsWith(...authRoutes)) {
-    if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_REDIRECT_HOME_URL, url));
-    }
-    return null;
-  }
+  const privateRoute = privateRoutes.find((r) => r.path === route);
 
-  if (privateRoutes.includes(route)) {
+  console.log("Private Route:", privateRoute);
+
+  if (privateRoute) {
     if (!isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_REDIRECT_LOGIN_URL, url));
+      console.log("Redirecting to login because user is not logged in");
+      return NextResponse.redirect(new URL(DEFAULT_REDIRECT_LOGIN_URL, url));
     }
-    return null;
+    if (!privateRoute.roles.includes(userRole)) {
+      console.log("Redirecting to forbidden because user does not have the required role");
+      return NextResponse.redirect(new URL(DEFAULT_REDIRECT_FORBIDDEN_URL, url));
+    }
   }
 
-  return null;
-});
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
