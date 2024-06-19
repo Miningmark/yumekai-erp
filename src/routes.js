@@ -2,6 +2,7 @@ export const privateRoutes = [
   { path: "/dashboard", roles: ["user", "orga", "admin"] },
   { path: "/profile", roles: ["user", "orga", "admin"] },
   { path: "/adminPage", roles: ["admin"] },
+  { path: "/kanban", roles: ["user", "orga", "admin"] },
 ];
 
 export const authRoutes = ["/login", "/api/auth/signin"];
