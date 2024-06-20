@@ -53,11 +53,10 @@ export default function Kanban() {
   const [taskEditMode, setTaskEditMode] = useState(false);
   const [users, setUsers] = useState([]);
 
-  /*
-  const socket = io("http://192.168.1.100:5000");
+  const socket = io("http://192.168.1.100:3000");
 
   useEffect(() => {
-    const socket = io("http://192.168.1.100:5000");
+    const socket = io("http://192.168.1.100:3000");
     socket.on("connect", () => {
       //console.log("Socket connected:", socket.id);
     });
@@ -100,7 +99,7 @@ export default function Kanban() {
       socket.disconnect();
     };
   });
-*/
+
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -180,7 +179,7 @@ export default function Kanban() {
         setTaskDetailId(null);
         const newTaskslist = tasks.filter((task) => task.id != taskId);
         setTasks([...newTaskslist]);
-        //socket.emit("myevent", "Hello Server");
+        socket.emit("myevent", "Hello Server");
       } else {
         console.error("Failed to delete task:", response.status);
         // Handle error
@@ -228,7 +227,7 @@ export default function Kanban() {
       if (response.ok) {
         const newTaskslist = tasks.map((task) => (task.id === changeTask.id ? changeTask : task));
         setTasks([...newTaskslist]);
-        //socket.emit("myevent", "Hello Server");
+        socket.emit("myevent", "Hello Server");
         closeTaskEdit();
       } else {
         console.error("Failed to update task:", response.status);
@@ -314,7 +313,7 @@ export default function Kanban() {
         },
         body: JSON.stringify({ tasks: finalTasksSortedSQL }),
       });
-      //socket.emit("myevent", "Hello Server");
+      socket.emit("myevent", "Hello Server");
       if (!response.ok) {
         throw new Error("Failed to update tasks");
       }
@@ -357,7 +356,7 @@ export default function Kanban() {
         // Überprüfe, ob die Antwort die ID des neu erstellten Tasks enthält
         if (responseData && responseData.insertId) {
           setTasks([...tasks, { ...newTask, id: responseData.insertId }]);
-          //socket.emit("myevent", "Hello Server");
+          socket.emit("myevent", "Hello Server");
           closeAddNewTask();
         } else {
           console.error("Failed to add task: Response does not contain insertId");

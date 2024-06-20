@@ -39,7 +39,7 @@ export const {
           }
 
           const user = await response.json();
-          console.log("User from auth: ", user);
+          //console.log("User from auth: ", user);
 
           return user || null;
         } catch (error) {
@@ -58,7 +58,7 @@ export const {
         token.name = user.name;
         token.id = user.id;
       }
-      console.log("JWT token from auth: ", token);
+      //console.log("JWT token from auth: ", token);
       return token;
     },
     async session({ session, token }) {
@@ -66,7 +66,7 @@ export const {
       session.user.email = token.email;
       session.user.name = token.name;
       session.user.id = token.id;
-      console.log("Session from auth: ", session);
+      //console.log("Session from auth: ", session);
       return session;
     },
   },
