@@ -13,6 +13,8 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req) {
   const token = await getToken({ req, secret });
 
+  console.log("req aus middleware: ", req);
+
   console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
   if (token) {
     req.auth = {
