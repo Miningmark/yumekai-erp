@@ -80,7 +80,7 @@ export const {
         sameSite: "lax",
         path: "/",
         domain: ".vercel.app",
-        secure: useSecureCookies,
+        secure: true,
       },
     },
   },
