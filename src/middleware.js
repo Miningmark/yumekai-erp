@@ -31,9 +31,9 @@ export async function middleware(req) {
   const isLoggedIn = !!req.auth;
   const userRole = req.auth?.role;
 
-  //console.log("Route from middleware:", route);
-  //console.log("Is Logged In from middleware:", isLoggedIn);
-  //console.log("User Role from middleware:", userRole);
+  console.log("Route from middleware:", route);
+  console.log("Is Logged In from middleware:", isLoggedIn);
+  console.log("User Role from middleware:", userRole);
 
   function checkAuthRoute(authRoute) {
     return route.startsWith(authRoute);
