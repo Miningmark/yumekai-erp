@@ -37,6 +37,7 @@ export default function CommingSoon() {
           <li>Suchfunktion</li>
           <li>Smartphone Support</li>
           <li>Lightmode</li>
+          <li>Passwort zurücksetzen</li>
         </ul>
       </SoonContainer>
     </SoonBackground>

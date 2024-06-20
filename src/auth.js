@@ -57,6 +57,7 @@ export const {
         token.email = user.email;
         token.name = user.name;
         token.id = user.id;
+        token.lastlogins = user.lastlogins;
       }
       //console.log("JWT token from auth: ", token);
       return token;
@@ -66,6 +67,7 @@ export const {
       session.user.email = token.email;
       session.user.name = token.name;
       session.user.id = token.id;
+      session.user.lastlogins = token.lastlogins;
       //console.log("Session from auth: ", session);
       return session;
     },

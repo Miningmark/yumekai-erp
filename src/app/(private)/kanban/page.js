@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";

@@ -10,7 +10,11 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
+  console.log("API login endpoint hit");
   const { name, password } = await req.json();
+
+  const hashedPassword = await bcrypt.hash("Admin123!", 10);
+  console.log("hashedPassword: ", hashedPassword);
 
   if (!name || !password) {
     return NextResponse.json({ message: "Name and password are required" }, { status: 400 });
@@ -18,7 +22,7 @@ export async function POST(req) {
 
   try {
     const [rows] = await connection.execute(
-      "SELECT id, role, email, name, password FROM users WHERE name = ?",
+      "SELECT id, role, email, name, password, lastlogins FROM users WHERE name = ?",
       [name]
     );
 
@@ -33,6 +37,33 @@ export async function POST(req) {
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
 
+    // Get the current timestamp, IP, and location
+    const formattedDate = new Date()
+      .toLocaleString("de-DE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+      .replace(",", "");
+    const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
+
+    // Update the lastlogin array
+    let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
+    lastlogins.unshift(` ${formattedDate};${userIp} `);
+
+    // Trim the array to a maximum of 5 elements
+    lastlogins = lastlogins.slice(0, 5);
+    //onsole.log("LASTS LOGINS: ", lastlogins);
+
+    // Update the database
+    await connection.execute("UPDATE users SET lastlogins = ? WHERE id = ?", [
+      JSON.stringify(lastlogins),
+      user.id,
+    ]);
+
     return NextResponse.json(
       {
         message: "Login successful",
@@ -40,11 +71,12 @@ export async function POST(req) {
         email: user.email,
         name: user.name,
         id: user.id,
+        lastlogins: lastlogins,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error in API login endpoint: ", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

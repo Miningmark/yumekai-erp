@@ -50,13 +50,14 @@ export default function Home() {
   const [logins, setLogins] = useState([]);
 
   useEffect(() => {
-    // Hier sollten die letzten Logins von einer API abgerufen werden
-    setLogins([
-      { date: "2024-06-15 10:00", location: "Berlin" },
-      { date: "2024-06-14 18:00", location: "Munich" },
-      { date: "2024-06-13 08:00", location: "Hamburg" },
-    ]);
-  }, []);
+    if (session && session.user && session.user.lastlogins) {
+      const parsedLogins = session.user.lastlogins.map((login) => {
+        const [date, ip] = login.split(";");
+        return { date: date, location: ip.trim() };
+      });
+      setLogins(parsedLogins);
+    }
+  }, [session]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -178,7 +179,7 @@ export default function Home() {
         <LoginList>
           {logins.map((login, index) => (
             <LoginListItem key={index}>
-              {login.date} - {login.location}
+              Datum: {login.date} <br /> IP: {login.location}
             </LoginListItem>
           ))}
         </LoginList>
