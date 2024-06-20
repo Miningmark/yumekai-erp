@@ -79,7 +79,7 @@ export const {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        domain: ".vercel.app",
+        domain: "yumekai-erp.vercel.app",
         secure: true,
       },
     },
