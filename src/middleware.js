@@ -14,7 +14,7 @@ export async function middleware(req) {
   const token = await getToken({ req, secret });
 
   if (token) {
-    console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
+    //console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
     req.auth = {
       role: token.role,
       email: token.email,
