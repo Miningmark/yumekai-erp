@@ -20,7 +20,7 @@ export const {
           throw new Error("Username and password are required");
         }
 
-        const url = process.env.NEXTAUTH_URL || "http://localhost:3000";
+        const url = process.env.NEXTAUTH_URL;
 
         try {
           const response = await fetch(`${url}/api/login`, {
@@ -59,7 +59,7 @@ export const {
         token.id = user.id;
         token.lastlogins = user.lastlogins;
       }
-      //console.log("JWT token from auth: ", token);
+      console.log("JWT token from auth: ", token);
       return token;
     },
     async session({ session, token }) {
@@ -68,7 +68,7 @@ export const {
       session.user.name = token.name;
       session.user.id = token.id;
       session.user.lastlogins = token.lastlogins;
-      //console.log("Session from auth: ", session);
+      console.log("Session from auth: ", session);
       return session;
     },
   },

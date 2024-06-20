@@ -52,10 +52,10 @@ export default function Kanban() {
   const [taskEditMode, setTaskEditMode] = useState(false);
   const [users, setUsers] = useState([]);
 
-  const socket = io("http://192.168.1.100:3000");
+  const socket = io(process.env.NEXTAUTH_URL);
 
   useEffect(() => {
-    const socket = io("http://192.168.1.100:3000");
+    const socket = io(process.env.NEXTAUTH_URL);
     socket.on("connect", () => {
       //console.log("Socket connected:", socket.id);
     });

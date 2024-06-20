@@ -18,7 +18,7 @@ export default function Login() {
   const [modal, setModal] = useState(false);
 
   const handleAuth = (event) => {
-    signIn(event.target.name, { callbackUrl: "http://localhost:3000/dashboard" });
+    signIn(event.target.name, { callbackUrl: `${NEXTAUTH_URL}/dashboard` });
   };
 
   const handleCredentials = async (prevState, formData) => {
