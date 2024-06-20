@@ -10,6 +10,8 @@ import IconLogo from "/public/assets/icons/yumekai_color_font.svg";
 import Icon1 from "/public/assets/icons/dashboard.svg";
 import Icon2 from "/public/assets/icons/kanban.svg";
 import Icon3 from "/public/assets/icons/settings.svg";
+import Icon4 from "/public/assets/icons/admin_panel.svg";
+import Icon5 from "/public/assets/icons/change_history.svg";
 import LogoutIcon from "/public/assets/icons/logout.svg";
 
 const Sidebar = styled.div`
@@ -212,11 +214,17 @@ export default function SideMenu({ sideMenuOpen, session }) {
         {session.user.role == "admin" && (
           <SideMenuItem className={pathname === "/adminPage" ? "active" : ""}>
             <SideMenuLink href="/adminPage">
-              <Icon3 />
+              <Icon4 />
               admin
             </SideMenuLink>
           </SideMenuItem>
         )}
+        <SideMenuItem className={pathname === "/changelog" ? "active" : ""}>
+          <SideMenuLink href="/changelog">
+            <Icon5 />
+            Changelog
+          </SideMenuLink>
+        </SideMenuItem>
         <SideMenuItem>
           <SideMenuButton className="logout" onClick={() => signOut()}>
             <LogoutIcon />
