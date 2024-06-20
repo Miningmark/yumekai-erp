@@ -13,7 +13,12 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req) {
   const token = await getToken({ req, secret });
 
+  const cookies = req.cookies;
+  console.log("cookies from middleware: ", cookies);
+
   console.log("req aus middleware: ", req);
+  console.log("req.headers from middleware: ", req.headers);
+  console.log("secret from middleware: ", secret);
 
   console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
   if (token) {
@@ -67,5 +72,17 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  //matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    /*
+     * Match all paths except for:
+     * 1. /api/ routes
+     * 2. /_next/ (Next.js internals)
+     * 3. /_proxy/ (special page for OG tags proxying)
+     * 4. /_static (inside /public)
+     * 5. /_vercel (Vercel internals)
+     * 6. Static files (e.g. /favicon.ico, /sitemap.xml, /robots.txt, etc.)
+     */
+    "/((?!api/|_next/|_proxy/|_static|_vercel|[\\w-]+\\.\\w+).*)",
+  ],
 };
