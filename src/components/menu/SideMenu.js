@@ -201,18 +201,21 @@ export default function SideMenu({ sideMenuOpen, session }) {
             Dashboard
           </SideMenuLink>
         </SideMenuItem>
+
         <SideMenuItem className={pathname === "/kanban" ? "active" : ""}>
           <SideMenuLink href="/kanban">
             <Icon2 />
             Kanban
           </SideMenuLink>
         </SideMenuItem>
+        {/* 
         <SideMenuItem className={pathname === "/settings" ? "active" : ""}>
           <SideMenuLink href="/settings">
             <Icon3 />
             Settings
           </SideMenuLink>
         </SideMenuItem>
+*/}
         {session.user.role == "admin" && (
           <SideMenuItem className={pathname === "/adminPage" ? "active" : ""}>
             <SideMenuLink href="/adminPage">
@@ -221,30 +224,32 @@ export default function SideMenu({ sideMenuOpen, session }) {
             </SideMenuLink>
           </SideMenuItem>
         )}
+
         <SideMenuItem className={pathname === "/changelog" ? "active" : ""}>
           <SideMenuLink href="/changelog">
             <Icon5 />
             Changelog
           </SideMenuLink>
         </SideMenuItem>
-        <SideMenuItem>
-          <SideMenuItem className={pathname === "/commingSoon" ? "active" : ""}>
-            <SideMenuLink href="/commingSoon">
-              <Icon6 />
-              Comming Soon
-            </SideMenuLink>
-          </SideMenuItem>
-          <SideMenuItem className={pathname === "/bugReport" ? "active" : ""}>
-            <SideMenuLink href="/bugReport">
-              <Icon7 />
-              Bug-Report
-            </SideMenuLink>
-          </SideMenuItem>
-          <SideMenuButton className="logout" onClick={() => signOut()}>
-            <LogoutIcon />
-            Logout
-          </SideMenuButton>
+
+        <SideMenuItem className={pathname === "/commingSoon" ? "active" : ""}>
+          <SideMenuLink href="/commingSoon">
+            <Icon6 />
+            Comming Soon
+          </SideMenuLink>
         </SideMenuItem>
+
+        <SideMenuItem className={pathname === "/bugReport" ? "active" : ""}>
+          <SideMenuLink href="/bugReport">
+            <Icon7 />
+            Bug-Report
+          </SideMenuLink>
+        </SideMenuItem>
+
+        <SideMenuButton className="logout" onClick={() => signOut()}>
+          <LogoutIcon />
+          Logout
+        </SideMenuButton>
       </SideMenuList>
     </Sidebar>
   );
