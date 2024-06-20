@@ -12,6 +12,8 @@ import Icon2 from "/public/assets/icons/kanban.svg";
 import Icon3 from "/public/assets/icons/settings.svg";
 import Icon4 from "/public/assets/icons/admin_panel.svg";
 import Icon5 from "/public/assets/icons/change_history.svg";
+import Icon6 from "/public/assets/icons/newspaper.svg";
+import Icon7 from "/public/assets/icons/report.svg";
 import LogoutIcon from "/public/assets/icons/logout.svg";
 
 const Sidebar = styled.div`
@@ -58,7 +60,7 @@ const Logo = styled.div`
 
 const SideMenuList = styled.ul`
   width: 100%;
-  margin-top: 200px;
+  margin-top: 120px;
   list-style: none;
   padding-left: 10px;
 `;
@@ -226,6 +228,18 @@ export default function SideMenu({ sideMenuOpen, session }) {
           </SideMenuLink>
         </SideMenuItem>
         <SideMenuItem>
+          <SideMenuItem className={pathname === "/commingSoon" ? "active" : ""}>
+            <SideMenuLink href="/commingSoon">
+              <Icon6 />
+              Comming Soon
+            </SideMenuLink>
+          </SideMenuItem>
+          <SideMenuItem className={pathname === "/bugReport" ? "active" : ""}>
+            <SideMenuLink href="/bugReport">
+              <Icon7 />
+              Bug-Report
+            </SideMenuLink>
+          </SideMenuItem>
           <SideMenuButton className="logout" onClick={() => signOut()}>
             <LogoutIcon />
             Logout

@@ -27,7 +27,7 @@ const VersionsNumber = styled.p`
   top: 10px;
 `;
 
-export default function DashBoard() {
+export default function Changelog() {
   return (
     <LogBackground>
       <h1>Changelog</h1>
@@ -39,6 +39,8 @@ export default function DashBoard() {
           <li>Add Kanbanboard</li>
           <li>Add Adminboard</li>
           <li>Add Changelog</li>
+          <li>Add Comming Soon</li>
+          <li>Add Bug Report</li>
         </ul>
       </LogContainer>
     </LogBackground>
