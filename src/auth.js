@@ -72,6 +72,7 @@ export const {
       return session;
     },
   },
+  /*
   cookies: {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,
@@ -84,7 +85,7 @@ export const {
       },
     },
   },
-  /*
+  
   cookies: {
     sessionToken: {
       name: `__Secure-next-auth.session-token`,

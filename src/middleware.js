@@ -11,7 +11,6 @@ import {
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req) {
-  /*
   const token = await getToken({ req, secret });
 
   const cookies = req.cookies;
@@ -22,7 +21,8 @@ export async function middleware(req) {
   console.log("secret from middleware: ", secret);
 
   console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
-*/
+
+  /*
   const token = await req.cookies.get("__Secure-next-auth.session-token");
 
   try {
@@ -34,7 +34,7 @@ export async function middleware(req) {
     console.error("Error decoding token", error);
     return NextResponse.redirect(new URL("/login", req.url));
   }
-
+*/
   if (token) {
     req.auth = {
       role: token.role,
