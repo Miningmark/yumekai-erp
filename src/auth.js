@@ -74,6 +74,19 @@ export const {
   },
   cookies: {
     sessionToken: {
+      name: `${true ? "__Secure-" : ""}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        domain: ".vercel.app",
+        secure: useSecureCookies,
+      },
+    },
+  },
+  /*
+  cookies: {
+    sessionToken: {
       name: `__Secure-next-auth.session-token`,
       options: {
         httpOnly: true,
@@ -131,4 +144,5 @@ export const {
       },
     },
   },
+  */
 });
