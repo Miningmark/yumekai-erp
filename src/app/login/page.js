@@ -4,8 +4,8 @@ import { z } from "zod";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const initialState = {
   message: "",
@@ -13,6 +13,9 @@ const initialState = {
 
 export default function Login() {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  console.log("Session from login: ", session);
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [modal, setModal] = useState(false);
