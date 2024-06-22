@@ -55,7 +55,7 @@ export async function middleware(req) {
   console.log("Route from middleware:", route);
   console.log("Is Logged In from middleware:", isLoggedIn);
   console.log("User Role from middleware:", userRole);
-  /*
+
   function checkAuthRoute(authRoute) {
     return route.startsWith(authRoute);
   }
@@ -81,7 +81,6 @@ export async function middleware(req) {
       return NextResponse.redirect(new URL(DEFAULT_REDIRECT_FORBIDDEN_URL, url));
     }
   }
-    */
 
   return NextResponse.next();
 }

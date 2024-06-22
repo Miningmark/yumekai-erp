@@ -38,6 +38,8 @@ export default function CommingSoon() {
           <li>Smartphone Support</li>
           <li>Lightmode</li>
           <li>Passwort zurücksetzen</li>
+          <li>Add task löschen von subtasks</li>
+          <li>Kontaklisten für Helfer und Aussteller</li>
         </ul>
       </SoonContainer>
     </SoonBackground>

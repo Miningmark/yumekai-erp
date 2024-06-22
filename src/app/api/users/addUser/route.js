@@ -18,6 +18,8 @@ export async function POST(req) {
     if (!name || !email || !role || !password || !color) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
+    const lastlogins = [];
+    lastlogins.unshift(` --;-- `);
 
     // Check if the username already exists
     const [nameRows] = await connection.execute("SELECT id FROM users WHERE name = ?", [name]);
@@ -37,8 +39,8 @@ export async function POST(req) {
 
     // Insert new user
     const [result] = await connection.execute(
-      "INSERT INTO users (name, email, role, password, color) VALUES (?, ?, ?, ?, ?)",
-      [name, email, role, hashedPassword, color]
+      "INSERT INTO users (name, email, role, password, color, lastlogins) VALUES (?, ?, ?, ?, ?, ?)",
+      [name, email, role, hashedPassword, color, lastlogins]
     );
 
     if (result.affectedRows > 0) {

@@ -50,6 +50,10 @@ export async function POST(req) {
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
 
+    console.log(
+      "user from login API -------------------------------------------------------",
+      user
+    );
     // Update the lastlogin array
     let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
     lastlogins.unshift(` ${formattedDate};${userIp} `);
