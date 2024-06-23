@@ -18,6 +18,7 @@ export async function POST(req) {
     if (!name || !email || !role || !password || !color) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
+
     const lastlogins = [];
     lastlogins.unshift(` --;-- `);
 
