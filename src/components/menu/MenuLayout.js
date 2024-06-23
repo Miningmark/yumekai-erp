@@ -38,7 +38,7 @@ export default function MenuLayout({ children }) {
    */
   return (
     <>
-      {true ? (
+      {!session ? (
         <>{children}</>
       ) : (
         <>
