@@ -13,8 +13,8 @@ export async function POST(req) {
   console.log("API login endpoint hit");
   const { name, password } = await req.json();
 
-  const hashedPassword = await bcrypt.hash("Admin123!", 10);
-  console.log("hashedPassword: ", hashedPassword);
+  //const hashedPassword = await bcrypt.hash("Admin123!", 10);
+  //console.log("hashedPassword: ", hashedPassword);
 
   if (!name || !password) {
     return NextResponse.json({ message: "Name and password are required" }, { status: 400 });
