@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy to DigitalOcean
         env:
-          HOST: miningmark-cloud.de
+          HOST: 162.55.48.124
           USERNAME: root
           TARGET_DIR: /var/www/yumekai-erp
           APP_NAME: yumekai-erp #should match the name of the server block
