@@ -20,11 +20,25 @@ export default function MenuLayout({ children }) {
   const [sideMenuOpen, setSideMenuOpen] = useState(true);
   const { data: session, update } = useSession();
 
-  console.log("session from menu: ", session);
-
+  if (session) {
+    console.log("session from menu: ", session);
+  } else {
+    console.log("session from menu: No Session");
+  }
+  /**
+     {!session ? (
+        <>{children}</>
+      ) : (
+        <>
+          <SideMenu sideMenuOpen={sideMenuOpen} session={session} />
+          <StickyMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen} />
+          <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>{children}</Content>
+        </>
+      )}
+   */
   return (
     <>
-      {!session ? (
+      {true ? (
         <>{children}</>
       ) : (
         <>
