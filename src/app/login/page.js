@@ -83,7 +83,7 @@ export default function Login() {
     const passSchema = z
       .string()
       .min(8, { message: "Must be 8 or more characters long" })
-      .regex(new RegExp(".*[A-Z].*"), { message: "Must conatain one uppercase character" })
+      .regex(new RegExp(".*[A-Z].*"), { message: "Must contain one uppercase character" })
       .regex(new RegExp(".*\\d.*"), { message: "Must contains one number" })
       .regex(new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"), {
         message: "Must contain one special character",
