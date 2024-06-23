@@ -72,6 +72,9 @@ export const {
       return session;
     },
   },
+
+  trustHost: process.env.TRUST_HOST ?? "yumekai.miningmark.de",
+
   /*
   cookies: {
     sessionToken: {
