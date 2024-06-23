@@ -19,10 +19,10 @@ nextApp.prepare().then(() => {
   });
 
   io.on("connection", (socket) => {
-    //console.log("Client connected:", socket.id);
+    console.log("Client connected:", socket.id);
 
     socket.on("myevent", (data) => {
-      //console.log("Received myevent:", data);
+      console.log("Received myevent:", data);
       socket.broadcast.emit("loadNewTasks", "new");
     });
   });

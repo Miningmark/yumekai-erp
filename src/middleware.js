@@ -18,7 +18,6 @@ export async function middleware(req) {
 
   //console.log("req aus middleware: ", req);
   //console.log("req.headers from middleware: ", req.headers);
-  console.log("secret from middleware: ", secret);
 
   console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
 
