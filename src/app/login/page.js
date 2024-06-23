@@ -6,16 +6,35 @@ import React, { useState, useEffect, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
+import styled from "styled-components";
+import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 
 const initialState = {
   message: "",
 };
 
+const ContainerBgmLogin = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  padding: 0 2rem;
+  background-color: var(--light);
+  color: var(--dark);
+  gap: 20px;
+`;
+
 export default function Login() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  console.log("Session from login: ", session);
+  if (session) {
+    console.log("session from menu: ", session);
+  } else {
+    console.log("session from menu: No Session");
+  }
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [modal, setModal] = useState(false);
@@ -102,16 +121,16 @@ export default function Login() {
   };
 
   return (
-    <>
+    <ContainerBgmLogin>
       <h1>Login Page</h1>
       <form action={formAction}>
         <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Username: </label>
           <input type="text" name="username" onChange={setValue} required />
           <p>{userMessage}</p>
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Password: </label>
           <input type="password" name="password" onChange={setValue} required />
           <p>{passMessage}</p>
         </div>
@@ -120,14 +139,6 @@ export default function Login() {
           if (modal) {
             return (
               <div id="alert-2" role="alert">
-                <svg
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                </svg>
                 <span>Info</span>
                 <div>{errorMessage}</div>
                 <button
@@ -159,8 +170,8 @@ export default function Login() {
           }
         })()}
 
-        <button type="submit">Submit</button>
+        <StyledButton type="submit">Submit</StyledButton>
       </form>
-    </>
+    </ContainerBgmLogin>
   );
 }

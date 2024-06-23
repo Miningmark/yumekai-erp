@@ -27,6 +27,7 @@ export async function POST(req) {
     );
 
     if (rows.length === 0) {
+      console.log("---Falscher Name---");
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
 
@@ -34,6 +35,7 @@ export async function POST(req) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      console.log("---Falsches Password---");
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
 

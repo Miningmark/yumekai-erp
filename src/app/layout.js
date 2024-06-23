@@ -11,7 +11,13 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await auth();
-  console.log("session from layout: ", session);
+
+  if (session) {
+    console.log("session from menu: ", session);
+  } else {
+    console.log("session from menu: No Session");
+  }
+
   return (
     <html lang="de">
       <body>

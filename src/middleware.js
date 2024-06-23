@@ -13,11 +13,11 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req) {
   const token = await getToken({ req, secret });
 
-  const cookies = req.cookies;
-  console.log("cookies from middleware: ", cookies);
+  //const cookies = req.cookies;
+  //console.log("cookies from middleware: ", cookies);
 
-  console.log("req aus middleware: ", req);
-  console.log("req.headers from middleware: ", req.headers);
+  //console.log("req aus middleware: ", req);
+  //console.log("req.headers from middleware: ", req.headers);
   console.log("secret from middleware: ", secret);
 
   console.log("Token in auth middleware:", token); // Debugging-Log hinzufügen
@@ -69,15 +69,17 @@ export async function middleware(req) {
 
   const privateRoute = privateRoutes.find((r) => r.path === route);
 
-  //console.log("Private Route:", privateRoute);
+  console.log("Private Route from middleware:", privateRoute);
 
   if (privateRoute) {
     if (!isLoggedIn) {
-      //console.log("Redirecting to login because user is not logged in");
+      console.log("Redirecting to login because user is not logged in  from middleware");
       return NextResponse.redirect(new URL(DEFAULT_REDIRECT_LOGIN_URL, url));
     }
     if (!privateRoute.roles.includes(userRole)) {
-      //console.log("Redirecting to forbidden because user does not have the required role");
+      console.log(
+        "Redirecting to forbidden because user does not have the required role  from middleware"
+      );
       return NextResponse.redirect(new URL(DEFAULT_REDIRECT_FORBIDDEN_URL, url));
     }
   }
