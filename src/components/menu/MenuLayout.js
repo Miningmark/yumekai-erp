@@ -2,7 +2,7 @@
 
 import StickyMenu from "@/components/menu/StickyMenu";
 import SideMenu from "@/components/menu/SideMenu";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Content = styled.div`
@@ -20,15 +20,9 @@ export default function MenuLayout({ children }) {
 
   return (
     <>
-      {true ? (
-        <>{children}</>
-      ) : (
-        <>
-          <SideMenu sideMenuOpen={sideMenuOpen} session={session} />
-          <StickyMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen} />
-          <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>{children}</Content>
-        </>
-      )}
+      <SideMenu sideMenuOpen={sideMenuOpen} />
+      <StickyMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen} />
+      <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>{children}</Content>
     </>
   );
 }

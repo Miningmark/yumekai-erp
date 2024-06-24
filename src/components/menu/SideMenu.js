@@ -2,8 +2,10 @@
 
 import styled from "styled-components";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { getSession, login, logout } from "@/lib/cockietest";
 
 // Import SVG icons
 import IconLogo from "/public/assets/icons/yumekai_color_font.svg";
@@ -183,8 +185,25 @@ const SideMenuButton = styled.button`
   }
 `;
 
-export default function SideMenu({ sideMenuOpen, session }) {
+export default function SideMenu({ sideMenuOpen }) {
+  const [session, setSession] = useState(null);
+  const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    async function checkSession() {
+      setSession(await getSession());
+    }
+
+    checkSession();
+  }, []);
+
+  async function handleLogout() {
+    const response = await logout();
+    if (response) {
+      router.push("/");
+    }
+  }
 
   return (
     <Sidebar className={!sideMenuOpen && "close"}>
@@ -216,7 +235,7 @@ export default function SideMenu({ sideMenuOpen, session }) {
           </SideMenuLink>
         </SideMenuItem>
 */}
-        {session.user.role == "admin" && (
+        {session && session.user.role == "admin" && (
           <SideMenuItem className={pathname === "/adminPage" ? "active" : ""}>
             <SideMenuLink href="/adminPage">
               <Icon4 />
@@ -246,7 +265,7 @@ export default function SideMenu({ sideMenuOpen, session }) {
           </SideMenuLink>
         </SideMenuItem>
 
-        <SideMenuButton className="logout" onClick={() => signOut()}>
+        <SideMenuButton className="logout" onClick={handleLogout}>
           <LogoutIcon />
           Logout
         </SideMenuButton>

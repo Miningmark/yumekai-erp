@@ -12,9 +12,7 @@ export default async function RootLayout({ children }) {
     <html lang="de">
       <body>
         <GlobalStyles />
-        <StyledComponentsRegistry>
-          <MenuLayout>{children}</MenuLayout>
-        </StyledComponentsRegistry>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>
   );
