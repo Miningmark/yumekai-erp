@@ -4,6 +4,8 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+import test from "./test";
+
 const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
 
@@ -30,8 +32,8 @@ export async function decrypt(input) {
 export async function login(data) {
   console.log("formdata from cockietest", data);
 
-  const loginUrl = process.env.NEXTAUTH_URL + "/api/login";
-  console.log("nextauth_url from cockietest: ", loginUrl);
+  const answer = await test(data);
+  console.log("answer from cockietest: ", answer);
 
   if (data.name == "admin" && data.password == "Admin123!") {
     console.log("Login erfolgreich");
@@ -85,6 +87,15 @@ export async function login(data) {
     return false;
   }
     */
+}
+
+export async function setSession(user) {
+  console.log("user from cockietest", user);
+  const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+  const session = await encrypt({ user, expires });
+
+  // Save the session in a cookie
+  cookies().set("session", session, { expires, httpOnly: true });
 }
 
 export async function logout() {

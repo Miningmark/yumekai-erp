@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 
+import { getSession, login, logout, setSession } from "@/lib/cockietest";
+
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -70,6 +72,8 @@ export async function POST(req) {
       JSON.stringify(lastlogins),
       user.id,
     ]);
+
+    await setSession(user);
 
     return NextResponse.json(
       {

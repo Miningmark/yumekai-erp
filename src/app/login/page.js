@@ -41,6 +41,32 @@ export default function Login() {
       return;
     }
 
+    const loginUrl = process.env.NEXTAUTH_URL + "/api/login";
+    console.log("nextauth_url from login page: ", loginUrl);
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: name, password: password }),
+    });
+    /**
+      headers: {
+        "Content-Type": "application/json",
+        "Referrer-Policy": "no-referrer-when-downgrade",
+      },
+     */
+
+    if (response.ok) {
+      console.log("Richtiger Login from login page");
+      router.push("/dashboard");
+    } else {
+      setErrorMessage("Incorrect Username or Password");
+      console.log("response from loginpage error", response);
+    }
+
+    /*
     const response = await login({ name: name, password: password });
     console.log("response from login", response);
     if (response) {
@@ -50,6 +76,7 @@ export default function Login() {
       setErrorMessage("Incorrect Username or Password");
       console.log("response from loginpage error", response);
     }
+      */
   }
 
   return (
