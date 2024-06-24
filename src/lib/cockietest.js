@@ -33,7 +33,7 @@ export async function login(data) {
   const loginUrl = process.env.NEXTAUTH_URL + "/test/login";
   console.log("nextauth_url from cockietest: ", loginUrl);
 
-  if (data.name == "damin" && data.password == "Admin123!") {
+  if (data.name == "admin" && data.password == "Admin123!") {
     console.log("Login erfolgreich");
     // Create the session
     const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
