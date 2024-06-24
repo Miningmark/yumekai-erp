@@ -55,6 +55,7 @@ export async function login(data) {
 
     return true;
   } else {
+    console.log("response error from cockietest", response);
     return false;
   }
 }
