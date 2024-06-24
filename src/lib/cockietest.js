@@ -33,15 +33,6 @@ export async function login(data) {
   const loginUrl = process.env.NEXTAUTH_URL + "/test/login";
   console.log("nextauth_url from cockietest: ", loginUrl);
 
-  const response = await fetch(loginUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Referrer-Policy": "no-referrer-when-downgrade",
-    },
-    body: JSON.stringify(data),
-  });
-
   if (data.name == "damin" && data.password == "Admin123!") {
     // Create the session
     const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
@@ -53,6 +44,15 @@ export async function login(data) {
 
     return true;
   }
+  /*
+  const response = await fetch(loginUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Referrer-Policy": "no-referrer-when-downgrade",
+    },
+    body: JSON.stringify(data),
+  });
 
   if (response.ok) {
     console.log("Richtiger Login from cockietest");
@@ -71,6 +71,7 @@ export async function login(data) {
     console.log("response error from cockietest", response);
     return false;
   }
+    */
 }
 
 export async function logout() {
