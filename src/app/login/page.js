@@ -48,7 +48,7 @@ export default function Login() {
       //redirect("/dashboard");
     } else {
       setErrorMessage("Incorrect Username or Password");
-      console.log(response.error);
+      console.log("response from loginpage error", response);
     }
   }
 
