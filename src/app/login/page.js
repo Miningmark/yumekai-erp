@@ -21,6 +21,11 @@ const ContainerBgmLogin = styled.div`
   gap: 20px;
 `;
 
+const LoginError = styled.p`
+  color: var(--danger);
+  text-align: center;
+`;
+
 export default function Login() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState(null);
@@ -30,12 +35,16 @@ export default function Login() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    //TODO: prüfen nicht leere eingaben
+
+    if (name.trim() === "" || password.trim() === "") {
+      setErrorMessage("Please fill in both fields.");
+      return;
+    }
 
     const response = await login({ name: name, password: password });
     console.log("response from login", response);
     if (response) {
-      router.push("/");
+      router.push("/dashboard");
       //redirect("/dashboard");
     }
   }
@@ -59,37 +68,30 @@ export default function Login() {
   return (
     <ContainerBgmLogin>
       <h1>Login Page</h1>
-      <form>
-        <div>
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
-            name="username"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            name="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            required
-          />
-        </div>
+      <div>
+        <label htmlFor="username">Username: </label>
+        <input
+          type="text"
+          name="username"
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="password">Password: </label>
+        <input
+          type="password"
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          required
+        />
+      </div>
 
-        {errorMessage && (
-          <div id="alert-2" role="alert">
-            <span>Info</span>
-            <div>{errorMessage}</div>
-          </div>
-        )}
+      {errorMessage && <LoginError>{errorMessage}</LoginError>}
 
-        <StyledButton onClick={(event) => handleSubmit(event)}>Submit</StyledButton>
-      </form>
+      <StyledButton onClick={(event) => handleSubmit(event)}>Submit</StyledButton>
     </ContainerBgmLogin>
   );
 }

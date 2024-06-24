@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
-import { useSession, getSession, signIn, signOut } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { getSession } from "@/lib/cockietest";
 
 import yumekaiLogo from "/public/assets/images/yumekai_512px.png";
 
@@ -45,20 +46,25 @@ const LoginButton = styled(StyledButton)`
 `;
 
 export default function Home() {
-  //const { data: session, status } = useSession();
   const router = useRouter();
-  /*
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/dashboard");
+    async function checkSession() {
+      const session = await getSession();
+      if (session) {
+        router.push("/dashboard");
+      } else {
+        setLoading(false);
+      }
     }
-  }, [status, router]);
 
+    checkSession();
+  }, [router]);
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <Container>Loading...</Container>;
   }
-*/
 
   return (
     <Container>
