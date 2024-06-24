@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/cockietest";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -11,7 +11,9 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  const session = await auth();
+  console.log("req aus route email update", req);
+
+  const session = await getSession();
 
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import styled from "styled-components";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
@@ -34,7 +33,6 @@ const ButtonContainer = styled.div`
 `;
 
 export default function AddNewUser({ handleClose }) {
-  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("user");

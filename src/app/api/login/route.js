@@ -65,7 +65,7 @@ export async function POST(req) {
 
     // Trim the array to a maximum of 5 elements
     lastlogins = lastlogins.slice(0, 5);
-    //onsole.log("LASTS LOGINS: ", lastlogins);
+    //console.log("LASTS LOGINS: ", lastlogins);
 
     // Update the database
     await connection.execute("UPDATE users SET lastlogins = ? WHERE id = ?", [
@@ -73,7 +73,7 @@ export async function POST(req) {
       user.id,
     ]);
 
-    await setSession(user);
+    await setSession({ ...user, lastlogins: lastlogins });
 
     return NextResponse.json(
       {

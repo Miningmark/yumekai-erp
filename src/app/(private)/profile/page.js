@@ -1,9 +1,11 @@
 "use client";
 
-import { useSession, getSession, signIn, signOut } from "next-auth/react";
 import styled from "styled-components";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+import { getSession, login, logout } from "@/lib/cockietest";
 
 const PageBackground = styled.div`
   display: flex;
@@ -42,12 +44,25 @@ const LoginListItem = styled.li`
 `;
 
 export default function Home() {
-  const { data: session } = useSession();
-  const [email, setEmail] = useState(session?.user?.email || "");
+  const [session, setSession] = useState({});
+  const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [logins, setLogins] = useState([]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkSession() {
+      const newSession = await getSession();
+      setSession(newSession);
+      setEmail(newSession.user.email);
+    }
+
+    checkSession();
+  }, []);
+  console.log("session from profile page: ", session);
 
   useEffect(() => {
     if (session && session.user && session.user.lastlogins) {
@@ -94,11 +109,18 @@ export default function Home() {
       }
 
       alert("E-Mail erfolgreich aktualisiert");
-      signOut();
+      handleLogout();
     } catch (error) {
       alert(error.message);
     }
   };
+
+  async function handleLogout() {
+    const response = await logout();
+    if (response) {
+      router.push("/");
+    }
+  }
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();

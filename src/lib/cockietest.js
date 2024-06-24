@@ -4,8 +4,6 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import test from "./test";
-
 const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
 
@@ -31,6 +29,7 @@ export async function decrypt(input) {
 
 export async function login(data) {
   console.log("formdata from cockietest", data);
+  /*
 
   const answer = await test(data);
   console.log("answer from cockietest: ", answer);
@@ -59,6 +58,7 @@ export async function login(data) {
 
     return true;
   }
+    */
   /*
   const response = await fetch(loginUrl, {
     method: "POST",
