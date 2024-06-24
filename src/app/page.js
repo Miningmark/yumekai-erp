@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 
 import yumekaiLogo from "/public/assets/images/yumekai_512px.png";
 
+import cockietest from "../../cockietest";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,6 +49,10 @@ const LoginButton = styled(StyledButton)`
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    cockietest();
+  }, []);
 
   useEffect(() => {
     if (status === "authenticated") {

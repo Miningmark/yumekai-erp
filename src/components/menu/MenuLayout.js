@@ -25,17 +25,7 @@ export default function MenuLayout({ children }) {
   } else {
     console.log("session from menu: No Session");
   }
-  /**
-     {!session ? (
-        <>{children}</>
-      ) : (
-        <>
-          <SideMenu sideMenuOpen={sideMenuOpen} session={session} />
-          <StickyMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen} />
-          <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>{children}</Content>
-        </>
-      )}
-   */
+
   return (
     <>
       {!session ? (
