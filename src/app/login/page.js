@@ -46,24 +46,11 @@ export default function Login() {
     if (response) {
       router.push("/dashboard");
       //redirect("/dashboard");
-    }
-  }
-
-  const handleCredentials = async (prevState, formData) => {
-    const response = await signIn("credentials", {
-      username: formData.get("username"),
-      password: formData.get("password"),
-      redirect: false,
-    });
-
-    if (!!response.error) {
-      setModal(true);
+    } else {
       setErrorMessage("Incorrect Username or Password");
       console.log(response.error);
-    } else {
-      router.push("/dashboard");
     }
-  };
+  }
 
   return (
     <ContainerBgmLogin>
