@@ -30,10 +30,10 @@ export async function decrypt(input) {
 export async function login(data) {
   console.log("formdata from cockietest", data);
 
-  const test = process.env.NEXTAUTH_URL;
-  console.log("nextauth_url from cockietest: ", test);
+  const loginUrl = process.env.NEXTAUTH_URL + "/api/login";
+  console.log("nextauth_url from cockietest: ", loginUrl);
 
-  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/login`, {
+  const response = await fetch(loginUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
