@@ -70,6 +70,7 @@ export default function Home() {
     <Container>
       <Header>
         <h1>Wilkommen beim YumeKai Planungsbord</h1>
+        <h2>test</h2>
       </Header>
       <Main>
         <Hero>
