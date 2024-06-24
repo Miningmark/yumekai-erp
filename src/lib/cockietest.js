@@ -37,7 +37,19 @@ export async function login(data) {
     console.log("Login erfolgreich");
     // Create the session
     const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-    const user = { name: "admin" };
+    const user = {
+      role: "admin",
+      email: "admin123@test.de",
+      name: "admin",
+      id: 1,
+      lastlogins: [
+        " 24.06.2024 16:41:42;::1 ",
+        " 24.06.2024 16:36:05;::1 ",
+        " 24.06.2024 16:18:13;::1 ",
+        " 24.06.2024 15:45:07;::1 ",
+        " 24.06.2024 15:30:42;::1 ",
+      ],
+    };
     const session = await encrypt({ user, expires });
 
     // Save the session in a cookie
