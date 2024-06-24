@@ -4,7 +4,6 @@ import StickyMenu from "@/components/menu/StickyMenu";
 import SideMenu from "@/components/menu/SideMenu";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSession } from "next-auth/react";
 
 const Content = styled.div`
   position: absolute;
@@ -18,17 +17,10 @@ const Content = styled.div`
 
 export default function MenuLayout({ children }) {
   const [sideMenuOpen, setSideMenuOpen] = useState(true);
-  const { data: session, update } = useSession();
-
-  if (session) {
-    console.log("session from menu: ", session);
-  } else {
-    console.log("session from menu: No Session");
-  }
 
   return (
     <>
-      {!session ? (
+      {true ? (
         <>{children}</>
       ) : (
         <>

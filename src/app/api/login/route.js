@@ -12,6 +12,7 @@ const connection = mysql.createPool({
 export async function POST(req) {
   console.log("API login endpoint hit");
   const { name, password } = await req.json();
+  console.log("Name and Password form login route", name, ", ", password);
 
   //const hashedPassword = await bcrypt.hash("Admin123!", 10);
   //console.log("hashedPassword: ", hashedPassword);
@@ -72,7 +73,6 @@ export async function POST(req) {
 
     return NextResponse.json(
       {
-        message: "Login successful",
         role: user.role,
         email: user.email,
         name: user.name,
