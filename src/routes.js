@@ -1,4 +1,12 @@
-export const privateRoutes = [{ path: "/dashboard", roles: ["user", "orga", "admin"] }];
+export const privateRoutes = [
+  { path: "/dashboard", roles: ["user", "orga", "admin"] },
+  { path: "/profile", roles: ["user", "orga", "admin"] },
+  { path: "/adminPage", roles: ["admin"] },
+  { path: "/kanban", roles: ["user", "orga", "admin"] },
+  { path: "/changelog", roles: ["user", "orga", "admin"] },
+  { path: "/commingSoon", roles: ["user", "orga", "admin"] },
+  { path: "/bugReport", roles: ["user", "orga", "admin"] },
+];
 
 export const authRoutes = ["/login", "/test/auth/signin"];
 

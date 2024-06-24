@@ -30,7 +30,7 @@ export async function decrypt(input) {
 export async function login(data) {
   console.log("formdata from cockietest", data);
 
-  const loginUrl = process.env.NEXTAUTH_URL + "/test/login";
+  const loginUrl = process.env.NEXTAUTH_URL + "/api/login";
   console.log("nextauth_url from cockietest: ", loginUrl);
 
   if (data.name == "admin" && data.password == "Admin123!") {
