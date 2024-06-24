@@ -37,6 +37,7 @@ export async function login(data) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Referrer-Policy": "no-referrer-when-downgrade",
     },
     body: JSON.stringify(data),
   });
