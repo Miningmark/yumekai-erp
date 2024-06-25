@@ -35,7 +35,7 @@ export default function Changelog() {
         <h2>Initiale Version</h2>
         <VersionsNumber>V 0.1</VersionsNumber>
         <ul>
-          <li>Add Profilepage with E-Mail and Password chnage</li>
+          <li>Add Profilepage with E-Mail and Password change</li>
           <li>Add Kanbanboard</li>
           <li>Add Adminboard</li>
           <li>Add Changelog</li>

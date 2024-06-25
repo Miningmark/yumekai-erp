@@ -38,8 +38,12 @@ export default function CommingSoon() {
           <li>Smartphone Support</li>
           <li>Lightmode</li>
           <li>Passwort zurücksetzen</li>
-          <li>Add task löschen von subtasks</li>
+          <li>Beim Task erstellen löschen von subtasks</li>
           <li>Kontaklisten für Helfer und Aussteller</li>
+          <li>Farb Legende für Kanban Board</li>
+          <li>Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt</li>
+          <li>Admin Page überarbeiten</li>
+          <li>Tasks ohne subtasks haben plötzlich 1 subtast (noch auf fehlersuche)</li>
         </ul>
       </SoonContainer>
     </SoonBackground>
