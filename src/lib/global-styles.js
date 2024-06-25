@@ -42,7 +42,7 @@ export const GlobalStyles = createGlobalStyle`
     h1{
         text-align: center;
         margin: 0;
-        padding-top: 50px;
+        padding-top: 25px;
         color: var(--primary-color);
     }
     h2{

@@ -53,9 +53,8 @@ export default function AddNewTask({
   editors,
   session,
 }) {
-  //const { data: session } = useSession();
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState(columns[0].id);
+  const [column, setColumn] = useState(columns[0].title);
   const [description, setDescription] = useState("");
   const [editor, setEditor] = useState("");
   const [subtasks, setSubtasks] = useState([]);
@@ -102,7 +101,7 @@ export default function AddNewTask({
 
     const newTask = {
       title,
-      status,
+      status: columns.find((columnTable) => columnTable.title == column).droppableId,
       description,
       editor,
       subtasks: subtasks.map((subtask) => subtask.text),
@@ -110,6 +109,7 @@ export default function AddNewTask({
       creator: session?.user?.name || "Unknown",
       created: formattedDate,
     };
+    console.log("newTask", newTask);
     addNewTask(newTask);
   }
 

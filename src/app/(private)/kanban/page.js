@@ -9,13 +9,15 @@ import TaskCardDetail from "@/components/kanbanComponents/TaskCardDetail";
 import TaskCardEdit from "@/components/kanbanComponents/TaskCardEdit";
 import io from "socket.io-client";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import RenameColumnModal from "@/components/kanbanComponents/RenameColumnModal";
 
 import { getSession, login, logout } from "@/lib/cockietest";
 
-const columns = [
+const columnsAlt = [
   { id: "todo", title: "TODO" },
   { id: "inProgress", title: "In Progress" },
   { id: "completed", title: "Completed" },
+  { id: "completed2", title: "e Wer e Wer e Wer e " },
 ];
 
 const taskList = [
@@ -36,12 +38,22 @@ const KanbanBoard = styled.div`
   margin: 20px;
   display: flex;
   gap: 20px;
+  max-width: 100%;
+  overflow-x: auto;
 `;
 
 const AddButton = styled(GreenButton)`
   position: absolute;
-  top: 110px;
+  top: 85px;
   left: 20px;
+`;
+
+const NewColumnButton = styled(StyledButton)`
+  min-width: 200px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default function Kanban() {
@@ -52,6 +64,9 @@ export default function Kanban() {
   const [taskDetailId, setTaskDetailId] = useState(null);
   const [taskEditMode, setTaskEditMode] = useState(false);
   const [users, setUsers] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [renameColumnModalOpen, setRenameColumnModalOpen] = useState(false);
+  const [columnToRename, setColumnToRename] = useState(null);
 
   const socket = io(process.env.NEXTAUTH_URL);
 
@@ -62,6 +77,56 @@ export default function Kanban() {
 
     checkSession();
   }, []);
+
+  useEffect(() => {
+    async function fetchColumns() {
+      try {
+        const response = await fetch("/api/columns");
+        if (!response.ok) {
+          throw new Error("Failed to fetch columns");
+        }
+        const data = await response.json();
+        console.log("Columns data", data);
+        console.log("columns.length", data.length);
+        setColumns(data);
+      } catch (error) {
+        console.error("Failed to fetch columns:", error);
+      }
+    }
+
+    fetchColumns();
+  }, []);
+
+  useEffect(() => {
+    const socket = io(process.env.NEXTAUTH_URL);
+    socket.on("connect", () => {
+      //console.log("Socket connected:", socket.id);
+    });
+
+    socket.on("loadNewColumns", (data) => {
+      //console.log("Received loadNewTasks event:", data);
+      fetchColumns();
+    });
+
+    async function fetchColumns() {
+      try {
+        const response = await fetch("/api/columns");
+        if (!response.ok) {
+          throw new Error("Failed to fetch columns");
+        }
+        const data = await response.json();
+        console.log("Columns data", data);
+        console.log("columns.length", data.length);
+        setColumns(data);
+      } catch (error) {
+        console.error("Failed to fetch columns:", error);
+      }
+    }
+
+    return () => {
+      socket.disconnect();
+    };
+  });
 
   useEffect(() => {
     const socket = io(process.env.NEXTAUTH_URL);
@@ -187,7 +252,7 @@ export default function Kanban() {
         setTaskDetailId(null);
         const newTaskslist = tasks.filter((task) => task.id != taskId);
         setTasks([...newTaskslist]);
-        socket.emit("myevent", "Hello Server");
+        socket.emit("newTask", "Hello Server");
       } else {
         console.error("Failed to delete task:", response.status);
         // Handle error
@@ -235,7 +300,7 @@ export default function Kanban() {
       if (response.ok) {
         const newTaskslist = tasks.map((task) => (task.id === changeTask.id ? changeTask : task));
         setTasks([...newTaskslist]);
-        socket.emit("myevent", "Hello Server");
+        socket.emit("newTask", "Hello Server");
         closeTaskEdit();
       } else {
         console.error("Failed to update task:", response.status);
@@ -261,8 +326,10 @@ export default function Kanban() {
     let updatedStatus = draggedTask.status;
 
     if (source.droppableId !== destination.droppableId) {
-      const destinationColumn = columns.find((column) => column.id === destination.droppableId);
-      updatedStatus = destinationColumn ? destinationColumn.id : draggedTask.status;
+      const destinationColumn = columns.find(
+        (column) => column.droppableId === destination.droppableId
+      );
+      updatedStatus = destinationColumn ? destinationColumn.droppableId : draggedTask.status;
     }
 
     const updatedTasks = tasks.map((task) => {
@@ -321,7 +388,7 @@ export default function Kanban() {
         },
         body: JSON.stringify({ tasks: finalTasksSortedSQL }),
       });
-      socket.emit("myevent", "Hello Server");
+      socket.emit("newTask", "Hello Server");
       if (!response.ok) {
         throw new Error("Failed to update tasks");
       }
@@ -364,7 +431,7 @@ export default function Kanban() {
         // Überprüfe, ob die Antwort die ID des neu erstellten Tasks enthält
         if (responseData && responseData.insertId) {
           setTasks([...tasks, { ...newTask, id: responseData.insertId }]);
-          socket.emit("myevent", "Hello Server");
+          socket.emit("newTask", "Hello Server");
           closeAddNewTask();
         } else {
           console.error("Failed to add task: Response does not contain insertId");
@@ -384,24 +451,98 @@ export default function Kanban() {
     setTaskDetailModalOpen(false);
   }
 
+  async function addNewColumn() {
+    const title = prompt("Enter column title:");
+    if (!title) return;
+
+    try {
+      console.log("Add new Column", {
+        title,
+        position: columns.length,
+        creator: session.user.name,
+      });
+      const response = await fetch("/api/columns", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, position: columns.length, creator: session.user.name }),
+      });
+
+      if (response.ok) {
+        const newColumn = await response.json();
+        setColumns([...columns, newColumn]);
+        socket.emit("newColumn", "Hello Server");
+      } else {
+        console.error("Failed to add column:", response.status);
+      }
+    } catch (error) {
+      console.error("Failed to add column:", error);
+    }
+  }
+
+  async function renameColumn(columnId, newTitle) {
+    try {
+      const response = await fetch("/api/columns", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: columnId, newTitle }),
+      });
+
+      if (response.ok) {
+        setColumns((prevColumns) =>
+          prevColumns.map((column) =>
+            column.id === columnId
+              ? {
+                  ...column,
+                  title: newTitle,
+                }
+              : column
+          )
+        );
+        socket.emit("newColumn", "Hello Server");
+      } else {
+        console.error("Failed to rename column:", response.status);
+      }
+    } catch (error) {
+      console.error("Failed to rename column:", error);
+    }
+  }
+
+  function openRenameColumnModal(column) {
+    setColumnToRename(column);
+    setRenameColumnModalOpen(true);
+  }
+
+  function closeRenameColumnModal() {
+    setRenameColumnModalOpen(false);
+    setColumnToRename(null);
+  }
+
   return (
     <>
       <h1>ToDo</h1>
       <AddButton onClick={() => setNewTaskModalOpen(true)}>Neuer Eintrag</AddButton>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <KanbanBoard>
           {columns.map((column) => (
             <Column
               key={column.id}
               title={column.title}
-              tasks={tasks.filter((task) => task.status === column.id)}
-              droppableId={column.id}
+              tasks={tasks.filter((task) => task.status === column.droppableId)}
+              droppableId={column.droppableId}
+              onTitleClick={() => openRenameColumnModal(column)}
               openTaskDetail={openTaskDetail}
               users={users}
             />
           ))}
+          <NewColumnButton onClick={addNewColumn}>Neue Spalte</NewColumnButton>
         </KanbanBoard>
       </DragDropContext>
+
       {newTaskModalOpen && (
         <AddNewTask
           addNewTask={addNewTask}
@@ -426,6 +567,13 @@ export default function Kanban() {
           editors={users.map((user) => user.name)}
           handleCloseTaskEdit={closeTaskEdit}
           handleEditTask={editTask}
+        />
+      )}
+      {renameColumnModalOpen && (
+        <RenameColumnModal
+          column={columnToRename}
+          onClose={closeRenameColumnModal}
+          onRename={renameColumn}
         />
       )}
     </>

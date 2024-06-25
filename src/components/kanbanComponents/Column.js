@@ -5,7 +5,7 @@ import TaskPreview from "@/components/kanbanComponents/TaskPreview";
 
 const ColumnDiv = styled.div`
   position: relative;
-  width: 250px;
+  min-width: 250px;
   height: calc(100vh - 163px - 45px);
   gap: 10px;
   background: var(--light);
@@ -21,8 +21,10 @@ const ColumnDiv = styled.div`
 
 const ColumnContent = styled.div`
   max-height: calc(100% - 52px - 10px);
+
   overflow-y: auto;
   overflow-x: hidden;
+
   padding: 10px;
 
   /* Gradient overlay for top and bottom fade effect */
@@ -91,6 +93,7 @@ export default function Column({
   handleEditTask,
   openTaskDetail,
   users,
+  onTitleClick,
 }) {
   const [hoverIndex, setHoverIndex] = useState(null);
   const contentRef = useRef(null);
@@ -129,7 +132,7 @@ export default function Column({
 
   return (
     <ColumnDiv>
-      <h3>
+      <h3 onClick={onTitleClick}>
         {title} ({tasks.length})
       </h3>
       <ColumnContent ref={contentRef}>

@@ -44,6 +44,7 @@ export default function CommingSoon() {
           <li>Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt</li>
           <li>Admin Page überarbeiten</li>
           <li>Tasks ohne subtasks haben plötzlich 1 subtast (noch auf fehlersuche)</li>
+          <li>Password vorraussetzungen Sonderzeichen, zahlen, großschreibung</li>
         </ul>
       </SoonContainer>
     </SoonBackground>

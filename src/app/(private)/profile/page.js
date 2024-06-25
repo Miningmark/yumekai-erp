@@ -10,8 +10,9 @@ import { getSession, login, logout } from "@/lib/cockietest";
 const PageBackground = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 0 20px;
   color: var(--dark);
+  gap: 20px;
 `;
 
 const Section = styled.div`
@@ -34,6 +35,8 @@ const Input = styled.input`
 const LoginList = styled.ul`
   list-style-type: none;
   padding: 0;
+  width: 80%;
+  max-width: 500px;
 `;
 
 const LoginListItem = styled.li`
@@ -41,6 +44,19 @@ const LoginListItem = styled.li`
   padding: 10px;
   margin-bottom: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+`;
+
+const AccountChanges = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+`;
+
+const ChangeSection = styled.section`
+  padding: 0 20px 20px 20px;
+  background-color: var(--light);
+  border-radius: 10px;
+  width: 220px;
 `;
 
 export default function Home() {
@@ -153,49 +169,51 @@ export default function Home() {
   return (
     <PageBackground>
       <h1>Profil</h1>
-      <Section>
-        <h2>E-Mail ändern</h2>
-        <form onSubmit={handleEmailSubmit}>
-          <div>
-            <Label htmlFor="email">E-Mail</Label>
-            <Input type="email" id="email" value={email} onChange={handleEmailChange} />
-          </div>
-          <GreenButton type="submit">E-Mail ändern</GreenButton>
-        </form>
-      </Section>
-      <Section>
-        <h2>Passwort ändern</h2>
-        <form onSubmit={handlePasswordSubmit}>
-          <div>
-            <Label htmlFor="currentPassword">Aktuelles Passwort</Label>
-            <Input
-              type="password"
-              id="currentPassword"
-              value={currentPassword}
-              onChange={handleCurrentPasswordChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="newPassword">Neues Passwort</Label>
-            <Input
-              type="password"
-              id="newPassword"
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="confirmNewPassword">Neues Passwort bestätigen</Label>
-            <Input
-              type="password"
-              id="confirmNewPassword"
-              value={confirmNewPassword}
-              onChange={handleConfirmNewPasswordChange}
-            />
-          </div>
-          <GreenButton type="submit">Passwort ändern</GreenButton>
-        </form>
-      </Section>
+      <AccountChanges>
+        <ChangeSection>
+          <h2>E-Mail ändern</h2>
+          <form onSubmit={handleEmailSubmit}>
+            <div>
+              <Label htmlFor="email">E-Mail</Label>
+              <Input type="email" id="email" value={email} onChange={handleEmailChange} />
+            </div>
+            <GreenButton type="submit">E-Mail ändern</GreenButton>
+          </form>
+        </ChangeSection>
+        <ChangeSection>
+          <h2>Passwort ändern</h2>
+          <form onSubmit={handlePasswordSubmit}>
+            <div>
+              <Label htmlFor="currentPassword">Aktuelles Passwort</Label>
+              <Input
+                type="password"
+                id="currentPassword"
+                value={currentPassword}
+                onChange={handleCurrentPasswordChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="newPassword">Neues Passwort</Label>
+              <Input
+                type="password"
+                id="newPassword"
+                value={newPassword}
+                onChange={handleNewPasswordChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="confirmNewPassword">Neues Passwort bestätigen</Label>
+              <Input
+                type="password"
+                id="confirmNewPassword"
+                value={confirmNewPassword}
+                onChange={handleConfirmNewPasswordChange}
+              />
+            </div>
+            <GreenButton type="submit">Passwort ändern</GreenButton>
+          </form>
+        </ChangeSection>
+      </AccountChanges>
       <Section>
         <h2>Letzte Logins</h2>
         <LoginList>

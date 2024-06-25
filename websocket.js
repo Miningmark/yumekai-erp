@@ -21,9 +21,14 @@ nextApp.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
-    socket.on("myevent", (data) => {
-      console.log("Received myevent:", data);
+    socket.on("newTask", (data) => {
+      console.log("newTask:", data);
       socket.broadcast.emit("loadNewTasks", "new");
+    });
+
+    socket.on("newColumn", (data) => {
+      console.log("newColumn:", data);
+      socket.broadcast.emit("loadNewColumns", "new");
     });
   });
 

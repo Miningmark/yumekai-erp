@@ -13,7 +13,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { name, email, role, password, color } = body;
-    console.log("body: ", body);
+    console.log("body: ", { name, email, role, password, color });
 
     if (!name || !email || !role || !password || !color) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
@@ -38,10 +38,19 @@ export async function POST(req) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    console.log("SQL statement zur übergabe", [
+      name,
+      email,
+      role,
+      hashedPassword,
+      color,
+      JSON.stringify(lastlogins),
+    ]);
+
     // Insert new user
     const [result] = await connection.execute(
       "INSERT INTO users (name, email, role, password, color, lastlogins) VALUES (?, ?, ?, ?, ?, ?)",
-      [name, email, role, hashedPassword, color, lastlogins]
+      [name, email, role, hashedPassword, color, JSON.stringify(lastlogins)]
     );
 
     if (result.affectedRows > 0) {
