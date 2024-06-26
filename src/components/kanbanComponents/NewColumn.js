@@ -20,14 +20,14 @@ const DisabledGreenButton = styled(GreenButton)`
   cursor: not-allowed;
 `;
 
-export default function RenameColumnModal({ column, onClose, onRename }) {
-  const [newTitle, setNewTitle] = useState(column.title);
+export default function NewColumn({ onClose, newColumnName }) {
+  const [newTitle, setNewTitle] = useState("");
   const maxLength = 16;
   const tooLong = newTitle.length > maxLength;
 
   const handleRename = () => {
     if (!tooLong) {
-      onRename(column.id, newTitle);
+      newColumnName(newTitle);
       onClose();
     }
   };
@@ -35,7 +35,7 @@ export default function RenameColumnModal({ column, onClose, onRename }) {
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <ModalTitle>Spalte umbenennen</ModalTitle>
+        <ModalTitle>Neue Spalte</ModalTitle>
         <input
           type="text"
           value={newTitle}
@@ -48,9 +48,9 @@ export default function RenameColumnModal({ column, onClose, onRename }) {
         <ModalActions>
           <RedButton onClick={onClose}>Abbrechen</RedButton>
           {tooLong || newTitle.length == 0 ? (
-            <DisabledGreenButton disabled>Umbenennen</DisabledGreenButton>
+            <DisabledGreenButton disabled>Speichern</DisabledGreenButton>
           ) : (
-            <GreenButton onClick={handleRename}>Umbenennen</GreenButton>
+            <GreenButton onClick={handleRename}>Speichern</GreenButton>
           )}
         </ModalActions>
       </ModalContent>

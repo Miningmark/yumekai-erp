@@ -1,50 +1,11 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import { ModalOverlay, ModalContent } from "@/components/styledComponents/ModalComponents";
 
 // Import SVG icons
 import IconMoreVert from "/public/assets/icons/more_vert.svg";
 import IconClose from "/public/assets/icons/close.svg";
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-`;
-
-const ModalContent = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #888;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow: auto;
-  width: 90%;
-  border-radius: var(--border-radius);
-  cursor: default;
-  color: var(--dark);
-  background-color: var(--grey);
-  z-index: 101;
-
-  svg {
-    fill: var(--dark);
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  }
-`;
 
 const MiniModal = styled.div`
   position: absolute;
@@ -94,6 +55,7 @@ const ConfirmationModal = styled.div`
 const SubtaskItem = styled.li`
   list-style-type: none;
   cursor: pointer;
+  padding-bottom: 5px;
 `;
 
 const TaskInfo = styled.div`
@@ -158,7 +120,7 @@ export default function TaskCardDetail({
 
   return (
     <>
-      <Overlay onClick={handleCloseTaskDetail}>
+      <ModalOverlay onClick={handleCloseTaskDetail}>
         <ModalContent onClick={(e) => e.stopPropagation()}>
           <IconMoreVert onClick={openMiniModal} />
           <MiniModal $show={isMiniModalOpen ? "block" : "none"}>
@@ -168,18 +130,19 @@ export default function TaskCardDetail({
           </MiniModal>
           <h2>{title}</h2>
           <p>{description}</p>
-          <ul>
-            {subtasks.map((subtask, index) => (
-              <SubtaskItem key={index} onClick={() => toggleCheckbox(index)}>
-                <input
-                  type="checkbox"
-                  checked={subtaskschecked[index]}
-                  onChange={() => toggleCheckbox(index)}
-                />
-                {`  ${subtask}`}
-              </SubtaskItem>
-            ))}
-          </ul>
+
+          {subtasks.map((subtask, index) => (
+            <SubtaskItem key={index} onClick={() => toggleCheckbox(index)}>
+              <input
+                type="checkbox"
+                checked={subtaskschecked[index]}
+                onChange={() => toggleCheckbox(index)}
+              />
+              {`  ${subtask}`}
+            </SubtaskItem>
+          ))}
+          <br />
+
           <div>
             <TaskInfo>
               <p>Erstellt von: {creator}</p>
@@ -189,7 +152,7 @@ export default function TaskCardDetail({
           </div>
         </ModalContent>
         {isConfirmDeleteOpen && (
-          <Overlay onClick={(e) => e.stopPropagation()}>
+          <ModalOverlay onClick={(e) => e.stopPropagation()}>
             <ConfirmationModal>
               <p>Bist du sicher, dass du diese Aufgabe löschen möchtest?</p>
               <ButtonContainer>
@@ -197,9 +160,9 @@ export default function TaskCardDetail({
                 <RedButton onClick={closeConfirmDelete}>Nein</RedButton>
               </ButtonContainer>
             </ConfirmationModal>
-          </Overlay>
+          </ModalOverlay>
         )}
-      </Overlay>
+      </ModalOverlay>
     </>
   );
 }

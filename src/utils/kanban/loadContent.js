@@ -5,8 +5,6 @@ export async function fetchColumns() {
       throw new Error("Failed to fetch columns");
     }
     const data = await response.json();
-    console.log("Columns data", data);
-    console.log("columns.length", data.length);
     return data;
   } catch (error) {
     console.error("Failed to fetch columns:", error);

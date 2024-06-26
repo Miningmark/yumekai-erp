@@ -16,6 +16,7 @@ const ColumnDiv = styled.div`
     color: var(--secondary-color);
     text-align: center;
     margin: 15px 0 15px 0;
+    cursor: text;
   }
 `;
 

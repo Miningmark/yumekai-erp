@@ -1,50 +1,16 @@
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import Link from "next/link";
+import { useState } from "react";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-`;
-
-const TaskFormContainer = styled.div`
-  color: var(--dark);
-  background-color: var(--grey);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow: auto;
-  width: 90%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-`;
-
-const SubtaskInput = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-
-  input {
-    margin-right: 8px;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-`;
+import CharacterCount from "@/components/styledComponents/CharacterCount";
+import {
+  ModalOverlay,
+  ModalInputField,
+  ModalTextArea,
+  ModalSubtaskInput,
+  ModalButtonRightContainer,
+  ModalContent,
+  ModalCloseIcon,
+  ModalImputTitle,
+} from "@/components/styledComponents/ModalComponents";
 
 export default function AddNewTask({
   addNewTask,
@@ -54,7 +20,7 @@ export default function AddNewTask({
   session,
 }) {
   const [title, setTitle] = useState("");
-  const [column, setColumn] = useState(columns[0].title);
+  const [column, setColumn] = useState("");
   const [description, setDescription] = useState("");
   const [editor, setEditor] = useState("");
   const [subtasks, setSubtasks] = useState([]);
@@ -70,9 +36,19 @@ export default function AddNewTask({
     setSubtasks([...subtasks, { text: "" }]);
   }
 
+  function deleteSubtask(index) {
+    const newSubtasks = subtasks.filter((_, i) => i !== index);
+    setSubtasks(newSubtasks);
+  }
+
   function onSubmit() {
     if (!title.trim()) {
       setError("Bitte geben Sie einen Titel ein.");
+      return;
+    }
+
+    if (!column) {
+      setError("Bitte wählen Sie einen Spalte aus.");
       return;
     }
 
@@ -109,37 +85,43 @@ export default function AddNewTask({
       creator: session?.user?.name || "Unknown",
       created: formattedDate,
     };
-    console.log("newTask", newTask);
     addNewTask(newTask);
   }
 
   return (
-    <Overlay onClick={handleCloseAddNewTask}>
-      <TaskFormContainer onClick={(e) => e.stopPropagation()}>
-        <h2>Add New Task</h2>
-        <p>Title</p>
-        <input
+    <ModalOverlay onClick={handleCloseAddNewTask}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
+        <ModalCloseIcon onClick={handleCloseAddNewTask} />
+        <h2>Neue Aufgabe </h2>
+        <ModalImputTitle>Titel</ModalImputTitle>
+        <ModalInputField
           type="text"
           placeholder="e.g. Take a coffee break"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          maxLength={21}
         />
-        <p>Description</p>
-        <input
+        <CharacterCount $tooLong={title.length > 25 ? "var(--danger)" : "var(--dark)"}>
+          {title.length}/20 Zeichen
+        </CharacterCount>
+        <ModalImputTitle>Beschreibung</ModalImputTitle>
+        <ModalTextArea
           type="text"
           placeholder="e.g. It's always good to take a break."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          rows="4"
         />
-        <p>Status</p>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <ModalImputTitle>Spalte</ModalImputTitle>
+        <select value={column} onChange={(e) => setColumn(e.target.value)}>
+          <option value="">-- Bitte wählen --</option>
           {columns.map((column) => (
-            <option key={column.id} value={column.id}>
+            <option key={column.id} value={column.title}>
               {column.title}
             </option>
           ))}
         </select>
-        <p>Editor</p>
+        <ModalImputTitle>Bearbeiter</ModalImputTitle>
         <select value={editor} onChange={(e) => setEditor(e.target.value)}>
           <option value="">-- Bitte wählen --</option>
           {editors.map((editorName, index) => (
@@ -148,23 +130,24 @@ export default function AddNewTask({
             </option>
           ))}
         </select>
-        <p>Subtasks</p>
+        <p>Teilaufgaben</p>
         {subtasks.map((subtask, index) => (
-          <SubtaskInput key={index}>
-            <input
+          <ModalSubtaskInput key={index}>
+            <ModalInputField
               type="text"
-              placeholder="new Subtask"
+              placeholder="Neue Teilaufgabe"
               value={subtask.text}
               onChange={(e) => handleSubtaskChange(index, e.target.value)}
             />
-          </SubtaskInput>
+            <RedButton onClick={() => deleteSubtask(index)}>Löschen</RedButton>
+          </ModalSubtaskInput>
         ))}
-        <StyledButton onClick={addSubtask}>Add Subtask</StyledButton>
-        <ButtonContainer>
-          <GreenButton onClick={onSubmit}>Create New Task</GreenButton>
-        </ButtonContainer>
+        <StyledButton onClick={addSubtask}>weitere Teilaufgabe</StyledButton>
+        <ModalButtonRightContainer>
+          <GreenButton onClick={onSubmit}>Aufgabe Speichern</GreenButton>
+        </ModalButtonRightContainer>
         {error && <p style={{ color: "red" }}>{error}</p>}
-      </TaskFormContainer>
-    </Overlay>
+      </ModalContent>
+    </ModalOverlay>
   );
 }

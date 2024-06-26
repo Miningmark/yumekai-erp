@@ -12,6 +12,7 @@ import RenameColumnModal from "@/components/kanbanComponents/RenameColumnModal";
 import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/kanban/loadContent";
 import { getSession, login, logout } from "@/lib/cockietest";
 import { socket } from "@/app/socket";
+import NewColumn from "@/components/kanbanComponents/NewColumn";
 
 const columnsAlt = [
   { id: "todo", title: "TODO" },
@@ -68,6 +69,7 @@ export default function Kanban() {
   const [columnToRename, setColumnToRename] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
+  const [newColumnModal, setNewColumnModal] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -347,17 +349,18 @@ export default function Kanban() {
     setTaskDetailModalOpen(false);
   }
 
-  async function addNewColumn() {
-    const title = prompt("Enter column title:");
-    if (!title) return;
-
+  async function handleNewColumn(newColumnName) {
     try {
       const response = await fetch("/api/columns", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, position: columns.length, creator: session.user.name }),
+        body: JSON.stringify({
+          title: newColumnName,
+          position: columns.length,
+          creator: session.user.name,
+        }),
       });
 
       if (response.ok) {
@@ -370,6 +373,7 @@ export default function Kanban() {
     } catch (error) {
       console.error("Failed to add column:", error);
     }
+    setNewColumnModal(false);
   }
 
   async function renameColumn(columnId, newTitle) {
@@ -412,6 +416,10 @@ export default function Kanban() {
     setColumnToRename(null);
   }
 
+  function handleCloseNewColumn() {
+    setNewColumnModal(false);
+  }
+
   if (!tasks || !columns || !users) {
     return <p>Loading</p>;
   }
@@ -433,7 +441,7 @@ export default function Kanban() {
               users={users}
             />
           ))}
-          <NewColumnButton onClick={addNewColumn}>Neue Spalte</NewColumnButton>
+          <NewColumnButton onClick={() => setNewColumnModal(true)}>Neue Spalte</NewColumnButton>
         </KanbanBoard>
       </DragDropContext>
 
@@ -465,7 +473,9 @@ export default function Kanban() {
           handleEditTask={editTask}
         />
       )}
-
+      {newColumnModal && (
+        <NewColumn onClose={handleCloseNewColumn} newColumnName={handleNewColumn}></NewColumn>
+      )}
       {renameColumnModalOpen && (
         <RenameColumnModal
           column={columnToRename}
