@@ -1,10 +1,26 @@
 "use client";
 
 import styled from "styled-components";
-import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import {
+  StyledButton,
+  GreenButton,
+  RedButton,
+  DisabledGreenButton,
+} from "@/components/styledComponents/StyledButton";
 import { useState, useEffect, useRef } from "react";
 
 import { getSession, login, logout } from "@/lib/cockietest";
+import CharacterCount from "@/components/styledComponents/CharacterCount";
+import {
+  ModalOverlay,
+  ModalInputField,
+  ModalTextArea,
+  ModalSubtaskInput,
+  ModalButtonRightContainer,
+  ModalContent,
+  ModalCloseIcon,
+  ModalImputTitle,
+} from "@/components/styledComponents/ModalComponents";
 
 const FormContainer = styled.div`
   color: var(--dark);
@@ -20,17 +36,6 @@ const FormContainer = styled.div`
   h1 {
     padding-top: 0;
   }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-`;
-
-const CharacterCounter = styled.p`
-  color: ${(props) => props.$limitExceeded};
 `;
 
 export default function BugReport() {
@@ -85,26 +90,38 @@ export default function BugReport() {
     <FormContainer>
       <h1>Bug Report</h1>
       <form onSubmit={handleSubmit}>
-        <p>Titel (max. 50 zeichen)</p>
-        <input
+        <ModalImputTitle>Titel (max. 50 zeichen)</ModalImputTitle>
+        <ModalInputField
           type="text"
           placeholder="Enter title"
           value={title}
-          onChange={(e) => setTitle(e.target.value.slice(0, 50))}
+          onChange={(e) => setTitle(e.target.value)}
+          maxLength={51}
         />
-        <p>Beschreibung (max. 500 zeichen)</p>
-        <textarea
+        <CharacterCount $tooLong={title.length > 50 ? "var(--danger)" : "var(--dark)"}>
+          {title.length}/50 Zeichen
+        </CharacterCount>
+        <ModalImputTitle>Beschreibung (max. 500 zeichen)</ModalImputTitle>
+        <ModalTextArea
           placeholder="Enter description"
           value={description}
-          onChange={(e) => setDescription(e.target.value.slice(0, 500))}
-          rows="4"
+          onChange={(e) => setDescription(e.target.value)}
+          rows="6"
+          maxLength={501}
         />
-        <CharacterCounter $limitExceeded={description.length >= 500 ? "red" : "inherit"}>
+        <CharacterCount $tooLong={description.length > 500 ? "var(--danger)" : "var(--dark)"}>
           {description.length}/500 Zeichen
-        </CharacterCounter>
-        <ButtonContainer>
-          <StyledButton type="submit">Senden</StyledButton>
-        </ButtonContainer>
+        </CharacterCount>
+        <ModalButtonRightContainer>
+          {title.length > 50 ||
+          title.length == 0 ||
+          description.length > 500 ||
+          description.length == 0 ? (
+            <DisabledGreenButton disabled>Senden</DisabledGreenButton>
+          ) : (
+            <GreenButton onClick={handleSubmit}>Senden</GreenButton>
+          )}
+        </ModalButtonRightContainer>
       </form>
       {message && <p>{message}</p>}
     </FormContainer>

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import {
+  GreenButton,
+  RedButton,
+  DisabledGreenButton,
+} from "@/components/styledComponents/StyledButton";
 
 import CharacterCount from "@/components/styledComponents/CharacterCount";
 import { ModalOverlay, ModalContent } from "@/components/styledComponents/ModalComponents";
@@ -13,11 +17,6 @@ const ModalActions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-`;
-
-const DisabledGreenButton = styled(GreenButton)`
-  opacity: 0.5;
-  cursor: not-allowed;
 `;
 
 export default function NewColumn({ onClose, newColumnName }) {

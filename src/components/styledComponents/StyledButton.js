@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button`
   background-color: var(--dark-grey);
   color: var(--grey);
   border-radius: var(--border-radius);
@@ -26,14 +26,17 @@ const StyledButton = styled.button`
   }
 `;
 
-const GreenButton = styled(StyledButton)`
+export const GreenButton = styled(StyledButton)`
   background-color: var(--success);
   color: white;
 `;
 
-const RedButton = styled(StyledButton)`
+export const RedButton = styled(StyledButton)`
   background-color: var(--danger);
   color: white;
 `;
 
-export { StyledButton, GreenButton, RedButton };
+export const DisabledGreenButton = styled(GreenButton)`
+  opacity: 0.5;
+  cursor: not-allowed;
+`;
