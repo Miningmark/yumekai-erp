@@ -7,17 +7,16 @@ import Column from "@/components/kanbanComponents/Column";
 import AddNewTask from "@/components/kanbanComponents/AddNewTask";
 import TaskCardDetail from "@/components/kanbanComponents/TaskCardDetail";
 import TaskCardEdit from "@/components/kanbanComponents/TaskCardEdit";
-import io from "socket.io-client";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import RenameColumnModal from "@/components/kanbanComponents/RenameColumnModal";
-
+import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/kanban/loadContent";
 import { getSession, login, logout } from "@/lib/cockietest";
+import { socket } from "@/app/socket";
 
 const columnsAlt = [
   { id: "todo", title: "TODO" },
   { id: "inProgress", title: "In Progress" },
   { id: "completed", title: "Completed" },
-  { id: "completed2", title: "e Wer e Wer e Wer e " },
 ];
 
 const taskList = [
@@ -58,167 +57,80 @@ const NewColumnButton = styled(StyledButton)`
 
 export default function Kanban() {
   const [session, setSession] = useState(null);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(null);
   const [newTaskModalOpen, setNewTaskModalOpen] = useState(false);
   const [taskDetailModalOpen, setTaskDetailModalOpen] = useState(false);
   const [taskDetailId, setTaskDetailId] = useState(null);
   const [taskEditMode, setTaskEditMode] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [users, setUsers] = useState(null);
+  const [columns, setColumns] = useState(null);
   const [renameColumnModalOpen, setRenameColumnModalOpen] = useState(false);
   const [columnToRename, setColumnToRename] = useState(null);
-
-  const socket = io(process.env.NEXTAUTH_URL);
+  const [isConnected, setIsConnected] = useState(false);
+  const [transport, setTransport] = useState("N/A");
 
   useEffect(() => {
-    async function checkSession() {
-      setSession(await getSession());
+    async function fetchData() {
+      const [usersData, columnsData, tasksData] = await Promise.all([
+        fetchUsers(),
+        fetchColumns(),
+        fetchTasks(),
+      ]);
+      setUsers(usersData);
+      setColumns(columnsData);
+      setTasks(tasksData);
     }
 
+    fetchData();
     checkSession();
-  }, []);
 
-  useEffect(() => {
-    async function fetchColumns() {
-      try {
-        const response = await fetch("/api/columns");
-        if (!response.ok) {
-          throw new Error("Failed to fetch columns");
-        }
-        const data = await response.json();
-        console.log("Columns data", data);
-        console.log("columns.length", data.length);
-        setColumns(data);
-      } catch (error) {
-        console.error("Failed to fetch columns:", error);
-      }
-    }
-
-    fetchColumns();
-  }, []);
-
-  useEffect(() => {
-    const socket = io(process.env.NEXTAUTH_URL);
-    socket.on("connect", () => {
-      //console.log("Socket connected:", socket.id);
-    });
-
-    socket.on("loadNewColumns", (data) => {
-      //console.log("Received loadNewTasks event:", data);
-      fetchColumns();
-    });
-
-    async function fetchColumns() {
-      try {
-        const response = await fetch("/api/columns");
-        if (!response.ok) {
-          throw new Error("Failed to fetch columns");
-        }
-        const data = await response.json();
-        console.log("Columns data", data);
-        console.log("columns.length", data.length);
-        setColumns(data);
-      } catch (error) {
-        console.error("Failed to fetch columns:", error);
-      }
-    }
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("loadNewTasks", fetchTasksAndUpdateState);
+    socket.on("loadNewColumns", fetchColumnsAndUpdateState);
 
     return () => {
-      socket.disconnect();
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("loadNewTasks", fetchTasksAndUpdateState);
+      socket.off("loadNewColumns", fetchColumnsAndUpdateState);
     };
-  });
-
-  useEffect(() => {
-    const socket = io(process.env.NEXTAUTH_URL);
-    socket.on("connect", () => {
-      //console.log("Socket connected:", socket.id);
-    });
-
-    socket.on("loadNewTasks", (data) => {
-      //console.log("Received loadNewTasks event:", data);
-      fetchTasks();
-    });
-
-    async function fetchTasks() {
-      try {
-        const response = await fetch("/api/tasks");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tasks");
-        }
-        const data = await response.json();
-        // Stellen Sie sicher, dass die Daten im erwarteten Format vorliegen
-        // und passen Sie sie gegebenenfalls an Ihren Zustand an
-        const formattedTasks = data.map((task) => ({
-          id: task.id,
-          title: task.title,
-          status: task.status,
-          editor: task.editor,
-          description: task.description,
-          subtasks: task.subtasks.split(",").map((subtask) => subtask.trim()), // Konvertiere die subtasks-Zeichenfolge in ein Array
-          subtaskschecked: task.subtaskschecked
-            .split(",")
-            .map((checked) => checked.trim() === "true"), // Konvertiere die subtaskschecked-Zeichenfolge in ein Array von booleschen Werten
-          creator: task.creator,
-          created: task.created,
-          position: task.position,
-        }));
-        setTasks(formattedTasks);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    }
-
-    return () => {
-      socket.disconnect();
-    };
-  });
-
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const response = await fetch("/api/users/userList");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      }
-    }
-
-    fetchUsers();
   }, []);
 
   useEffect(() => {
-    async function fetchTasks() {
-      try {
-        const response = await fetch("/api/tasks");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tasks");
-        }
-        const data = await response.json();
-        // Stellen Sie sicher, dass die Daten im erwarteten Format vorliegen
-        // und passen Sie sie gegebenenfalls an Ihren Zustand an
-        const formattedTasks = data.map((task) => ({
-          id: task.id,
-          title: task.title,
-          status: task.status,
-          editor: task.editor,
-          description: task.description,
-          subtasks: task.subtasks.split(",").map((subtask) => subtask.trim()), // Konvertiere die subtasks-Zeichenfolge in ein Array
-          subtaskschecked: task.subtaskschecked
-            .split(",")
-            .map((checked) => checked.trim() === "true"), // Konvertiere die subtaskschecked-Zeichenfolge in ein Array von booleschen Werten
-          creator: task.creator,
-          created: task.created,
-          position: task.position,
-        }));
-        setTasks(formattedTasks);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
+    if (socket.connected) {
+      onConnect();
     }
+  }, [socket.connected]);
 
-    fetchTasks();
-  }, []);
+  function onConnect() {
+    setIsConnected(true);
+    setTransport(socket.io.engine.transport.name);
+
+    socket.io.engine.on("upgrade", (transport) => {
+      setTransport(transport.name);
+    });
+  }
+
+  function onDisconnect() {
+    setIsConnected(false);
+    setTransport("N/A");
+  }
+
+  async function fetchTasksAndUpdateState() {
+    const tasksData = await fetchTasks();
+    setTasks(tasksData);
+  }
+
+  async function fetchColumnsAndUpdateState() {
+    const columnsData = await fetchColumns();
+    setColumns(columnsData);
+  }
+
+  async function checkSession() {
+    const sessionData = await getSession();
+    setSession(sessionData);
+  }
 
   function openTaskDetail(taskId) {
     setTaskDetailId(taskId);
@@ -238,7 +150,6 @@ export default function Kanban() {
 
   async function deleteTask(taskId) {
     try {
-      // Make the DELETE request to delete the task
       const response = await fetch("/api/tasks", {
         method: "DELETE",
         headers: {
@@ -250,16 +161,13 @@ export default function Kanban() {
       if (response.ok) {
         setTaskDetailModalOpen(false);
         setTaskDetailId(null);
-        const newTaskslist = tasks.filter((task) => task.id != taskId);
-        setTasks([...newTaskslist]);
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
         socket.emit("newTask", "Hello Server");
       } else {
         console.error("Failed to delete task:", response.status);
-        // Handle error
       }
     } catch (error) {
       console.error("Failed to delete task:", error);
-      // Handle error
     }
   }
 
@@ -288,7 +196,6 @@ export default function Kanban() {
         created: formatDateForMySQL(changeTask.created), // Format the created date
       };
 
-      // Make the PUT request to update the task
       const response = await fetch("/api/tasks", {
         method: "PATCH",
         headers: {
@@ -298,17 +205,16 @@ export default function Kanban() {
       });
 
       if (response.ok) {
-        const newTaskslist = tasks.map((task) => (task.id === changeTask.id ? changeTask : task));
-        setTasks([...newTaskslist]);
+        setTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === changeTask.id ? changeTask : task))
+        );
         socket.emit("newTask", "Hello Server");
         closeTaskEdit();
       } else {
         console.error("Failed to update task:", response.status);
-        // Handle error
       }
     } catch (error) {
       console.error("Failed to update task:", error);
-      // Handle error
     }
   }
 
@@ -361,13 +267,9 @@ export default function Kanban() {
     // Reconstruct the final tasks array
     const finalTasks = [...filteredUpdatedTasks, ...destinationTasksWithOut];
 
-    let finalTasksSorted = finalTasks.map((task, index) => {
-      return { ...task, position: index };
-    });
+    let finalTasksSorted = finalTasks.map((task, index) => ({ ...task, position: index }));
 
     setTasks([...finalTasksSorted]);
-
-    //-----------------------------------------------------------
 
     const finalTasksSortedSQL = finalTasksSorted.map((task) => {
       return {
@@ -376,8 +278,6 @@ export default function Kanban() {
         subtaskschecked: task.subtaskschecked.join(", "),
       };
     });
-
-    //-----------------------------------------------------------
 
     // Update the task status in the database
     try {
@@ -416,7 +316,6 @@ export default function Kanban() {
         position: tasks.length,
       };
 
-      // Sende die POST-Anfrage an die API mit dem neuen Aufgabenobjekt
       const response = await fetch("/api/tasks", {
         method: "POST",
         headers: {
@@ -435,15 +334,12 @@ export default function Kanban() {
           closeAddNewTask();
         } else {
           console.error("Failed to add task: Response does not contain insertId");
-          // Handle error
         }
       } else {
         console.error("Failed to add task:", response.status);
-        // Handle error
       }
     } catch (error) {
       console.error("Failed to add task:", error);
-      // Handle error
     }
   }
 
@@ -456,11 +352,6 @@ export default function Kanban() {
     if (!title) return;
 
     try {
-      console.log("Add new Column", {
-        title,
-        position: columns.length,
-        creator: session.user.name,
-      });
       const response = await fetch("/api/columns", {
         method: "POST",
         headers: {
@@ -521,11 +412,14 @@ export default function Kanban() {
     setColumnToRename(null);
   }
 
+  if (!tasks || !columns || !users) {
+    return <p>Loading</p>;
+  }
+
   return (
     <>
       <h1>ToDo</h1>
       <AddButton onClick={() => setNewTaskModalOpen(true)}>Neuer Eintrag</AddButton>
-
       <DragDropContext onDragEnd={handleDragEnd}>
         <KanbanBoard>
           {columns.map((column) => (
@@ -552,6 +446,7 @@ export default function Kanban() {
           session={session}
         />
       )}
+
       {taskDetailModalOpen && (
         <TaskCardDetail
           task={tasks.find((task) => task.id == taskDetailId)}
@@ -561,6 +456,7 @@ export default function Kanban() {
           handleEditTask={editTask}
         />
       )}
+
       {taskEditMode && (
         <TaskCardEdit
           task={tasks.find((task) => task.id == taskDetailId)}
@@ -569,6 +465,7 @@ export default function Kanban() {
           handleEditTask={editTask}
         />
       )}
+
       {renameColumnModalOpen && (
         <RenameColumnModal
           column={columnToRename}
