@@ -1,6 +1,35 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
 
+/**
+  CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(20) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    editor VARCHAR(50) NOT NULL,
+    description TEXT,
+    subtasks TEXT,
+    subtaskschecked TEXT,
+    creator VARCHAR(50),
+    created VARCHAR(50),
+    position INT 
+  );
+
+  CREATE TABLE tasksdeleted (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(20) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    editor VARCHAR(50) NOT NULL,
+    description TEXT,
+    subtasks TEXT,
+    subtaskschecked TEXT,
+    creator VARCHAR(50),
+    created VARCHAR(50),
+    deleted_by VARCHAR(50);
+    deleted_at DATETIME;
+  );
+ */
+
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -64,15 +93,56 @@ export async function PATCH(req) {
 }
 
 export async function DELETE(req) {
-  const { id } = await req.json();
+  const { id, deletedBy } = await req.json();
 
-  if (!id) {
-    return NextResponse.json({ message: "Task ID is required" }, { status: 400 });
+  if (!id || !deletedBy) {
+    return NextResponse.json({ message: "Task ID and deletedBy are required" }, { status: 400 });
   }
 
   try {
-    await connection.query("DELETE FROM tasks WHERE id = ?", [id]);
-    return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 });
+    const conn = await connection.getConnection();
+
+    try {
+      await conn.beginTransaction();
+
+      // Get the task to be deleted
+      const [taskRows] = await conn.query("SELECT * FROM tasks WHERE id = ?", [id]);
+      if (taskRows.length === 0) {
+        throw new Error("Task not found");
+      }
+      const task = taskRows[0];
+
+      // Insert the task into tasksdeleted with deleted_by and deleted_at
+      await conn.query(
+        "INSERT INTO tasksdeleted (id, title, status, editor, description, subtasks, subtaskschecked, creator, created, deleted_by, deleted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          task.id,
+          task.title,
+          task.status,
+          task.editor,
+          task.description,
+          task.subtasks,
+          task.subtaskschecked,
+          task.creator,
+          task.created,
+          deletedBy,
+          new Date(), // current timestamp
+        ]
+      );
+
+      // Delete the task from tasks
+      await conn.query("DELETE FROM tasks WHERE id = ?", [id]);
+
+      await conn.commit();
+      conn.release();
+
+      return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 });
+    } catch (error) {
+      await conn.rollback();
+      conn.release();
+      console.error(error);
+      return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

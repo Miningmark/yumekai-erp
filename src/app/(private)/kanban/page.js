@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import Column from "@/components/kanbanComponents/Column";
@@ -10,7 +10,7 @@ import TaskCardEdit from "@/components/kanbanComponents/TaskCardEdit";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import RenameColumnModal from "@/components/kanbanComponents/RenameColumnModal";
 import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/kanban/loadContent";
-import { getSession, login, logout } from "@/lib/cockietest";
+import { getSession } from "@/lib/cockietest";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
 
@@ -40,6 +40,7 @@ const KanbanBoard = styled.div`
   gap: 20px;
   max-width: 100%;
   overflow-x: auto;
+  padding-bottom: 10px;
 `;
 
 const AddButton = styled(GreenButton)`
@@ -157,7 +158,7 @@ export default function Kanban() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: taskId }),
+        body: JSON.stringify({ id: taskId, deletedBy: session.user.name }),
       });
 
       if (response.ok) {
@@ -310,12 +311,14 @@ export default function Kanban() {
       const subtasksString = newTask.subtasks.join(", ");
       const subtasksCheckedString = newTask.subtaskschecked.join(", ");
 
+      const highestTaskPosition = tasks.reduce((max, task) => Math.max(max, task.position), 0);
+
       // Erstelle ein neues Aufgabenobjekt mit den konvertierten Zeichenfolgen
       const taskToAdd = {
         ...newTask,
         subtasks: subtasksString,
         subtaskschecked: subtasksCheckedString,
-        position: tasks.length,
+        position: highestTaskPosition + 1,
       };
 
       const response = await fetch("/api/tasks", {
@@ -331,7 +334,10 @@ export default function Kanban() {
         const responseData = await response.json();
         // Überprüfe, ob die Antwort die ID des neu erstellten Tasks enthält
         if (responseData && responseData.insertId) {
-          setTasks([...tasks, { ...newTask, id: responseData.insertId }]);
+          setTasks([
+            ...tasks,
+            { ...newTask, position: highestTaskPosition + 1, id: responseData.insertId },
+          ]);
           socket.emit("newTask", "Hello Server");
           closeAddNewTask();
         } else {

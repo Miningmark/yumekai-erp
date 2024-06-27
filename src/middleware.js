@@ -13,7 +13,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req) {
   const session = await getSession();
 
-  console.log("session from middleware", session);
+  //console.log("session from middleware", session);
 
   const url = req.nextUrl.clone();
   const route = url.pathname;

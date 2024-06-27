@@ -46,6 +46,10 @@ export default function AddNewTask({
       setError("Bitte geben Sie einen Titel ein.");
       return;
     }
+    if (title.length > 20) {
+      setError("Bitte geben Sie einen kürzeren Titel ein.");
+      return;
+    }
 
     if (!column) {
       setError("Bitte wählen Sie einen Spalte aus.");
@@ -101,7 +105,7 @@ export default function AddNewTask({
           onChange={(e) => setTitle(e.target.value)}
           maxLength={21}
         />
-        <CharacterCount $tooLong={title.length > 25 ? "var(--danger)" : "var(--dark)"}>
+        <CharacterCount $tooLong={title.length > 20 ? "var(--danger)" : "var(--dark)"}>
           {title.length}/20 Zeichen
         </CharacterCount>
         <ModalImputTitle>Beschreibung</ModalImputTitle>

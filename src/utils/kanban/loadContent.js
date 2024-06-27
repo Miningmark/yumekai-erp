@@ -24,8 +24,12 @@ export async function fetchTasks() {
       status: task.status,
       editor: task.editor,
       description: task.description,
-      subtasks: task.subtasks.split(",").map((subtask) => subtask.trim()), // Konvertiere die subtasks-Zeichenfolge in ein Array
-      subtaskschecked: task.subtaskschecked.split(",").map((checked) => checked.trim() === "true"), // Konvertiere die subtaskschecked-Zeichenfolge in ein Array von booleschen Werten
+      subtasks:
+        task.subtasks.length == 0 ? [] : task.subtasks.split(",").map((subtask) => subtask.trim()), // Konvertiere die subtasks-Zeichenfolge in ein Array
+      subtaskschecked:
+        task.subtaskschecked.length == 0
+          ? []
+          : task.subtaskschecked.split(",").map((checked) => checked.trim() === "true"), // Konvertiere die subtaskschecked-Zeichenfolge in ein Array von booleschen Werten
       creator: task.creator,
       created: task.created,
       position: task.position,

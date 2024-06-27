@@ -41,6 +41,10 @@ export default function TaskCardEdit({ task, handleCloseTaskEdit, handleEditTask
       setError("Bitte geben Sie einen Titel ein.");
       return;
     }
+    if (editTask.title.length > 20) {
+      setError("Bitte geben Sie einen kürzeren Titel ein.");
+      return;
+    }
 
     if (editTask.subtasks.some((subtask) => !subtask.trim())) {
       setError("Teilaufgaben dürfen nicht leer sein.");
@@ -69,7 +73,7 @@ export default function TaskCardEdit({ task, handleCloseTaskEdit, handleEditTask
             onChange={handleInputChange}
             maxLength={21}
           />
-          <CharacterCount $tooLong={editTask.title.length > 25 ? "var(--danger)" : "var(--dark)"}>
+          <CharacterCount $tooLong={editTask.title.length > 20 ? "var(--danger)" : "var(--dark)"}>
             {editTask.title.length}/20 Zeichen
           </CharacterCount>
           <ModalImputTitle>Beschreibung</ModalImputTitle>
