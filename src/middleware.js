@@ -8,8 +8,6 @@ import {
   DEFAULT_REDIRECT_FORBIDDEN_URL,
 } from "@/routes";
 
-const secret = process.env.NEXTAUTH_SECRET;
-
 export async function middleware(req) {
   const session = await getSession();
 

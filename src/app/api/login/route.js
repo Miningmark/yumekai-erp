@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 
-import { getSession, login, logout, setSession } from "@/lib/cockietest";
+import { getSession, login, logout, setSession } from "@/lib/cockieFunctions";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,

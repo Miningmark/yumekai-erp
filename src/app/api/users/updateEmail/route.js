@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/cockietest";
+import { getSession } from "@/lib/cockieFunctions";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
