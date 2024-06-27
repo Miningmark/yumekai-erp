@@ -1,11 +1,21 @@
 "use client";
 
 import styled from "styled-components";
-import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
-import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getSession, login, logout } from "@/lib/cockietest";
+
+import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import {
+  LoginIconButton,
+  LoginLabel,
+  LoginInput,
+  LoginInputWrapper,
+} from "@/components/styledComponents/LoginComponents";
+
+// Import SVG icons
+import IconVisible from "/public/assets/icons/visibility.svg";
+import IconVisibleOff from "/public/assets/icons/visibility_off.svg";
 
 const PageBackground = styled.div`
   display: flex;
@@ -17,19 +27,6 @@ const PageBackground = styled.div`
 
 const Section = styled.div`
   margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  max-width: 400px;
-  box-sizing: border-box;
 `;
 
 const LoginList = styled.ul`
@@ -59,6 +56,50 @@ const ChangeSection = styled.section`
   width: 220px;
 `;
 
+const ToggleButton = styled.button`
+  margin-left: 10px;
+  padding: 6px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: var(--dark);
+`;
+
+const PasswordRequirement = styled.div`
+  color: ${(props) => props.$requirement};
+  font-size: 0.9em;
+`;
+
+const PasswordRequirements = ({ password }) => {
+  const requirements = [
+    {
+      text: "min. 8 Zeichen lang",
+      requirement: password.length >= 8,
+    },
+    {
+      text: "min. 1 Sonderzeichen ",
+      requirement: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    },
+    {
+      text: "min. 1 Zahl",
+      requirement: /\d/.test(password),
+    },
+  ];
+
+  return (
+    <div>
+      {requirements.map((req, index) => (
+        <PasswordRequirement
+          key={index}
+          $requirement={req.requirement ? "var(--success)" : "var(--danger)"}
+        >
+          {req.text}
+        </PasswordRequirement>
+      ))}
+    </div>
+  );
+};
+
 export default function Home() {
   const [session, setSession] = useState({});
   const [email, setEmail] = useState("");
@@ -66,6 +107,9 @@ export default function Home() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [logins, setLogins] = useState([]);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
@@ -78,7 +122,6 @@ export default function Home() {
 
     checkSession();
   }, []);
-  console.log("session from profile page: ", session);
 
   useEffect(() => {
     if (session && session.user && session.user.lastlogins) {
@@ -166,6 +209,10 @@ export default function Home() {
     }
   };
 
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <PageBackground>
       <h1>Profil</h1>
@@ -174,42 +221,79 @@ export default function Home() {
           <h2>E-Mail ändern</h2>
           <form onSubmit={handleEmailSubmit}>
             <div>
-              <Label htmlFor="email">E-Mail</Label>
-              <Input type="email" id="email" value={email} onChange={handleEmailChange} />
+              <LoginLabel htmlFor="email">E-Mail</LoginLabel>
+              <LoginInput type="email" id="email" value={email} onChange={handleEmailChange} />
             </div>
+            <br />
             <GreenButton type="submit">E-Mail ändern</GreenButton>
           </form>
         </ChangeSection>
+
         <ChangeSection>
           <h2>Passwort ändern</h2>
           <form onSubmit={handlePasswordSubmit}>
             <div>
-              <Label htmlFor="currentPassword">Aktuelles Passwort</Label>
-              <Input
-                type="password"
-                id="currentPassword"
-                value={currentPassword}
-                onChange={handleCurrentPasswordChange}
-              />
+              <LoginLabel htmlFor="currentPassword">Aktuelles Passwort</LoginLabel>
+              <LoginInputWrapper>
+                <LoginInput
+                  type={showOldPassword ? "text" : "password"}
+                  id="currentPassword"
+                  value={currentPassword}
+                  onChange={handleCurrentPasswordChange}
+                />
+                <LoginIconButton
+                  type="button"
+                  onClick={() => {
+                    setShowOldPassword(!showOldPassword);
+                  }}
+                >
+                  {showOldPassword ? <IconVisibleOff /> : <IconVisible />}
+                </LoginIconButton>
+              </LoginInputWrapper>
             </div>
+            <br />
             <div>
-              <Label htmlFor="newPassword">Neues Passwort</Label>
-              <Input
-                type="password"
-                id="newPassword"
-                value={newPassword}
-                onChange={handleNewPasswordChange}
-              />
+              <LoginLabel htmlFor="newPassword">Neues Passwort</LoginLabel>
+              <LoginInputWrapper>
+                <LoginInput
+                  type={showPassword ? "text" : "password"}
+                  id="newPassword"
+                  value={newPassword}
+                  onChange={handleNewPasswordChange}
+                />
+                <LoginIconButton
+                  type="button"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
+                  {showPassword ? <IconVisibleOff /> : <IconVisible />}
+                </LoginIconButton>
+              </LoginInputWrapper>
+              <PasswordRequirements password={newPassword} />
             </div>
+            <br />
+
             <div>
-              <Label htmlFor="confirmNewPassword">Neues Passwort bestätigen</Label>
-              <Input
-                type="password"
-                id="confirmNewPassword"
-                value={confirmNewPassword}
-                onChange={handleConfirmNewPasswordChange}
-              />
+              <LoginLabel htmlFor="confirmNewPassword">Neues Passwort bestätigen</LoginLabel>
+              <LoginInputWrapper>
+                <LoginInput
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmNewPassword"
+                  value={confirmNewPassword}
+                  onChange={handleConfirmNewPasswordChange}
+                />
+                <LoginIconButton
+                  type="button"
+                  onClick={() => {
+                    setShowConfirmPassword(!showConfirmPassword);
+                  }}
+                >
+                  {showConfirmPassword ? <IconVisibleOff /> : <IconVisible />}
+                </LoginIconButton>
+              </LoginInputWrapper>
             </div>
+            <br />
             <GreenButton type="submit">Passwort ändern</GreenButton>
           </form>
         </ChangeSection>

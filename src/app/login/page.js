@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
-
-import { getSession, login, logout } from "@/lib/cockietest";
 import { redirect } from "next/navigation";
+
+import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
+import {
+  LoginIconButton,
+  LoginLabel,
+  LoginInput,
+  LoginInputWrapper,
+} from "@/components/styledComponents/LoginComponents";
+
+// Import SVG icons
+import IconVisible from "/public/assets/icons/visibility.svg";
+import IconVisibleOff from "/public/assets/icons/visibility_off.svg";
 
 const ContainerBgmLogin = styled.div`
   display: flex;
@@ -25,9 +34,14 @@ const LoginError = styled.p`
   color: var(--danger);
   text-align: center;
 `;
+const PageInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default function Login() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [name, setName] = useState("");
@@ -37,12 +51,9 @@ export default function Login() {
     event.preventDefault();
 
     if (name.trim() === "" || password.trim() === "") {
-      setErrorMessage("Please fill in both fields.");
+      setErrorMessage("Bitte geben Sie ihren Benutzernamen und Password an.");
       return;
     }
-
-    const loginUrl = process.env.NEXTAUTH_URL + "/api/login";
-    console.log("nextauth_url from login page: ", loginUrl);
 
     const response = await fetch("/api/login", {
       method: "POST",
@@ -59,50 +70,45 @@ export default function Login() {
      */
 
     if (response.ok) {
-      console.log("Richtiger Login from login page");
       router.push("/dashboard");
     } else {
       setErrorMessage("Incorrect Username or Password");
-      console.log("response from loginpage error", response);
+      console.error("response from loginpage", response);
     }
-
-    /*
-    const response = await login({ name: name, password: password });
-    console.log("response from login", response);
-    if (response) {
-      router.push("/dashboard");
-      //redirect("/dashboard");
-    } else {
-      setErrorMessage("Incorrect Username or Password");
-      console.log("response from loginpage error", response);
-    }
-      */
   }
 
   return (
     <ContainerBgmLogin>
       <h1>Login Page</h1>
-      <h3>afgagfaf</h3>
-      <div>
-        <label htmlFor="username">Username: </label>
-        <input
+      <PageInputWrapper>
+        <LoginLabel htmlFor="username">Username: </LoginLabel>
+        <LoginInput
           type="text"
           name="username"
           onChange={(e) => setName(e.target.value)}
           value={name}
           required
         />
-      </div>
-      <div>
-        <label htmlFor="password">Password: </label>
-        <input
-          type="password"
-          name="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          required
-        />
-      </div>
+      </PageInputWrapper>
+      <PageInputWrapper>
+        <LoginLabel htmlFor="password">Password: </LoginLabel>
+        <LoginInputWrapper>
+          <LoginInput
+            type={showPassword ? "text" : "password"}
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <LoginIconButton
+            type="button"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+          >
+            {showPassword ? <IconVisibleOff /> : <IconVisible />}
+          </LoginIconButton>
+        </LoginInputWrapper>
+      </PageInputWrapper>
 
       {errorMessage && <LoginError>{errorMessage}</LoginError>}
 
