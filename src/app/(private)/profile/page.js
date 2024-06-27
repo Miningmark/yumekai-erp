@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSession, login, logout } from "@/lib/cockietest";
+import { getSession, login, logout } from "@/lib/cockieFunctions";
 
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import {

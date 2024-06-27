@@ -9,7 +9,7 @@ import {
 } from "@/components/styledComponents/StyledButton";
 import { useState, useEffect, useRef } from "react";
 
-import { getSession, login, logout } from "@/lib/cockietest";
+import { getSession, login, logout } from "@/lib/cockieFunctions";
 import CharacterCount from "@/components/styledComponents/CharacterCount";
 import {
   ModalOverlay,

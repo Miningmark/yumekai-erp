@@ -7,7 +7,7 @@ import { StyledButton, GreenButton, RedButton } from "@/components/styledCompone
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { getSession } from "@/lib/cockietest";
+import { getSession } from "@/lib/cockieFunctions";
 
 import yumekaiLogo from "/public/assets/images/yumekai_512px.png";
 

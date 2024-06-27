@@ -27,68 +27,6 @@ export async function decrypt(input) {
   }
 }
 
-export async function login(data) {
-  console.log("formdata from cockietest", data);
-  /*
-
-  const answer = await test(data);
-  console.log("answer from cockietest: ", answer);
-
-  if (data.name == "admin" && data.password == "Admin123!") {
-    console.log("Login erfolgreich");
-    // Create the session
-    const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-    const user = {
-      role: "admin",
-      email: "admin123@test.de",
-      name: "admin",
-      id: 1,
-      lastlogins: [
-        " 24.06.2024 16:41:42;::1 ",
-        " 24.06.2024 16:36:05;::1 ",
-        " 24.06.2024 16:18:13;::1 ",
-        " 24.06.2024 15:45:07;::1 ",
-        " 24.06.2024 15:30:42;::1 ",
-      ],
-    };
-    const session = await encrypt({ user, expires });
-
-    // Save the session in a cookie
-    cookies().set("session", session, { expires, httpOnly: true });
-
-    return true;
-  }
-    */
-  /*
-  const response = await fetch(loginUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Referrer-Policy": "no-referrer-when-downgrade",
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (response.ok) {
-    console.log("Richtiger Login from cockietest");
-    const user = await response.json();
-    console.log("user from cockietest: ", user);
-
-    // Create the session
-    const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-    const session = await encrypt({ user, expires });
-
-    // Save the session in a cookie
-    cookies().set("session", session, { expires, httpOnly: true });
-
-    return true;
-  } else {
-    console.log("response error from cockietest", response);
-    return false;
-  }
-    */
-}
-
 export async function setSession(user) {
   console.log("user from cockietest", user);
   const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);

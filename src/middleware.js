@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getSession, login, logout } from "@/lib/cockietest";
+import { getSession, login, logout } from "@/lib/cockieFunctions";
 import {
   privateRoutes,
   authRoutes,

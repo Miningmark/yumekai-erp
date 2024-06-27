@@ -10,7 +10,7 @@ import TaskCardEdit from "@/components/kanbanComponents/TaskCardEdit";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import RenameColumnModal from "@/components/kanbanComponents/RenameColumnModal";
 import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/kanban/loadContent";
-import { getSession } from "@/lib/cockietest";
+import { getSession } from "@/lib/cockieFunctions";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
 
