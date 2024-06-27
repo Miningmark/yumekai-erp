@@ -19,7 +19,6 @@ export const ModalOverlay = styled.div`
 export const ModalInputField = styled.input`
   display: block;
   width: 90%;
-  margin-bottom: 10px;
 `;
 
 export const ModalTextArea = styled.textarea`
@@ -87,4 +86,14 @@ export const ModalCloseIcon = styled(IconClose)`
 
 export const ModalImputTitle = styled.p`
   margin-bottom: 5px;
+`;
+
+export const ModalInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  gap: 5px;
 `;

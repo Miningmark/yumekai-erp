@@ -43,9 +43,9 @@ export const GlobalStyles = createGlobalStyle`
         text-align: center;
         margin: 0;
         padding-top: 25px;
-        color: var(--primary-color);
+        color: var(--secondary-color);
     }
     h2{
-        color: var(--primary-color);
+        color: var(--secondary-color);
     }
 `;
