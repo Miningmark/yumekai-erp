@@ -6,6 +6,7 @@ export const privateRoutes = [
   { path: "/changelog", roles: ["user", "orga", "admin"] },
   { path: "/commingSoon", roles: ["user", "orga", "admin"] },
   { path: "/bugReport", roles: ["user", "orga", "admin"] },
+  { path: "/survey", roles: ["user", "orga", "admin"] },
 ];
 
 export const authRoutes = ["/login", "/test/auth/signin"];

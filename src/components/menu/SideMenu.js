@@ -16,6 +16,7 @@ import Icon4 from "/public/assets/icons/admin_panel.svg";
 import Icon5 from "/public/assets/icons/change_history.svg";
 import Icon6 from "/public/assets/icons/newspaper.svg";
 import Icon7 from "/public/assets/icons/report.svg";
+import Icon8 from "/public/assets/icons/query_stats.svg";
 import LogoutIcon from "/public/assets/icons/logout.svg";
 
 const Sidebar = styled.div`
@@ -243,6 +244,13 @@ export default function SideMenu({ sideMenuOpen }) {
             </SideMenuLink>
           </SideMenuItem>
         )}
+
+        <SideMenuItem className={pathname === "/survey" ? "active" : ""}>
+          <SideMenuLink href="/survey">
+            <Icon8 />
+            YumeKai Umfrage
+          </SideMenuLink>
+        </SideMenuItem>
 
         <SideMenuItem className={pathname === "/changelog" ? "active" : ""}>
           <SideMenuLink href="/changelog">

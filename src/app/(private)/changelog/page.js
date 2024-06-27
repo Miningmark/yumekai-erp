@@ -41,6 +41,7 @@ export default function Changelog() {
           <li>Add Changelog</li>
           <li>Add Comming Soon</li>
           <li>Add Bug Report</li>
+          <li>Add YumeKai Umfrage Auswertung</li>
         </ul>
       </LogContainer>
     </LogBackground>
