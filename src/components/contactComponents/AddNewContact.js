@@ -86,7 +86,10 @@ function InputOptionSelect({ title, options, selectedOption, onChange }) {
   return (
     <>
       <DropdownContainer>
-        <DropdownButton onClick={handleDropdownClick}>
+        <DropdownButton
+          onClick={handleDropdownClick}
+          $dropdownopen={isOpen ? `var(--secondary-color)` : `var(--dark)`}
+        >
           {selectedOption ? selectedOption : "-- Auswahl --"}
         </DropdownButton>
         {isOpen && (

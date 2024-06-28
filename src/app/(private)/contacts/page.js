@@ -2,13 +2,59 @@
 
 import { useState, useEffect } from "react";
 import AddNewContact from "@/components/contactComponents/AddNewContact";
+import styled from "styled-components";
 
+const ContactTabBackground = styled.div`
+  width: calc(100% -40px);
+  height: calc(100vh -158px);
+  margin: 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: red;
+`;
+
+const ContactTabList = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const ContactTabButton = styled.div`
+  width: 150px;
+  height: 30px;
+  background-color: blue;
+  border: solid 2px green;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: lightblue;
+    border: solid 2px lightgreen;
+    transition: 0.5s;
+  }
+`;
+
+const ContactTabCard = styled.div`
+  width: calc(100% - 20px);
+  height: 100%;
+  overflow: auto;
+  background-color: var(--light);
+  color: var(--dark);
+  padding: 10px;
+`;
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newContact, setNewContact] = useState(null);
+  const [activTab, setActivTab] = useState(0);
 
   useEffect(() => {
     async function fetchContacts() {
@@ -54,6 +100,51 @@ export default function Contacts() {
   }
 
   console.log("contacts", contacts);
+
+  function changeTab(tabNumber) {
+    setActivTab(tabNumber);
+  }
+
+  return (
+    <>
+      <h1>Kontakte</h1>
+      <button onClick={() => setShowModal(true)}>Add Contact</button>
+      <ContactTabBackground>
+        <ContactTabList>
+          <ContactTabButton onClick={() => changeTab(0)}>Händler</ContactTabButton>
+          <ContactTabButton onClick={() => changeTab(1)}>Künstler</ContactTabButton>
+          <ContactTabButton onClick={() => changeTab(2)}>Showacts</ContactTabButton>
+          <ContactTabButton onClick={() => changeTab(3)}>Helfer</ContactTabButton>
+        </ContactTabList>
+        {activTab == 0 && (
+          <ContactTabCard>
+            <p>Händler</p>
+          </ContactTabCard>
+        )}
+        {activTab == 1 && (
+          <ContactTabCard>
+            <p>Künstler</p>
+          </ContactTabCard>
+        )}
+        {activTab == 2 && (
+          <ContactTabCard>
+            <p>Showacts</p>
+          </ContactTabCard>
+        )}
+        {activTab == 3 && (
+          <ContactTabCard>
+            <p>Helfer</p>
+          </ContactTabCard>
+        )}
+      </ContactTabBackground>
+      {showModal && (
+        <AddNewContact
+          handleCloseAddContactTask={() => setShowModal(false)}
+          handleAddContact={handleAddContact}
+        />
+      )}
+    </>
+  );
 
   return (
     <>

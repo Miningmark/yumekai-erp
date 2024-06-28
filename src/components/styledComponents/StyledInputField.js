@@ -76,7 +76,7 @@ export const DropdownLabel = styled.label`
   left: 0;
   top: 0;
   padding: 0 4px;
-  margin: 12px 4px;
+  margin: 14px 4px;
   white-space: nowrap;
   transform: translate(0, 0);
   transform-origin: 0 0;
@@ -114,7 +114,7 @@ export const DropdownButton = styled.div`
   box-sizing: border-box;
   display: block;
   width: 100%;
-  border: 2px solid var(--dark);
+  border: 2px solid ${(prop) => prop.$dropdownopen};
   padding: 12px 8px;
   background: transparent;
   border-radius: 4px;
