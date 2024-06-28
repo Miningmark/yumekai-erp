@@ -118,7 +118,49 @@ export default function Contacts() {
         </ContactTabList>
         {activTab == 0 && (
           <ContactTabCard>
-            <p>Händler</p>
+            <h3>Händler</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Name</th>
+                  <th>Firma/Verein Name</th>
+                  <th>E-Mail</th>
+                  <th>Telefon</th>
+                  <th>Webseite</th>
+                  <th>Instagram</th>
+                  <th>PLZ</th>
+                  <th>City</th>
+                  <th>Street</th>
+                  <th>House Number</th>
+                  <th>Land</th>
+                  <th>Contact By</th>
+                  <th>Notes</th>
+                  <th>Previous Collaboration</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredContacts.map((contact, index) => (
+                  <tr key={index}>
+                    <td>{contact.category}</td>
+                    <td>{contact.name}</td>
+                    <td>{contact.company}</td>
+                    <td>{contact.email}</td>
+                    <td>{contact.phone}</td>
+                    <td>{contact.website}</td>
+                    <td>{contact.instagram}</td>
+                    <td>{contact.plz}</td>
+                    <td>{contact.city}</td>
+                    <td>{contact.street}</td>
+                    <td>{contact.country}</td>
+                    <td>{contact.house_number}</td>
+                    <td>{contact.contact_by}</td>
+                    <td>{contact.notes}</td>
+                    <td>{contact.previous_collaboration}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </ContactTabCard>
         )}
         {activTab == 1 && (
