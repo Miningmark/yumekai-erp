@@ -84,21 +84,24 @@ function InputOptionSelect({ title, options, selectedOption, onChange }) {
   };
 
   return (
-    <DropdownContainer>
-      <DropdownButton onClick={handleDropdownClick}>
-        {selectedOption ? selectedOption : "Select an option"}
-      </DropdownButton>
-      {isOpen && (
-        <DropdownMenu>
-          {options.map((option) => (
-            <DropdownItem key={option} onClick={() => handleOptionClick(option)}>
-              {option}
-            </DropdownItem>
-          ))}
-        </DropdownMenu>
-      )}
-      <DropdownLabel>{title}</DropdownLabel>
-    </DropdownContainer>
+    <>
+      <DropdownContainer>
+        <DropdownButton onClick={handleDropdownClick}>
+          {selectedOption ? selectedOption : "Select an option"}
+        </DropdownButton>
+        {isOpen && (
+          <DropdownMenu>
+            {options.map((option) => (
+              <DropdownItem key={option} onClick={() => handleOptionClick(option)}>
+                {option}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        )}
+        <DropdownLabel>{title}</DropdownLabel>
+      </DropdownContainer>
+      <br />
+    </>
   );
   /*
   return (
@@ -181,6 +184,7 @@ const categories = [
   "Workshop",
   "Verein",
   "Cosplayer",
+  "Helfer",
 ];
 
 export default function AddNewContact({ handleCloseAddContactTask, handleAddContact }) {
@@ -250,7 +254,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
           inputText={company}
           inputChange={setCompany}
         />
-        <InputOptionInput title={"Email"} inputText={email} inputChange={setEmail} />
+        <InputOptionInput title={"E-Mail"} inputText={email} inputChange={setEmail} />
         <InputOptionInput title={"Telefon"} inputText={phone} inputChange={setPhone} />
         <InputOptionInput title={"Webseite"} inputText={website} inputChange={setWebsite} />
         <InputOptionInput title={"Instagram"} inputText={instagram} inputChange={setInstagram} />

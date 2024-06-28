@@ -104,7 +104,6 @@ export const DropdownField = styled.select`
 */
 export const DropdownContainer = styled.div`
   position: relative;
-  margin: 20px 0;
 `;
 
 export const DropdownButton = styled.div`

@@ -80,8 +80,8 @@ export async function POST(req) {
       category ?? null,
     ];
 
-    if (!name) {
-      return NextResponse.json({ message: "Name is required" }, { status: 400 });
+    if (!name || !category) {
+      return NextResponse.json({ message: "Name and Category are required" }, { status: 400 });
     }
 
     const [result] = await connection.execute(

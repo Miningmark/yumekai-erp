@@ -32,6 +32,17 @@ export default function Changelog() {
     <LogBackground>
       <h1>Changelog</h1>
       <LogContainer>
+        <h2>Add new Pages and Functions</h2>
+        <VersionsNumber>V 0.2</VersionsNumber>
+        <ul>
+          <li>Add Contact Page</li>
+          <li>Add Password show Buttons</li>
+          <li>Add Password guidelines</li>
+          <li>Add Delete subtasks when creating a task</li>
+          <li>Fix Tasks without subtasks suddenly have 1 subtask</li>
+        </ul>
+      </LogContainer>
+      <LogContainer>
         <h2>Initiale Version</h2>
         <VersionsNumber>V 0.1</VersionsNumber>
         <ul>

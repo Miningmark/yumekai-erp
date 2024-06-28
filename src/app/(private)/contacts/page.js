@@ -43,12 +43,13 @@ export default function Contacts() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newContact),
     });
-
+    const data = await response.json();
     if (response.ok) {
-      const data = await response.json();
-      setContacts([...contacts, data]);
-      setFilteredContacts([...contacts, data]);
+      setContacts([...contacts, newContact]);
+      setFilteredContacts([...contacts, newContact]);
       setShowModal(false);
+    } else {
+      console.error("Fehler beim Speichern des Kontakts. ", data);
     }
   }
 
@@ -62,8 +63,9 @@ export default function Contacts() {
       <table>
         <thead>
           <tr>
+            <th>Category</th>
             <th>Name</th>
-            <th>Firma/Verein</th>
+            <th>Firma/Verein Name</th>
             <th>E-Mail</th>
             <th>Telefon</th>
             <th>Webseite</th>
@@ -76,12 +78,12 @@ export default function Contacts() {
             <th>Contact By</th>
             <th>Notes</th>
             <th>Previous Collaboration</th>
-            <th>Category</th>
           </tr>
         </thead>
         <tbody>
-          {filteredContacts.map((contact) => (
-            <tr key={contact.id}>
+          {filteredContacts.map((contact, index) => (
+            <tr key={index}>
+              <td>{contact.category}</td>
               <td>{contact.name}</td>
               <td>{contact.company}</td>
               <td>{contact.email}</td>
@@ -96,50 +98,11 @@ export default function Contacts() {
               <td>{contact.contact_by}</td>
               <td>{contact.notes}</td>
               <td>{contact.previous_collaboration}</td>
-              <td>{contact.category}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {showModal && (
-        <div className="modal">
-          <h2>Add New Contact</h2>
-          <input type="text" name="name" placeholder="Name" onChange={handleInputChange} />
-          <input type="text" name="company" placeholder="Company" onChange={handleInputChange} />
-          <input type="email" name="email" placeholder="Email" onChange={handleInputChange} />
-          <input type="tel" name="phone" placeholder="Phone" onChange={handleInputChange} />
-          <input type="text" name="website" placeholder="Website" onChange={handleInputChange} />
-          <input
-            type="text"
-            name="instagram"
-            placeholder="Instagram"
-            onChange={handleInputChange}
-          />
-          <input type="text" name="city" placeholder="City" onChange={handleInputChange} />
-          <input type="text" name="street" placeholder="Street" onChange={handleInputChange} />
-          <input
-            type="text"
-            name="house_number"
-            placeholder="House Number"
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="contact_by"
-            placeholder="Contact By"
-            onChange={handleInputChange}
-          />
-          <textarea name="notes" placeholder="Notes" onChange={handleInputChange} />
-          <textarea
-            name="previous_collaboration"
-            placeholder="Previous Collaboration"
-            onChange={handleInputChange}
-          />
-          <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
-          <button onClick={handleAddContact}>Add</button>
-          <button onClick={() => setShowModal(false)}>Cancel</button>
-        </div>
-      )}
+
       {showModal && (
         <AddNewContact
           handleCloseAddContactTask={() => setShowModal(false)}
