@@ -48,6 +48,46 @@ const ContactTabCard = styled.div`
   color: var(--dark);
   padding: 10px;
 `;
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+`;
+
+const StyledTableHead = styled.thead`
+  th {
+    font-weight: bold;
+    border: 1px solid white;
+    padding: 8px;
+  }
+`;
+
+const StyledTableBody = styled.tbody`
+  td {
+    border: 1px solid white;
+    padding: 8px;
+  }
+`;
+
+const columns = [
+  "Category",
+  "Name",
+  "Firma/Verein Name",
+  "E-Mail",
+  "Telefon",
+  "Webseite",
+  "Instagram",
+  "PLZ",
+  "City",
+  "Street",
+  "House Number",
+  "Land",
+  "Contact By",
+  "Notes",
+  "Previous Collaboration",
+];
+
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,48 +159,24 @@ export default function Contacts() {
         {activTab == 0 && (
           <ContactTabCard>
             <h3>Händler</h3>
-            <table>
-              <thead>
+            <StyledTable>
+              <StyledTableHead>
                 <tr>
-                  <th>Category</th>
-                  <th>Name</th>
-                  <th>Firma/Verein Name</th>
-                  <th>E-Mail</th>
-                  <th>Telefon</th>
-                  <th>Webseite</th>
-                  <th>Instagram</th>
-                  <th>PLZ</th>
-                  <th>City</th>
-                  <th>Street</th>
-                  <th>House Number</th>
-                  <th>Land</th>
-                  <th>Contact By</th>
-                  <th>Notes</th>
-                  <th>Previous Collaboration</th>
+                  {columns.map((column, index) => (
+                    <th key={index}>{column}</th>
+                  ))}
                 </tr>
-              </thead>
-              <tbody>
+              </StyledTableHead>
+              <StyledTableBody>
                 {filteredContacts.map((contact, index) => (
                   <tr key={index}>
-                    <td>{contact.category}</td>
-                    <td>{contact.name}</td>
-                    <td>{contact.company}</td>
-                    <td>{contact.email}</td>
-                    <td>{contact.phone}</td>
-                    <td>{contact.website}</td>
-                    <td>{contact.instagram}</td>
-                    <td>{contact.plz}</td>
-                    <td>{contact.city}</td>
-                    <td>{contact.street}</td>
-                    <td>{contact.country}</td>
-                    <td>{contact.house_number}</td>
-                    <td>{contact.contact_by}</td>
-                    <td>{contact.notes}</td>
-                    <td>{contact.previous_collaboration}</td>
+                    {columns.map((column, colIndex) => (
+                      <td key={colIndex}>{contact[column.toLowerCase().replace(/\s/g, "_")]}</td>
+                    ))}
                   </tr>
                 ))}
-              </tbody>
-            </table>
+              </StyledTableBody>
+            </StyledTable>
           </ContactTabCard>
         )}
         {activTab == 1 && (
