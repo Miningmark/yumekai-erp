@@ -37,6 +37,7 @@ export const GlobalStyles = createGlobalStyle`
         font-family: Helvetica, sans-serif;
         display: flex;
         justify-content: center;
+        box-sizing: border-box;
     }
 
     h1{

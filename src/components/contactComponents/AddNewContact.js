@@ -20,7 +20,7 @@ import {
   InputField,
   InputArea,
   InputLabel,
-  Label,
+  InputWrapper,
   DropdownLabel,
   DropdownContainer,
   DropdownButton,
@@ -31,7 +31,7 @@ import {
 function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
   return (
     <>
-      <Label className="input">
+      <InputWrapper className="input">
         <InputField
           className="inputField"
           placeholder=" "
@@ -43,7 +43,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
         <InputLabel className="inputLabel" htmlFor="name">
           {title}
         </InputLabel>
-      </Label>
+      </InputWrapper>
       <br />
     </>
   );
@@ -52,7 +52,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
 function InputOptionTextArea({ title, inputText, inputChange }) {
   return (
     <>
-      <Label className="input">
+      <InputWrapper className="input">
         <InputArea
           className="inputField"
           placeholder=" "
@@ -65,7 +65,7 @@ function InputOptionTextArea({ title, inputText, inputChange }) {
         <InputLabel className="inputLabel" htmlFor="name">
           {title}
         </InputLabel>
-      </Label>
+      </InputWrapper>
       <br />
     </>
   );
@@ -87,7 +87,7 @@ function InputOptionSelect({ title, options, selectedOption, onChange }) {
     <>
       <DropdownContainer>
         <DropdownButton onClick={handleDropdownClick}>
-          {selectedOption ? selectedOption : "Select an option"}
+          {selectedOption ? selectedOption : "-- Auswahl --"}
         </DropdownButton>
         {isOpen && (
           <DropdownMenu>
@@ -203,7 +203,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   const [contactBy, setContactBy] = useState("");
   const [notes, setNotes] = useState("");
   const [previousCollaboration, setPreviousCollaboration] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(null);
 
   async function onSubmit() {
     if (!name) {

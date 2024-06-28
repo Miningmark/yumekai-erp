@@ -13,6 +13,10 @@ export const InputLabel = styled.label`
   transform: translate(0, 0);
   transform-origin: 0 0;
   background: var(--grey);
+
+  @-moz-document url-prefix() {
+    margin: 26px 4px;
+  }
 `;
 
 export const InputField = styled.input`
@@ -27,7 +31,7 @@ export const InputField = styled.input`
   color: var(--dark);
 
   &:focus + ${InputLabel}, &:not(:placeholder-shown) + ${InputLabel} {
-    transform: translate(0.25rem, -100%) scale(0.8);
+    transform: translate(6px, -100%) scale(0.8);
     color: var(--secondary-color);
   }
 
@@ -59,7 +63,7 @@ export const InputArea = styled.textarea`
   }
 `;
 
-export const Label = styled.label`
+export const InputWrapper = styled.label`
   position: relative;
 `;
 
@@ -134,14 +138,12 @@ export const DropdownMenu = styled.ul`
   top: 100%;
   left: 0;
   width: 100%;
-  background: var(--dropdown-background, var(--light));
-
-  border-radius: 4px;
+  background: var(--light);
+  border-radius: 10px;
   padding: 0;
   margin: 0;
   list-style: none;
   z-index: 1000;
-  color: green;
 `;
 
 export const DropdownItem = styled.li`
