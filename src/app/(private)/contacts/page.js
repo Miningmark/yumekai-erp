@@ -11,6 +11,7 @@ const ContactTabBackground = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const ContactTabList = styled.div`
@@ -23,6 +24,7 @@ const ContactTabButton = styled.div`
   height: 30px;
   background-color: ${({ $activeBackground }) => $activeBackground};
   border: solid 2px ${({ $activeBoarder }) => $activeBoarder};
+  color: var(--dark);
   border-bottom: none;
   border-radius: 10px 10px 0 0;
   display: flex;
@@ -32,9 +34,10 @@ const ContactTabButton = styled.div`
   font-weight: bold;
   transition: 0.5s;
   cursor: pointer;
+  z-index: ${({ $tabIndex }) => $tabIndex};
 
   &:hover {
-    background-color: red;
+    background-color: var(--dark-grey);
     border: solid 2px var(--dark);
     border-bottom: none;
     transition: 0.5s;
@@ -42,34 +45,52 @@ const ContactTabButton = styled.div`
 `;
 
 const ContactTabCard = styled.div`
+  position: absolute;
+  top: 30px;
   width: calc(100% - 24px);
-  height: 100%;
+  height: calc(100vh - 158px - 70px);
   overflow: auto;
-  background-color: var(--light);
+  background-color: var(--light); //var(--light)
   color: var(--dark);
   padding: 10px;
   border: solid 2px var(--dark);
-  border-top: none;
+`;
+
+const TableBackground = styled.div`
+  position: relative;
+  height: calc(100vh - 158px - 70px);
+  overflow-x: auto;
 `;
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  border-spacing: 0;
 `;
 
 const StyledTableHead = styled.thead`
   th {
+    position: sticky;
+    top: 0px;
+    background-color: var(--grey);
+    border: 1px solid var(--dark);
     font-weight: bold;
-    border: 1px solid white;
     padding: 8px;
+    z-index: 1;
+    width: 150px; /* Feste Breite der Spalten */
+    white-space: nowrap; /* Verhindert Zeilenumbrüche */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Fügt "..." hinzu, wenn Text abgeschnitten wird */
   }
 `;
 
 const StyledTableBody = styled.tbody`
   td {
-    border: 1px solid white;
+    border: 1px solid var(--dark);
     padding: 8px;
+    max-width: 150px; /* Maximale Breite der Zellen */
+    white-space: nowrap; /* Verhindert Zeilenumbrüche */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Fügt "..." hinzu, wenn Text abgeschnitten wird */
   }
 `;
 
@@ -82,10 +103,10 @@ const allColumns = [
   { id: "phone", name: "Telefon" },
   { id: "website", name: "Website" },
   { id: "instagram", name: "Instagram" },
-  { id: "postal_code", name: "Postleitzahl" },
+  { id: "postal_code", name: "PLZ" },
   { id: "city", name: "Stadt" },
   { id: "street", name: "Straße" },
-  { id: "house_number", name: "Hausnummer" },
+  { id: "house_number", name: "Hausnr." },
   { id: "country", name: "Land" },
   { id: "contact_by", name: "Kontakt durch" },
   { id: "notes", name: "Notizen" },
@@ -111,7 +132,7 @@ const columnsByCategory = {
     (column) => !["id", "category", "created_at", "birth_date", "company"].includes(column.id)
   ),
   Verein: allColumns.filter(
-    (column) => !["created_at", "birth_date", "discord_name"].includes(column.id)
+    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
   ),
   Cosplayer: allColumns.filter(
     (column) => !["id", "category", "created_at", "birth_date"].includes(column.id)
@@ -196,31 +217,37 @@ export default function Contacts() {
               onClick={() => changeTab(category)}
               $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
               $activeBoarder={category === activeTab ? "var(--dark)" : "blue"}
+              $tabIndex={category === activeTab ? "1" : "0"}
             >
               {category}
             </ContactTabButton>
           ))}
         </ContactTabList>
         <ContactTabCard>
-          <h3>{activeTab}</h3>
-          <StyledTable>
-            <StyledTableHead>
-              <tr>
-                {columns.map((column) => (
-                  <th key={column.id}>{column.name}</th>
-                ))}
-              </tr>
-            </StyledTableHead>
-            <StyledTableBody>
-              {currentCategoryContacts.map((contact, index) => (
-                <tr key={index}>
+          <TableBackground>
+            <StyledTable>
+              <StyledTableHead>
+                <tr>
                   {columns.map((column) => (
-                    <td key={column.id}>{contact[column.id]}</td>
+                    <th key={column.id} title={column.name}>
+                      {column.name}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </StyledTableBody>
-          </StyledTable>
+              </StyledTableHead>
+              <StyledTableBody>
+                {currentCategoryContacts.map((contact, index) => (
+                  <tr key={index}>
+                    {columns.map((column) => (
+                      <td key={column.id} title={contact[column.id]}>
+                        {contact[column.id]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </StyledTableBody>
+            </StyledTable>
+          </TableBackground>
         </ContactTabCard>
       </ContactTabBackground>
       {showModal && (
