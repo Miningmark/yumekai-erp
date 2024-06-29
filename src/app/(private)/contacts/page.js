@@ -11,7 +11,6 @@ const ContactTabBackground = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
-  background-color: red;
 `;
 
 const ContactTabList = styled.div`
@@ -22,8 +21,9 @@ const ContactTabList = styled.div`
 const ContactTabButton = styled.div`
   width: 150px;
   height: 30px;
-  background-color: blue;
-  border: solid 2px green;
+  background-color: ${({ $activeBackground }) => $activeBackground};
+  border: solid 2px ${({ $activeBoarder }) => $activeBoarder};
+  border-bottom: none;
   border-radius: 10px 10px 0 0;
   display: flex;
   flex-direction: row;
@@ -34,19 +34,22 @@ const ContactTabButton = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: lightblue;
-    border: solid 2px lightgreen;
+    background-color: red;
+    border: solid 2px var(--dark);
+    border-bottom: none;
     transition: 0.5s;
   }
 `;
 
 const ContactTabCard = styled.div`
-  width: calc(100% - 20px);
+  width: calc(100% - 24px);
   height: 100%;
   overflow: auto;
   background-color: var(--light);
   color: var(--dark);
   padding: 10px;
+  border: solid 2px var(--dark);
+  border-top: none;
 `;
 
 const StyledTable = styled.table`
@@ -70,23 +73,54 @@ const StyledTableBody = styled.tbody`
   }
 `;
 
-const columns = [
-  "Category",
-  "Name",
-  "Firma/Verein Name",
-  "E-Mail",
-  "Telefon",
-  "Webseite",
-  "Instagram",
-  "PLZ",
-  "City",
-  "Street",
-  "House Number",
-  "Land",
-  "Contact By",
-  "Notes",
-  "Previous Collaboration",
+const allColumns = [
+  { id: "id", name: "ID" },
+  { id: "category", name: "Kategorie" },
+  { id: "name", name: "Name" },
+  { id: "company", name: "Firma" },
+  { id: "email", name: "E-Mail" },
+  { id: "phone", name: "Telefon" },
+  { id: "website", name: "Website" },
+  { id: "instagram", name: "Instagram" },
+  { id: "postal_code", name: "Postleitzahl" },
+  { id: "city", name: "Stadt" },
+  { id: "street", name: "Straße" },
+  { id: "house_number", name: "Hausnummer" },
+  { id: "country", name: "Land" },
+  { id: "contact_by", name: "Kontakt durch" },
+  { id: "notes", name: "Notizen" },
+  { id: "previous_collaboration", name: "Frühere Zusammenarbeit" },
+  { id: "created_at", name: "Erstellt am" },
+  { id: "birth_date", name: "Geburtsdatum" },
+  { id: "discord_name", name: "Discord Name" },
+  { id: "gender", name: "Geschlecht" },
 ];
+
+const columnsByCategory = {
+  Händler: allColumns.filter(
+    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+  ),
+  Künstler: allColumns.filter(
+    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+  ),
+  Showact: allColumns.filter(
+    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+  ),
+  Sonstiges: allColumns.filter((column) => !["id", "category", "created_at"].includes(column.id)),
+  Workshop: allColumns.filter(
+    (column) => !["id", "category", "created_at", "birth_date", "company"].includes(column.id)
+  ),
+  Verein: allColumns.filter(
+    (column) => !["created_at", "birth_date", "discord_name"].includes(column.id)
+  ),
+  Cosplayer: allColumns.filter(
+    (column) => !["id", "category", "created_at", "birth_date"].includes(column.id)
+  ),
+  Helfer: allColumns.filter(
+    (column) =>
+      !["id", "category", "created_at", "company", "website", "instagram"].includes(column.id)
+  ),
+};
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -94,7 +128,7 @@ export default function Contacts() {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newContact, setNewContact] = useState(null);
-  const [activTab, setActivTab] = useState(0);
+  const [activeTab, setActiveTab] = useState("Händler");
 
   useEffect(() => {
     async function fetchContacts() {
@@ -141,9 +175,14 @@ export default function Contacts() {
 
   console.log("contacts", contacts);
 
-  function changeTab(tabNumber) {
-    setActivTab(tabNumber);
+  function changeTab(category) {
+    setActiveTab(category);
   }
+
+  const currentCategoryContacts = filteredContacts.filter(
+    (contact) => contact.category === activeTab
+  );
+  const columns = columnsByCategory[activeTab];
 
   return (
     <>
@@ -151,107 +190,39 @@ export default function Contacts() {
       <button onClick={() => setShowModal(true)}>Add Contact</button>
       <ContactTabBackground>
         <ContactTabList>
-          <ContactTabButton onClick={() => changeTab(0)}>Händler</ContactTabButton>
-          <ContactTabButton onClick={() => changeTab(1)}>Künstler</ContactTabButton>
-          <ContactTabButton onClick={() => changeTab(2)}>Showacts</ContactTabButton>
-          <ContactTabButton onClick={() => changeTab(3)}>Helfer</ContactTabButton>
+          {Object.keys(columnsByCategory).map((category) => (
+            <ContactTabButton
+              key={category}
+              onClick={() => changeTab(category)}
+              $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
+              $activeBoarder={category === activeTab ? "var(--dark)" : "blue"}
+            >
+              {category}
+            </ContactTabButton>
+          ))}
         </ContactTabList>
-        {activTab == 0 && (
-          <ContactTabCard>
-            <h3>Händler</h3>
-            <StyledTable>
-              <StyledTableHead>
-                <tr>
-                  {columns.map((column, index) => (
-                    <th key={index}>{column}</th>
+        <ContactTabCard>
+          <h3>{activeTab}</h3>
+          <StyledTable>
+            <StyledTableHead>
+              <tr>
+                {columns.map((column) => (
+                  <th key={column.id}>{column.name}</th>
+                ))}
+              </tr>
+            </StyledTableHead>
+            <StyledTableBody>
+              {currentCategoryContacts.map((contact, index) => (
+                <tr key={index}>
+                  {columns.map((column) => (
+                    <td key={column.id}>{contact[column.id]}</td>
                   ))}
                 </tr>
-              </StyledTableHead>
-              <StyledTableBody>
-                {filteredContacts.map((contact, index) => (
-                  <tr key={index}>
-                    {columns.map((column, colIndex) => (
-                      <td key={colIndex}>{contact[column.toLowerCase().replace(/\s/g, "_")]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </StyledTableBody>
-            </StyledTable>
-          </ContactTabCard>
-        )}
-        {activTab == 1 && (
-          <ContactTabCard>
-            <p>Künstler</p>
-          </ContactTabCard>
-        )}
-        {activTab == 2 && (
-          <ContactTabCard>
-            <p>Showacts</p>
-          </ContactTabCard>
-        )}
-        {activTab == 3 && (
-          <ContactTabCard>
-            <p>Helfer</p>
-          </ContactTabCard>
-        )}
+              ))}
+            </StyledTableBody>
+          </StyledTable>
+        </ContactTabCard>
       </ContactTabBackground>
-      {showModal && (
-        <AddNewContact
-          handleCloseAddContactTask={() => setShowModal(false)}
-          handleAddContact={handleAddContact}
-        />
-      )}
-    </>
-  );
-
-  return (
-    <>
-      <h1>Kontakte</h1>
-      <input type="text" placeholder="Search..." value={searchQuery} onChange={handleSearch} />
-      <button onClick={() => setShowModal(true)}>Add Contact</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Name</th>
-            <th>Firma/Verein Name</th>
-            <th>E-Mail</th>
-            <th>Telefon</th>
-            <th>Webseite</th>
-            <th>Instagram</th>
-            <th>PLZ</th>
-            <th>City</th>
-            <th>Street</th>
-            <th>House Number</th>
-            <th>Land</th>
-            <th>Contact By</th>
-            <th>Notes</th>
-            <th>Previous Collaboration</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredContacts.map((contact, index) => (
-            <tr key={index}>
-              <td>{contact.category}</td>
-              <td>{contact.name}</td>
-              <td>{contact.company}</td>
-              <td>{contact.email}</td>
-              <td>{contact.phone}</td>
-              <td>{contact.website}</td>
-              <td>{contact.instagram}</td>
-              <td>{contact.plz}</td>
-              <td>{contact.city}</td>
-              <td>{contact.street}</td>
-              <td>{contact.country}</td>
-              <td>{contact.house_number}</td>
-              <td>{contact.contact_by}</td>
-              <td>{contact.notes}</td>
-              <td>{contact.previous_collaboration}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
       {showModal && (
         <AddNewContact
           handleCloseAddContactTask={() => setShowModal(false)}

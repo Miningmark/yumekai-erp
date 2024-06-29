@@ -2,25 +2,30 @@ import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
 
 /*
-    CREATE TABLE contacts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    company VARCHAR(255),
-    email VARCHAR(255),
-    phone VARCHAR(50),
-    website VARCHAR(255),
-    instagram VARCHAR(255),
-    plz INT,
-    city VARCHAR(255),
-    street VARCHAR(255),
-    house_number VARCHAR(50),
-    country VARCHAR(50),
-    contact_by VARCHAR(255),
-    notes TEXT,
-    previous_collaboration TEXT,
-    category VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+
+   CREATE TABLE contacts (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      category VARCHAR(50) NOT NULL,
+      name VARCHAR(50) NOT NULL,
+      company VARCHAR(50),
+      email VARCHAR(50),
+      phone VARCHAR(20),
+      website VARCHAR(255),
+      instagram VARCHAR(255),
+      postal_code INT UNSIGNED,
+      city VARCHAR(50),
+      street VARCHAR(50),
+      house_number VARCHAR(50),
+      country VARCHAR(50),
+      contact_by VARCHAR(255),
+      notes TEXT,
+      previous_collaboration TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      birth_date DATE,
+      discord_name VARCHAR(50),
+      gender VARCHAR(10)
+  );
+
 */
 
 const connection = mysql.createPool({
@@ -50,7 +55,7 @@ export async function POST(req) {
       phone,
       website,
       instagram,
-      plz,
+      postal_code,
       city,
       street,
       house_number,
@@ -59,6 +64,9 @@ export async function POST(req) {
       notes,
       previous_collaboration,
       category,
+      birth_date,
+      discord_name,
+      gender,
     } = body;
 
     // Ensure all parameters are not undefined
@@ -69,7 +77,7 @@ export async function POST(req) {
       phone ?? null,
       website ?? null,
       instagram ?? null,
-      plz ?? null,
+      postal_code ?? null,
       city ?? null,
       street ?? null,
       house_number ?? null,
@@ -78,6 +86,9 @@ export async function POST(req) {
       notes ?? null,
       previous_collaboration ?? null,
       category ?? null,
+      birth_date ?? null,
+      discord_name ?? null,
+      gender ?? null,
     ];
 
     if (!name || !category) {
@@ -85,7 +96,7 @@ export async function POST(req) {
     }
 
     const [result] = await connection.execute(
-      "INSERT INTO contacts (name, company, email, phone, website, instagram, plz, city, street, house_number, country, contact_by, notes, previous_collaboration, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO contacts (name, company, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
 
