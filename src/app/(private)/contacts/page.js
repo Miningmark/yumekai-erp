@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import AddNewContact from "@/components/contactComponents/AddNewContact";
 import styled from "styled-components";
+import { PageContext } from "@/components/menu/MenuLayout";
+import React from "react";
 
 const ContactTabBackground = styled.div`
   width: calc(100% -40px);
@@ -145,11 +147,13 @@ const columnsByCategory = {
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newContact, setNewContact] = useState(null);
   const [activeTab, setActiveTab] = useState("Händler");
+
+  const search = React.useContext(PageContext);
+  //console.log("12345", search);
 
   useEffect(() => {
     async function fetchContacts() {
@@ -162,13 +166,29 @@ export default function Contacts() {
     fetchContacts();
   }, []);
 
+  useEffect(() => {
+    if (search) {
+      const filtered = contacts.filter((contact) =>
+        allColumns.some(
+          (column) =>
+            contact[column.id] &&
+            contact[column.id].toString().toLowerCase().includes(search.toLowerCase())
+        )
+      );
+      setFilteredContacts(filtered);
+    } else {
+      setFilteredContacts(contacts);
+    }
+  }, [search, contacts]);
+
   function handleSearch(e) {
     setSearchQuery(e.target.value);
-    const filtered = contacts.filter(
-      (contact) =>
-        contact.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        contact.company.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        contact.email.toLowerCase().includes(e.target.value.toLowerCase())
+    const filtered = contacts.filter((contact) =>
+      allColumns.some(
+        (column) =>
+          contact[column.id] &&
+          contact[column.id].toString().toLowerCase().includes(e.target.value.toLowerCase())
+      )
     );
     setFilteredContacts(filtered);
   }
@@ -194,7 +214,7 @@ export default function Contacts() {
     }
   }
 
-  console.log("contacts", contacts);
+  //console.log("contacts", contacts);
 
   function changeTab(category) {
     setActiveTab(category);
@@ -210,45 +230,90 @@ export default function Contacts() {
       <h1>Kontakte</h1>
       <button onClick={() => setShowModal(true)}>Add Contact</button>
       <ContactTabBackground>
-        <ContactTabList>
-          {Object.keys(columnsByCategory).map((category) => (
-            <ContactTabButton
-              key={category}
-              onClick={() => changeTab(category)}
-              $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
-              $activeBoarder={category === activeTab ? "var(--dark)" : "blue"}
-              $tabIndex={category === activeTab ? "1" : "0"}
-            >
-              {category}
-            </ContactTabButton>
-          ))}
-        </ContactTabList>
-        <ContactTabCard>
-          <TableBackground>
-            <StyledTable>
-              <StyledTableHead>
-                <tr>
-                  {columns.map((column) => (
-                    <th key={column.id} title={column.name}>
-                      {column.name}
-                    </th>
-                  ))}
-                </tr>
-              </StyledTableHead>
-              <StyledTableBody>
-                {currentCategoryContacts.map((contact, index) => (
-                  <tr key={index}>
-                    {columns.map((column) => (
-                      <td key={column.id} title={contact[column.id]}>
-                        {contact[column.id]}
-                      </td>
+        {!search && (
+          <>
+            <ContactTabList>
+              {Object.keys(columnsByCategory).map((category) => (
+                <ContactTabButton
+                  key={category}
+                  onClick={() => changeTab(category)}
+                  $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
+                  $activeBoarder={category === activeTab ? "var(--dark)" : "blue"}
+                  $tabIndex={category === activeTab ? "1" : "0"}
+                >
+                  {category}
+                </ContactTabButton>
+              ))}
+            </ContactTabList>
+            <ContactTabCard>
+              <TableBackground>
+                <StyledTable>
+                  <StyledTableHead>
+                    <tr>
+                      {columns.map((column) => (
+                        <th key={column.id} title={column.name}>
+                          {column.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </StyledTableHead>
+                  <StyledTableBody>
+                    {currentCategoryContacts.map((contact, index) => (
+                      <tr key={index}>
+                        {columns.map((column) => (
+                          <td key={column.id} title={contact[column.id]}>
+                            {contact[column.id]}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-              </StyledTableBody>
-            </StyledTable>
-          </TableBackground>
-        </ContactTabCard>
+                  </StyledTableBody>
+                </StyledTable>
+              </TableBackground>
+            </ContactTabCard>
+          </>
+        )}
+        {search.length > 0 && (
+          <>
+            <ContactTabCard>
+              <TableBackground>
+                <StyledTable>
+                  <StyledTableHead>
+                    <tr>
+                      {allColumns.map((column) => (
+                        <th key={column.id} title={column.name}>
+                          {column.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </StyledTableHead>
+                  <StyledTableBody>
+                    {contacts
+                      .filter((contact) =>
+                        allColumns.some(
+                          (column) =>
+                            contact[column.id] &&
+                            contact[column.id]
+                              .toString()
+                              .toLowerCase()
+                              .includes(search.toLowerCase())
+                        )
+                      )
+                      .map((contact, index) => (
+                        <tr key={index}>
+                          {allColumns.map((column) => (
+                            <td key={column.id} title={contact[column.id]}>
+                              {contact[column.id]}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                  </StyledTableBody>
+                </StyledTable>
+              </TableBackground>
+            </ContactTabCard>
+          </>
+        )}
       </ContactTabBackground>
       {showModal && (
         <AddNewContact

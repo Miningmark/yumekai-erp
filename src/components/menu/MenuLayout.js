@@ -4,6 +4,7 @@ import StickyMenu from "@/components/menu/StickyMenu";
 import SideMenu from "@/components/menu/SideMenu";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import React from "react";
 
 const Content = styled.div`
   position: absolute;
@@ -15,14 +16,32 @@ const Content = styled.div`
   transition: all 0.3s ease;
 `;
 
-export default function MenuLayout({ children }) {
+export const PageContext = React.createContext(null);
+
+export default function MenuLayout({ children, searchtext, handleSerchText }) {
   const [sideMenuOpen, setSideMenuOpen] = useState(true);
+
+  // Clone children and pass searchtext as a prop
+  const childrenWithProps = React.Children.map(children, (child) => {
+    // Check if child is a valid React element
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { searchtext });
+    }
+    return child;
+  });
 
   return (
     <>
       <SideMenu sideMenuOpen={sideMenuOpen} />
-      <StickyMenu sideMenuOpen={sideMenuOpen} setSideMenuOpen={setSideMenuOpen} />
-      <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>{children}</Content>
+      <StickyMenu
+        sideMenuOpen={sideMenuOpen}
+        setSideMenuOpen={setSideMenuOpen}
+        searchtext={searchtext}
+        handleSerchText={handleSerchText}
+      />
+      <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>
+        <PageContext.Provider value={searchtext}>{children}</PageContext.Provider>
+      </Content>
     </>
   );
 }

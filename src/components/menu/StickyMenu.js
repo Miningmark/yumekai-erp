@@ -65,13 +65,20 @@ const InputField = styled.input`
   outline: none;
 `;
 
-export default function StickyMenu({ sideMenuOpen, setSideMenuOpen }) {
+export default function StickyMenu({ sideMenuOpen, setSideMenuOpen, searchtext, handleSerchText }) {
   return (
     <StyledMenu $sidemenuwidth={sideMenuOpen ? "200" : "60"}>
       <MenuContainer>
         <IconMenu onClick={() => setSideMenuOpen(!sideMenuOpen)} />
         <SearchContainer>
-          <InputField type="text" placeholder="Search..." />
+          <InputField
+            type="text"
+            placeholder="Search..."
+            value={searchtext}
+            onChange={(e) => {
+              handleSerchText(e.target.value);
+            }}
+          />
           <IconSearch />
         </SearchContainer>
       </MenuContainer>
