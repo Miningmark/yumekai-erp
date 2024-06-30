@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
       category VARCHAR(50) NOT NULL,
       name VARCHAR(50) NOT NULL,
       company VARCHAR(50),
+      club VARCHAR(50),
       email VARCHAR(50),
       phone VARCHAR(20),
       website VARCHAR(255),
@@ -51,6 +52,7 @@ export async function POST(req) {
     const {
       name,
       company,
+      club,
       email,
       phone,
       website,
@@ -73,6 +75,7 @@ export async function POST(req) {
     const params = [
       name ?? null,
       company ?? null,
+      club ?? null,
       email ?? null,
       phone ?? null,
       website ?? null,
@@ -96,7 +99,7 @@ export async function POST(req) {
     }
 
     const [result] = await connection.execute(
-      "INSERT INTO contacts (name, company, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO contacts (name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
 

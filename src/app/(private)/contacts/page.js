@@ -6,6 +6,13 @@ import styled from "styled-components";
 import { PageContext } from "@/components/menu/MenuLayout";
 import React from "react";
 
+import {
+  StyledButton,
+  GreenButton,
+  RedButton,
+  DisabledGreenButton,
+} from "@/components/styledComponents/StyledButton";
+
 const ContactTabBackground = styled.div`
   width: calc(100% -40px);
   height: calc(100vh -158px);
@@ -101,6 +108,7 @@ const allColumns = [
   { id: "category", name: "Kategorie" },
   { id: "name", name: "Name" },
   { id: "company", name: "Firma" },
+  { id: "club", name: "Verein" },
   { id: "email", name: "E-Mail" },
   { id: "phone", name: "Telefon" },
   { id: "website", name: "Website" },
@@ -121,10 +129,12 @@ const allColumns = [
 
 const columnsByCategory = {
   Händler: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+    (column) =>
+      !["id", "category", "club", "created_at", "birth_date", "discord_name"].includes(column.id)
   ),
   Künstler: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+    (column) =>
+      !["id", "category", "club", "created_at", "birth_date", "discord_name"].includes(column.id)
   ),
   Showact: allColumns.filter(
     (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
@@ -134,14 +144,17 @@ const columnsByCategory = {
     (column) => !["id", "category", "created_at", "birth_date", "company"].includes(column.id)
   ),
   Verein: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+    (column) =>
+      !["id", "category", "company", "created_at", "birth_date", "discord_name"].includes(column.id)
   ),
   Cosplayer: allColumns.filter(
     (column) => !["id", "category", "created_at", "birth_date"].includes(column.id)
   ),
   Helfer: allColumns.filter(
     (column) =>
-      !["id", "category", "created_at", "company", "website", "instagram"].includes(column.id)
+      !["id", "category", "created_at", "company", "club", "website", "instagram"].includes(
+        column.id
+      )
   ),
 };
 
@@ -220,19 +233,27 @@ export default function Contacts() {
     setActiveTab(category);
   }
 
-  const currentCategoryContacts = filteredContacts.filter(
-    (contact) => contact.category === activeTab
-  );
-  const columns = columnsByCategory[activeTab];
+  const currentCategoryContacts = !search
+    ? filteredContacts.filter((contact) => contact.category === activeTab)
+    : contacts.filter((contact) =>
+        allColumns.some(
+          (column) =>
+            contact[column.id] &&
+            contact[column.id].toString().toLowerCase().includes(search.toLowerCase())
+        )
+      );
+  const columns = !search
+    ? columnsByCategory[activeTab]
+    : allColumns.filter((column) => !["id", "created_at"].includes(column.id));
 
   return (
     <>
       <h1>Kontakte</h1>
-      <button onClick={() => setShowModal(true)}>Add Contact</button>
+      <GreenButton onClick={() => setShowModal(true)}>Add Contact</GreenButton>
       <ContactTabBackground>
-        {!search && (
-          <>
-            <ContactTabList>
+        <ContactTabList>
+          {!search ? (
+            <>
               {Object.keys(columnsByCategory).map((category) => (
                 <ContactTabButton
                   key={category}
@@ -244,76 +265,45 @@ export default function Contacts() {
                   {category}
                 </ContactTabButton>
               ))}
-            </ContactTabList>
-            <ContactTabCard>
-              <TableBackground>
-                <StyledTable>
-                  <StyledTableHead>
-                    <tr>
-                      {columns.map((column) => (
-                        <th key={column.id} title={column.name}>
-                          {column.name}
-                        </th>
-                      ))}
-                    </tr>
-                  </StyledTableHead>
-                  <StyledTableBody>
-                    {currentCategoryContacts.map((contact, index) => (
-                      <tr key={index}>
-                        {columns.map((column) => (
-                          <td key={column.id} title={contact[column.id]}>
-                            {contact[column.id]}
-                          </td>
-                        ))}
-                      </tr>
+            </>
+          ) : (
+            <>
+              <ContactTabButton
+                $activeBackground={"var(--light)"}
+                $activeBoarder={"var(--dark)"}
+                $tabIndex={"1"}
+              >
+                Suche
+              </ContactTabButton>
+            </>
+          )}
+        </ContactTabList>
+        <ContactTabCard>
+          <TableBackground>
+            <StyledTable>
+              <StyledTableHead>
+                <tr>
+                  {columns.map((column) => (
+                    <th key={column.id} title={column.name}>
+                      {column.name}
+                    </th>
+                  ))}
+                </tr>
+              </StyledTableHead>
+              <StyledTableBody>
+                {currentCategoryContacts.map((contact, index) => (
+                  <tr key={index}>
+                    {columns.map((column) => (
+                      <td key={column.id} title={contact[column.id]}>
+                        {contact[column.id]}
+                      </td>
                     ))}
-                  </StyledTableBody>
-                </StyledTable>
-              </TableBackground>
-            </ContactTabCard>
-          </>
-        )}
-        {search.length > 0 && (
-          <>
-            <ContactTabCard>
-              <TableBackground>
-                <StyledTable>
-                  <StyledTableHead>
-                    <tr>
-                      {allColumns.map((column) => (
-                        <th key={column.id} title={column.name}>
-                          {column.name}
-                        </th>
-                      ))}
-                    </tr>
-                  </StyledTableHead>
-                  <StyledTableBody>
-                    {contacts
-                      .filter((contact) =>
-                        allColumns.some(
-                          (column) =>
-                            contact[column.id] &&
-                            contact[column.id]
-                              .toString()
-                              .toLowerCase()
-                              .includes(search.toLowerCase())
-                        )
-                      )
-                      .map((contact, index) => (
-                        <tr key={index}>
-                          {allColumns.map((column) => (
-                            <td key={column.id} title={contact[column.id]}>
-                              {contact[column.id]}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                  </StyledTableBody>
-                </StyledTable>
-              </TableBackground>
-            </ContactTabCard>
-          </>
-        )}
+                  </tr>
+                ))}
+              </StyledTableBody>
+            </StyledTable>
+          </TableBackground>
+        </ContactTabCard>
       </ContactTabBackground>
       {showModal && (
         <AddNewContact

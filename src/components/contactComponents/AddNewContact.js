@@ -194,6 +194,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
+  const [club, setClub] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState("");
@@ -220,6 +221,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
     const newContact = {
       name,
       company,
+      club,
       email,
       phone,
       website,
@@ -252,11 +254,8 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
           onChange={setCategory}
         />
         <InputOptionInput title={"Name"} inputText={name} inputChange={setName} />
-        <InputOptionInput
-          title={"Firma/Verein Name"}
-          inputText={company}
-          inputChange={setCompany}
-        />
+        <InputOptionInput title={"Firma Name"} inputText={company} inputChange={setCompany} />
+        <InputOptionInput title={"Verein Name"} inputText={club} inputChange={setClub} />
         <InputOptionInput title={"E-Mail"} inputText={email} inputChange={setEmail} />
         <InputOptionInput title={"Telefon"} inputText={phone} inputChange={setPhone} />
         <InputOptionInput title={"Webseite"} inputText={website} inputChange={setWebsite} />
