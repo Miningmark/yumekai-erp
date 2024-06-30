@@ -97,3 +97,15 @@ export const ModalInputWrapper = styled.div`
   max-width: 400px;
   gap: 5px;
 `;
+
+export const InputFieldsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+`;
+
+export const ModalContentLarge = styled(ModalContent)`
+  max-width: 850px;
+`;

@@ -80,39 +80,43 @@ export default function Login() {
   return (
     <ContainerBgmLogin>
       <h1>Login Page</h1>
-      <PageInputWrapper>
-        <LoginLabel htmlFor="username">Username: </LoginLabel>
-        <LoginInput
-          type="text"
-          name="username"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          required
-        />
-      </PageInputWrapper>
-      <PageInputWrapper>
-        <LoginLabel htmlFor="password">Password: </LoginLabel>
-        <LoginInputWrapper>
+      <form onSubmit={handleSubmit}>
+        <PageInputWrapper>
+          <LoginLabel htmlFor="username">Username: </LoginLabel>
           <LoginInput
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            name="username"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            required
           />
-          <LoginIconButton
-            type="button"
-            onClick={() => {
-              setShowPassword(!showPassword);
-            }}
-          >
-            {showPassword ? <IconVisibleOff /> : <IconVisible />}
-          </LoginIconButton>
-        </LoginInputWrapper>
-      </PageInputWrapper>
+        </PageInputWrapper>
+        <br />
+        <PageInputWrapper>
+          <LoginLabel htmlFor="password">Password: </LoginLabel>
+          <LoginInputWrapper>
+            <LoginInput
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <LoginIconButton
+              type="button"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              {showPassword ? <IconVisibleOff /> : <IconVisible />}
+            </LoginIconButton>
+          </LoginInputWrapper>
+        </PageInputWrapper>
 
-      {errorMessage && <LoginError>{errorMessage}</LoginError>}
-
-      <StyledButton onClick={(event) => handleSubmit(event)}>Submit</StyledButton>
+        {errorMessage && <LoginError>{errorMessage}</LoginError>}
+        <br />
+        <StyledButton type="submit">Submit</StyledButton>
+      </form>
     </ContainerBgmLogin>
   );
 }

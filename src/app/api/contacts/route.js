@@ -113,3 +113,40 @@ export async function POST(req) {
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  //console.log("req: ", req);
+  try {
+    const body = await req.json();
+    const { id, created_at, ...updatedFields } = body;
+
+    if (!id) {
+      return NextResponse.json({ message: "ID is required" }, { status: 400 });
+    }
+
+    const keys = Object.keys(updatedFields);
+    const values = Object.values(updatedFields);
+    console.log("keys: ", keys);
+
+    if (keys.length === 0) {
+      return NextResponse.json({ message: "No fields to update" }, { status: 400 });
+    }
+
+    const setString = keys.map((key) => `${key} = ?`).join(", ");
+    const params = [...values, id];
+
+    const [result] = await connection.execute(
+      `UPDATE contacts SET ${setString} WHERE id = ?`,
+      params
+    );
+
+    if (result.affectedRows > 0) {
+      return NextResponse.json({ message: "Contact successfully updated" }, { status: 200 });
+    } else {
+      return NextResponse.json({ message: "Error updating contact" }, { status: 500 });
+    }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
+}

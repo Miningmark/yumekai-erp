@@ -65,6 +65,7 @@ export const InputArea = styled.textarea`
 
 export const InputWrapper = styled.label`
   position: relative;
+  width: calc(100% - 20px);
 `;
 
 // Stil für das Label des Dropdown-Menüs

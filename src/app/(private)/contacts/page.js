@@ -13,6 +13,8 @@ import {
   DisabledGreenButton,
 } from "@/components/styledComponents/StyledButton";
 
+import DisplayContactModal from "@/components/contactComponents/ShowContact";
+
 const ContactTabBackground = styled.div`
   width: calc(100% -40px);
   height: calc(100vh -158px);
@@ -139,7 +141,6 @@ const columnsByCategory = {
   Showact: allColumns.filter(
     (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
   ),
-  Sonstiges: allColumns.filter((column) => !["id", "category", "created_at"].includes(column.id)),
   Workshop: allColumns.filter(
     (column) => !["id", "category", "created_at", "birth_date", "company"].includes(column.id)
   ),
@@ -156,6 +157,7 @@ const columnsByCategory = {
         column.id
       )
   ),
+  Sonstiges: allColumns.filter((column) => !["id", "category", "created_at"].includes(column.id)),
 };
 
 export default function Contacts() {
@@ -164,6 +166,7 @@ export default function Contacts() {
   const [showModal, setShowModal] = useState(false);
   const [newContact, setNewContact] = useState(null);
   const [activeTab, setActiveTab] = useState("Händler");
+  const [activeContact, setActiveContact] = useState(null);
 
   const search = React.useContext(PageContext);
   //console.log("12345", search);
@@ -246,6 +249,26 @@ export default function Contacts() {
     ? columnsByCategory[activeTab]
     : allColumns.filter((column) => !["id", "created_at"].includes(column.id));
 
+  function handleOnClose() {
+    setActiveContact(null);
+  }
+
+  async function handleEditContact(editContact) {
+    const response = await fetch("/api/contacts", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editContact),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setContacts(
+        contacts.map((contact) => (contact.id === editContact.id ? editContact : contact))
+      );
+    } else {
+      console.error("Fehler beim Speichern des Kontakts. ", data);
+    }
+  }
+
   return (
     <>
       <h1>Kontakte</h1>
@@ -259,7 +282,7 @@ export default function Contacts() {
                   key={category}
                   onClick={() => changeTab(category)}
                   $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
-                  $activeBoarder={category === activeTab ? "var(--dark)" : "blue"}
+                  $activeBoarder={category === activeTab ? "var(--dark)" : "var(--dark-grey)"}
                   $tabIndex={category === activeTab ? "1" : "0"}
                 >
                   {category}
@@ -294,7 +317,14 @@ export default function Contacts() {
                 {currentCategoryContacts.map((contact, index) => (
                   <tr key={index}>
                     {columns.map((column) => (
-                      <td key={column.id} title={contact[column.id]}>
+                      <td
+                        key={column.id}
+                        title={contact[column.id]}
+                        onClick={() => {
+                          console.log("Contact: ", contact, contact.id);
+                          setActiveContact(contact);
+                        }}
+                      >
                         {contact[column.id]}
                       </td>
                     ))}
@@ -310,6 +340,13 @@ export default function Contacts() {
           handleCloseAddContactTask={() => setShowModal(false)}
           handleAddContact={handleAddContact}
         />
+      )}
+      {activeContact && (
+        <DisplayContactModal
+          contact={activeContact}
+          handleOnClose={handleOnClose}
+          handleEditContact={handleEditContact}
+        ></DisplayContactModal>
       )}
     </>
   );

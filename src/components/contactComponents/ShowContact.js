@@ -1,7 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import CharacterCount from "@/components/styledComponents/CharacterCount";
 import {
@@ -30,7 +27,7 @@ import {
   DropdownItem,
 } from "../styledComponents/StyledInputField";
 
-function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
+function InputOptionInput({ title, inputText, inputChange, type = "text", editable }) {
   return (
     <>
       <InputWrapper className="input">
@@ -40,9 +37,11 @@ function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
           name={title}
           id={title}
           type={type}
+          value={inputText}
           onChange={(e) => inputChange(type === "number" ? +e.target.value : e.target.value)}
+          disabled={!editable}
         />
-        <InputLabel className="inputLabel" htmlFor="name">
+        <InputLabel className="inputLabel" htmlFor={title}>
           {title}
         </InputLabel>
       </InputWrapper>
@@ -50,7 +49,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text" }) {
   );
 }
 
-function InputOptionTextArea({ title, inputText, inputChange }) {
+function InputOptionTextArea({ title, inputText, inputChange, editable }) {
   return (
     <>
       <InputWrapper className="input">
@@ -58,12 +57,14 @@ function InputOptionTextArea({ title, inputText, inputChange }) {
           className="inputField"
           placeholder=""
           type="text"
-          name="name"
-          id="name"
+          name={title}
+          id={title}
+          value={inputText}
           onChange={(e) => inputChange(e.target.value)}
           rows="3"
+          disabled={!editable}
         />
-        <InputLabel className="inputLabel" htmlFor="name">
+        <InputLabel className="inputLabel" htmlFor={title}>
           {title}
         </InputLabel>
       </InputWrapper>
@@ -71,11 +72,13 @@ function InputOptionTextArea({ title, inputText, inputChange }) {
   );
 }
 
-function InputOptionSelect({ title, options, selectedOption, onChange }) {
+function InputOptionSelect({ title, options, selectedOption, onChange, editable }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDropdownClick = () => {
-    setIsOpen(!isOpen);
+    if (editable) {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleOptionClick = (option) => {
@@ -89,6 +92,7 @@ function InputOptionSelect({ title, options, selectedOption, onChange }) {
         <DropdownButton
           onClick={handleDropdownClick}
           $dropdownopen={isOpen ? `var(--secondary-color)` : `var(--dark)`}
+          disabled={!editable}
         >
           {selectedOption ? selectedOption : "-- Auswahl --"}
         </DropdownButton>
@@ -105,45 +109,6 @@ function InputOptionSelect({ title, options, selectedOption, onChange }) {
       </InputWrapper>
     </>
   );
-  /*
-  return (
-    <DropdownContainer>
-      <DropdownField
-        defaultValue=""
-        as="select"
-        value={selectedOption}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="" disabled hidden></option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </DropdownField>
-      <DropdownLabel>{title}</DropdownLabel>
-    </DropdownContainer>
-  );
-  return (
-    <ModalInputWrapper>
-      <p>{title}:</p>
-      <ModalInputField
-        as="select"
-        value={selectedOption}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="" disabled>
-          Select {title}
-        </option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </ModalInputField>
-    </ModalInputWrapper>
-  );
-  */
 }
 
 const countries = [
@@ -222,75 +187,38 @@ const columnsByCategory = {
 
 const categories = Object.keys(columnsByCategory);
 
-export default function AddNewContact({ handleCloseAddContactTask, handleAddContact }) {
-  const [error, setError] = useState("");
-  const [category, setCategory] = useState(null);
-  const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [club, setClub] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [website, setWebsite] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [postalCode, setPostalCode] = useState(null);
-  const [city, setCity] = useState("");
-  const [street, setStreet] = useState("");
-  const [houseNumber, setHouseNumber] = useState("");
-  const [country, setCountry] = useState("");
-  const [contactBy, setContactBy] = useState("");
-  const [notes, setNotes] = useState("");
-  const [previousCollaboration, setPreviousCollaboration] = useState("");
-  const [birthDate, setBirthDate] = useState(null);
-  const [discordName, setDiscordName] = useState("");
-  const [gender, setGender] = useState("");
+export default function DisplayContactModal({ contact, handleOnClose, handleEditContact }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableContact, setEditableContact] = useState(contact);
 
-  async function onSubmit() {
-    if (!name) {
-      setError("Name ist ein Pflichtfeld");
-      return;
-    }
-    if (!category) {
-      setError("Kategorie ist ein Pflichtfeld");
-      return;
-    }
-    const newContact = {
-      name,
-      company,
-      club,
-      email,
-      phone,
-      website,
-      instagram,
-      postal_code: postalCode,
-      city,
-      street,
-      house_number: houseNumber,
-      country,
-      contact_by: contactBy,
-      notes,
-      previous_collaboration: previousCollaboration,
-      birth_date: birthDate,
-      discord_name: discordName,
-      gender,
-      category,
-    };
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
 
-    console.log(newContact);
-    handleAddContact(newContact);
-  }
+  const handleSaveClick = () => {
+    setIsEditing(false);
+    // Save changes (you can implement save logic here)
+    handleEditContact(editableContact);
+    console.log("Saved contact:", editableContact);
+  };
+
+  const handleChange = (field, value) => {
+    setEditableContact((prev) => ({ ...prev, [field]: value }));
+  };
 
   const renderInputFields = () => {
-    if (!category) return null;
+    if (!editableContact.category) return null;
 
-    return columnsByCategory[category].map((column) => {
+    return columnsByCategory[editableContact.category].map((column) => {
       switch (column.id) {
         case "name":
           return (
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={name}
-              inputChange={setName}
+              inputText={editableContact.name}
+              inputChange={(value) => handleChange("name", value)}
+              editable={isEditing}
             />
           );
         case "company":
@@ -298,8 +226,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={company}
-              inputChange={setCompany}
+              inputText={editableContact.company}
+              inputChange={(value) => handleChange("company", value)}
+              editable={isEditing}
             />
           );
         case "club":
@@ -307,8 +236,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={club}
-              inputChange={setClub}
+              inputText={editableContact.club}
+              inputChange={(value) => handleChange("club", value)}
+              editable={isEditing}
             />
           );
         case "email":
@@ -316,8 +246,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={email}
-              inputChange={setEmail}
+              inputText={editableContact.email}
+              inputChange={(value) => handleChange("email", value)}
+              editable={isEditing}
             />
           );
         case "phone":
@@ -325,8 +256,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={phone}
-              inputChange={setPhone}
+              inputText={editableContact.phone}
+              inputChange={(value) => handleChange("phone", value)}
+              editable={isEditing}
             />
           );
         case "website":
@@ -334,8 +266,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={website}
-              inputChange={setWebsite}
+              inputText={editableContact.website}
+              inputChange={(value) => handleChange("website", value)}
+              editable={isEditing}
             />
           );
         case "instagram":
@@ -343,8 +276,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={instagram}
-              inputChange={setInstagram}
+              inputText={editableContact.instagram}
+              inputChange={(value) => handleChange("instagram", value)}
+              editable={isEditing}
             />
           );
         case "postal_code":
@@ -352,9 +286,10 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={postalCode}
-              inputChange={setPostalCode}
+              inputText={editableContact.postal_code}
+              inputChange={(value) => handleChange("postal_code", value)}
               type="number"
+              editable={isEditing}
             />
           );
         case "city":
@@ -362,8 +297,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={city}
-              inputChange={setCity}
+              inputText={editableContact.city}
+              inputChange={(value) => handleChange("city", value)}
+              editable={isEditing}
             />
           );
         case "street":
@@ -371,8 +307,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={street}
-              inputChange={setStreet}
+              inputText={editableContact.street}
+              inputChange={(value) => handleChange("street", value)}
+              editable={isEditing}
             />
           );
         case "house_number":
@@ -380,8 +317,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={houseNumber}
-              inputChange={setHouseNumber}
+              inputText={editableContact.house_number}
+              inputChange={(value) => handleChange("house_number", value)}
+              editable={isEditing}
             />
           );
         case "country":
@@ -390,8 +328,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
               key={column.id}
               title={column.name}
               options={sortedCountries}
-              selectedOption={country}
-              onChange={setCountry}
+              selectedOption={editableContact.country}
+              onChange={(value) => handleChange("country", value)}
+              editable={isEditing}
             />
           );
         case "contact_by":
@@ -399,8 +338,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={contactBy}
-              inputChange={setContactBy}
+              inputText={editableContact.contact_by}
+              inputChange={(value) => handleChange("contact_by", value)}
+              editable={isEditing}
             />
           );
         case "notes":
@@ -408,8 +348,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionTextArea
               key={column.id}
               title={column.name}
-              inputText={notes}
-              inputChange={setNotes}
+              inputText={editableContact.notes}
+              inputChange={(value) => handleChange("notes", value)}
+              editable={isEditing}
             />
           );
         case "previous_collaboration":
@@ -417,8 +358,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionTextArea
               key={column.id}
               title={column.name}
-              inputText={previousCollaboration}
-              inputChange={setPreviousCollaboration}
+              inputText={editableContact.previous_collaboration}
+              inputChange={(value) => handleChange("previous_collaboration", value)}
+              editable={isEditing}
             />
           );
         case "birth_date":
@@ -426,9 +368,10 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={birthDate}
-              inputChange={setBirthDate}
+              inputText={editableContact.birth_date}
+              inputChange={(value) => handleChange("birth_date", value)}
               type="date"
+              editable={isEditing}
             />
           );
         case "discord_name":
@@ -436,8 +379,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             <InputOptionInput
               key={column.id}
               title={column.name}
-              inputText={discordName}
-              inputChange={setDiscordName}
+              inputText={editableContact.discord_name}
+              inputChange={(value) => handleChange("discord_name", value)}
+              editable={isEditing}
             />
           );
         case "gender":
@@ -446,8 +390,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
               key={column.id}
               title={column.name}
               options={genders}
-              selectedOption={gender}
-              onChange={setGender}
+              selectedOption={editableContact.gender}
+              onChange={(value) => handleChange("gender", value)}
+              editable={isEditing}
             />
           );
         default:
@@ -457,32 +402,38 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   };
 
   return (
-    <ModalOverlay onClick={handleCloseAddContactTask}>
+    <ModalOverlay onClick={handleOnClose}>
       <ModalContentLarge onClick={(e) => e.stopPropagation()}>
-        <ModalCloseIcon onClick={handleCloseAddContactTask} />
-        <h2>Neuer Kontakt</h2>
-        <div>
-          {categories.map((cat, index) => (
-            <>
-              <input
-                key={cat}
-                type="radio"
-                id={`categoryChoice${index}`}
-                name="categoryChoice"
-                value={cat}
-                onChange={() => setCategory(cat)}
-              />
-              <label htmlFor={`categoryChoice${index}`} style={{ paddingRight: "10px" }}>
-                {cat}
-              </label>
-            </>
-          ))}
-        </div>
-
+        <ModalCloseIcon onClick={handleOnClose} />
+        <h2>Kontakt anzeigen</h2>
+        {isEditing && (
+          <div>
+            {categories.map((cat, index) => (
+              <>
+                <input
+                  key={cat}
+                  type="radio"
+                  id={`categoryChoice${index}`}
+                  name="categoryChoice"
+                  value={cat}
+                  checked={editableContact.category === cat}
+                  onChange={() => handleChange("category", cat)}
+                />
+                <label htmlFor={`categoryChoice${index}`} style={{ paddingRight: "10px" }}>
+                  {cat}
+                </label>
+              </>
+            ))}
+          </div>
+        )}
         <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
-        {error && <p style={{ color: "red" }}>{error}</p>}
         <ModalButtonRightContainer>
-          <GreenButton onClick={onSubmit}>Kontakt Speichern</GreenButton>
+          {isEditing ? (
+            <GreenButton onClick={handleSaveClick}>Speichern</GreenButton>
+          ) : (
+            <StyledButton onClick={handleEditClick}>Bearbeiten</StyledButton>
+          )}
+          <RedButton onClick={handleOnClose}>Schließen</RedButton>
         </ModalButtonRightContainer>
       </ModalContentLarge>
     </ModalOverlay>
