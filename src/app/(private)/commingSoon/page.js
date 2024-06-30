@@ -22,25 +22,34 @@ const SoonContainer = styled.div`
   }
 `;
 
+const CummingSoonListItem = styled.li`
+  padding-bottom: 5px;
+`;
+
 export default function CommingSoon() {
   return (
     <SoonBackground>
       <h1>Comming Soon</h1>
       <SoonContainer>
         <ul>
-          <li>Kostenkalkulation</li>
-          <li>Ehrengäste Zeitplan</li>
-          <li>Verschiedene Automatismen</li>
-          <li>Benachrichtigungen</li>
-          <li>E-Mail sender</li>
-          <li>Einstellungen</li>
-          <li>Suchfunktion</li>
-          <li>Smartphone Support</li>
-          <li>Lightmode</li>
-          <li>Passwort zurücksetzen</li>
-          <li>Farb Legende für Kanban Board</li>
-          <li>Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt</li>
-          <li>Admin Page überarbeiten</li>
+          <CummingSoonListItem>Kostenkalkulation</CummingSoonListItem>
+          <CummingSoonListItem>Ehrengäste Zeitplan</CummingSoonListItem>
+          <CummingSoonListItem>Verschiedene Automatismen</CummingSoonListItem>
+          <CummingSoonListItem>Benachrichtigungen</CummingSoonListItem>
+          <CummingSoonListItem>E-Mail sender</CummingSoonListItem>
+          <CummingSoonListItem>Einstellungen</CummingSoonListItem>
+          <CummingSoonListItem>Suchfunktion für Kanbanboard</CummingSoonListItem>
+          <CummingSoonListItem>Smartphone Support</CummingSoonListItem>
+          <CummingSoonListItem>Lightmode</CummingSoonListItem>
+          <CummingSoonListItem>Passwort zurücksetzen</CummingSoonListItem>
+          <CummingSoonListItem>Farb Legende für Kanban Board</CummingSoonListItem>
+          <CummingSoonListItem>
+            Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt
+          </CummingSoonListItem>
+          <CummingSoonListItem>Admin Page überarbeiten</CummingSoonListItem>
+          <CummingSoonListItem>
+            Kontaktliste Künstlername und Spitzname hinzufügen
+          </CummingSoonListItem>
         </ul>
       </SoonContainer>
     </SoonBackground>

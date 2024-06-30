@@ -39,7 +39,9 @@ export default function Changelog() {
           <li>Add Password show Buttons</li>
           <li>Add Password guidelines</li>
           <li>Add Delete subtasks when creating a task</li>
+          <li>Add Show Reported Bugs</li>
           <li>Fix Tasks without subtasks suddenly have 1 subtask</li>
+          <li>Fix Confirm login with enter key</li>
         </ul>
       </LogContainer>
       <LogContainer>
@@ -52,7 +54,7 @@ export default function Changelog() {
           <li>Add Changelog</li>
           <li>Add Comming Soon</li>
           <li>Add Bug Report</li>
-          <li>Add YumeKai Umfrage Auswertung</li>
+          <li>Add YumeKai Survey Evaluation</li>
         </ul>
       </LogContainer>
     </LogBackground>
