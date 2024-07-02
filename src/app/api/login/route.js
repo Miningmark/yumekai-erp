@@ -54,6 +54,9 @@ export async function POST(req) {
       })
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
+    console.log("IP x-forwarded-for: ", req.headers.get("x-forwarded-for"));
+    console.log("IP remote-addr: ", req.headers.get("remote-addr"));
+    console.log("IP connection.remoteAddress: ", req.connection.remoteAddress);
 
     console.log(
       "user from login API -------------------------------------------------------",

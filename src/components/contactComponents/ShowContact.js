@@ -47,7 +47,6 @@ const categories = Object.keys(columnsByCategory);
 export default function DisplayContactModal({ contact, handleOnClose, handleEditContact }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editableContact, setEditableContact] = useState(contact);
-  console.log(editableContact);
 
   const handleEditClick = () => {
     setIsEditing(true);
