@@ -41,7 +41,17 @@ const connection = mysql.createPool({
 export async function GET() {
   try {
     const [rows] = await connection.query("SELECT * FROM contacts ORDER BY name ASC");
-    return NextResponse.json(rows, { status: 200 });
+    // Konvertiere das Geburtsdatum
+    const convertedRows = rows.map((row) => {
+      if (row.birth_date) {
+        const utcDate = new Date(row.birth_date); // Konvertiere das Datum in UTC
+        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
+        row.birth_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+      }
+      return row;
+    });
+
+    return NextResponse.json(convertedRows, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

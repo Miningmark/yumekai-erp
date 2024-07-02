@@ -47,9 +47,6 @@ export default function CommingSoon() {
             Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt
           </CummingSoonListItem>
           <CummingSoonListItem>Admin Page überarbeiten</CummingSoonListItem>
-          <CummingSoonListItem>
-            Kontaktliste Künstlername und Spitzname hinzufügen
-          </CummingSoonListItem>
         </ul>
       </SoonContainer>
     </SoonBackground>

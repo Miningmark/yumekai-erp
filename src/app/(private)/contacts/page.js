@@ -355,7 +355,7 @@ export default function Contacts() {
                   ))}
                 </tr>
               </StyledTableHead>
-              <StyledTableBody>
+              <StyledTableBody key={"tableBody"}>
                 {currentCategoryContacts.map((contact, index) => (
                   <tr key={index}>
                     {columns.map((column) => (
@@ -367,7 +367,9 @@ export default function Contacts() {
                           setActiveContact(contact);
                         }}
                       >
-                        {contact[column.id]}
+                        {column.id === "birth_date" && contact[column.id]
+                          ? new Date(contact[column.id]).toLocaleDateString("de-DE") // Anzeige als tt.MM.yyyy
+                          : contact[column.id]}
                       </td>
                     ))}
                   </tr>
