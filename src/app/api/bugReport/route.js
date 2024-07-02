@@ -9,7 +9,8 @@ CREATE TABLE bugreport (
   title VARCHAR(50) NOT NULL,
   description VARCHAR(500) NOT NULL,
   reporter VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  finished BOOLEAN DEFAULT FALSE
 );
 
 */
@@ -52,6 +53,35 @@ export async function GET() {
     // Fetch all bug reports from the database
     const [rows] = await connection.execute("SELECT * FROM bugreport");
     return NextResponse.json(rows, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req) {
+  try {
+    const body = await req.json();
+    const { id, finished } = body;
+
+    if (typeof id !== "number" || typeof finished !== "boolean") {
+      return NextResponse.json({ message: "Invalid data" }, { status: 400 });
+    }
+
+    // Update the finished status of the bug report
+    const [result] = await connection.execute("UPDATE bugreport SET finished = ? WHERE id = ?", [
+      finished,
+      id,
+    ]);
+
+    if (result.affectedRows > 0) {
+      return NextResponse.json({ message: "Bug report erfolgreich aktualisiert" }, { status: 200 });
+    } else {
+      return NextResponse.json(
+        { message: "Fehler beim Aktualisieren des Bug reports" },
+        { status: 500 }
+      );
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

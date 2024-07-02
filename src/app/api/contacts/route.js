@@ -98,15 +98,24 @@ export async function POST(req) {
       return NextResponse.json({ message: "Name and Category are required" }, { status: 400 });
     }
 
-    const [result] = await connection.execute(
+    const [insertResult] = await connection.execute(
       "INSERT INTO contacts (name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
+    const [result] = await connection.query("SELECT LAST_INSERT_ID() as insertId");
 
-    if (result.affectedRows > 0) {
-      return NextResponse.json({ message: "Contact successfully added" }, { status: 200 });
+    if (result && result.length > 0 && result[0].insertId) {
+      const insertId = result[0].insertId;
+      return NextResponse.json(
+        { message: "Contact successfully added", insertId },
+        { status: 201 }
+      );
     } else {
-      return NextResponse.json({ message: "Error adding contact" }, { status: 500 });
+      console.error("Failed to get insertId after contact creation");
+      return NextResponse.json(
+        { message: "Failed to get insertId after contact creation" },
+        { status: 500 }
+      );
     }
   } catch (error) {
     console.error(error);
@@ -115,7 +124,6 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
-  //console.log("req: ", req);
   try {
     const body = await req.json();
     const { id, created_at, ...updatedFields } = body;
@@ -126,7 +134,6 @@ export async function PATCH(req) {
 
     const keys = Object.keys(updatedFields);
     const values = Object.values(updatedFields);
-    console.log("keys: ", keys);
 
     if (keys.length === 0) {
       return NextResponse.json({ message: "No fields to update" }, { status: 400 });

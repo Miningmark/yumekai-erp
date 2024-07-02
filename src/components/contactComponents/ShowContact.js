@@ -37,7 +37,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text", editab
           name={title}
           id={title}
           type={type}
-          value={inputText}
+          value={inputText || ""}
           onChange={(e) => inputChange(type === "number" ? +e.target.value : e.target.value)}
           disabled={!editable}
         />
@@ -59,7 +59,7 @@ function InputOptionTextArea({ title, inputText, inputChange, editable }) {
           type="text"
           name={title}
           id={title}
-          value={inputText}
+          value={inputText || ""}
           onChange={(e) => inputChange(e.target.value)}
           rows="3"
           disabled={!editable}

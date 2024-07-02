@@ -23,6 +23,11 @@ nextApp.prepare().then(() => {
       console.log("newColumn:", data);
       socket.broadcast.emit("loadNewColumns", "new");
     });
+
+    socket.on("newBug", (data) => {
+      console.log("newBug:", data);
+      socket.broadcast.emit("loadNewBug", "new");
+    });
   });
 
   const PORT = process.env.PORT || 3000;

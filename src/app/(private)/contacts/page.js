@@ -215,18 +215,27 @@ export default function Contacts() {
   }
 
   async function handleAddContact(newContact) {
-    const response = await fetch("/api/contacts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newContact),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setContacts([...contacts, newContact]);
-      setFilteredContacts([...contacts, newContact]);
-      setShowModal(false);
-    } else {
-      console.error("Fehler beim Speichern des Kontakts. ", data);
+    try {
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newContact),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        if (responseData && responseData.insertId) {
+          setContacts([...contacts, { ...newContact, id: responseData.insertId }]);
+          setFilteredContacts([...contacts, { ...newContact, id: responseData.insertId }]);
+          setShowModal(false);
+        } else {
+          console.error("Failed to add contact: Response does not contain insertId. ");
+        }
+      } else {
+        console.error("Failed to add contact. ", response.status);
+      }
+    } catch (error) {
+      console.error("Failed to add contact:", error);
     }
   }
 
