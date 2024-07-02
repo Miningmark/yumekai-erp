@@ -109,6 +109,8 @@ const allColumns = [
   { id: "id", name: "ID" },
   { id: "category", name: "Kategorie" },
   { id: "name", name: "Name" },
+  { id: "nickname", name: "Rufname" },
+  { id: "artist_name", name: "Künstlername" },
   { id: "company", name: "Firma" },
   { id: "club", name: "Verein" },
   { id: "email", name: "E-Mail" },
@@ -132,30 +134,61 @@ const allColumns = [
 const columnsByCategory = {
   Händler: allColumns.filter(
     (column) =>
-      !["id", "category", "club", "created_at", "birth_date", "discord_name"].includes(column.id)
+      ![
+        "id",
+        "nickname",
+        "artist_name",
+        "category",
+        "club",
+        "created_at",
+        "birth_date",
+        "discord_name",
+      ].includes(column.id)
   ),
   Künstler: allColumns.filter(
     (column) =>
-      !["id", "category", "club", "created_at", "birth_date", "discord_name"].includes(column.id)
+      !["id", "nickname", "category", "club", "created_at", "birth_date", "discord_name"].includes(
+        column.id
+      )
   ),
   Showact: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date", "discord_name"].includes(column.id)
+    (column) =>
+      !["id", "nickname", "category", "created_at", "birth_date", "discord_name"].includes(
+        column.id
+      )
   ),
   Workshop: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date", "company"].includes(column.id)
+    (column) =>
+      !["id", "nickname", "category", "created_at", "birth_date", "company"].includes(column.id)
   ),
   Verein: allColumns.filter(
     (column) =>
-      !["id", "category", "company", "created_at", "birth_date", "discord_name"].includes(column.id)
+      ![
+        "id",
+        "category",
+        "nickname",
+        "artist_name",
+        "company",
+        "created_at",
+        "birth_date",
+        "discord_name",
+      ].includes(column.id)
   ),
   Cosplayer: allColumns.filter(
-    (column) => !["id", "category", "created_at", "birth_date"].includes(column.id)
+    (column) => !["id", "nickname", "category", "created_at", "birth_date"].includes(column.id)
   ),
   Helfer: allColumns.filter(
     (column) =>
-      !["id", "category", "created_at", "company", "club", "website", "instagram"].includes(
-        column.id
-      )
+      ![
+        "id",
+        "category",
+        "artist_name",
+        "created_at",
+        "company",
+        "club",
+        "website",
+        "instagram",
+      ].includes(column.id)
   ),
   Sonstiges: allColumns.filter((column) => !["id", "category", "created_at"].includes(column.id)),
 };
@@ -346,12 +379,14 @@ export default function Contacts() {
       </ContactTabBackground>
       {showModal && (
         <AddNewContact
+          key={"newContact"}
           handleCloseAddContactTask={() => setShowModal(false)}
           handleAddContact={handleAddContact}
         />
       )}
       {activeContact && (
         <DisplayContactModal
+          key={"showContact"}
           contact={activeContact}
           handleOnClose={handleOnClose}
           handleEditContact={handleEditContact}

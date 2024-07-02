@@ -7,6 +7,8 @@ import { NextResponse } from "next/server";
       id INT AUTO_INCREMENT PRIMARY KEY,
       category VARCHAR(50) NOT NULL,
       name VARCHAR(50) NOT NULL,
+      nickname VARCHAR(50),
+      artist_name VARCHAR(50),
       company VARCHAR(50),
       club VARCHAR(50),
       email VARCHAR(50),
@@ -51,6 +53,8 @@ export async function POST(req) {
     const body = await req.json();
     const {
       name,
+      nickname,
+      artist_name,
       company,
       club,
       email,
@@ -74,6 +78,8 @@ export async function POST(req) {
     // Ensure all parameters are not undefined
     const params = [
       name ?? null,
+      nickname ?? null,
+      artist_name ?? null,
       company ?? null,
       club ?? null,
       email ?? null,
@@ -99,7 +105,7 @@ export async function POST(req) {
     }
 
     const [insertResult] = await connection.execute(
-      "INSERT INTO contacts (name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO contacts (name,nickname,artist_name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
     const [result] = await connection.query("SELECT LAST_INSERT_ID() as insertId");
