@@ -108,27 +108,6 @@ export default function BugModule() {
     }
   }
 
-  /*
-  useEffect(() => {
-    const fetchBugs = async () => {
-      try {
-        const response = await fetch("/api/bugReport");
-        if (response.ok) {
-          const data = await response.json();
-          setBugs(data);
-        } else {
-          console.error("Failed to fetch bug reports");
-        }
-      } catch (error) {
-        console.error("Error fetching bug reports", error);
-      }
-    };
-    fetchBugs();
-  }, []);
-*/
-
-  console.log(bugs);
-
   const handleCheckboxChange = async (bugId, currentValue) => {
     try {
       const response = await fetch(`/api/bugReport`, {

@@ -5,7 +5,7 @@ import StyledButton from "@/components/styledComponents/StyledButton";
 import AddNewUser from "@/components/adminComponents/AddNewUser";
 import UserListModal from "@/components/adminComponents/UserListModal";
 import { useState, useEffect } from "react";
-import BugModule from "@/components/adminComponents/BugModule";
+import BugModule from "@/components/adminComponents/BugModuleAdmin";
 
 const PageBackground = styled.div`
   display: flex;

@@ -51,7 +51,7 @@ export async function POST(req) {
 export async function GET() {
   try {
     // Fetch all bug reports from the database
-    const [rows] = await connection.execute("SELECT * FROM bugreport");
+    const [rows] = await connection.execute("SELECT * FROM bugreport WHERE finished = 0");
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);

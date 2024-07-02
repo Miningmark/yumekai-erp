@@ -21,7 +21,7 @@ import {
   ModalCloseIcon,
   ModalImputTitle,
 } from "@/components/styledComponents/ModalComponents";
-import BugModule from "@/components/adminComponents/BugModule";
+import BugModule from "@/components/bugReport/BugModule";
 import { socket } from "@/app/socket";
 
 const FormContainer = styled.div`
@@ -40,21 +40,50 @@ const FormContainer = styled.div`
   }
 `;
 
+function formatierteZeit() {
+  let jetzt = new Date();
+
+  // Datumskomponenten extrahieren
+  let tag = jetzt.getDate();
+  let monat = jetzt.getMonth() + 1; // Monate sind 0-basiert, daher +1
+  let jahr = jetzt.getFullYear();
+
+  // Zeitkomponenten extrahieren
+  let stunden = jetzt.getHours();
+  let minuten = jetzt.getMinutes();
+  let sekunden = jetzt.getSeconds();
+
+  // Führende Nullen hinzufügen, falls nötig
+  tag = (tag < 10 ? "0" : "") + tag;
+  monat = (monat < 10 ? "0" : "") + monat;
+  stunden = (stunden < 10 ? "0" : "") + stunden;
+  minuten = (minuten < 10 ? "0" : "") + minuten;
+  sekunden = (sekunden < 10 ? "0" : "") + sekunden;
+
+  // Das gewünschte Format erstellen
+  return `${tag}.${monat}.${jahr}, ${stunden}:${minuten}:${sekunden}`;
+}
+
 export default function BugReport() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const [session, setSession] = useState(null);
+  const [bugs, setBugs] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
 
   useEffect(() => {
+    fetchBugs();
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("loadNewBug", fetchBugs);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
+      socket.off("loadNewBug", fetchBugs);
     };
   }, []);
 
@@ -76,6 +105,28 @@ export default function BugReport() {
   function onDisconnect() {
     setIsConnected(false);
     setTransport("N/A");
+  }
+
+  useEffect(() => {
+    async function checkSession() {
+      setSession(await getSession());
+    }
+
+    checkSession();
+  }, []);
+
+  async function fetchBugs() {
+    try {
+      const response = await fetch("/api/bugReport");
+      if (response.ok) {
+        const data = await response.json();
+        setBugs(data);
+      } else {
+        console.error("Failed to fetch bug reports");
+      }
+    } catch (error) {
+      console.error("Error fetching bug reports", error);
+    }
   }
 
   useEffect(() => {
@@ -111,6 +162,15 @@ export default function BugReport() {
     setMessage(data.message);
 
     if (response.ok) {
+      setBugs([
+        ...bugs,
+        {
+          title: title,
+          description: description,
+          reporter: session?.user?.name || "Unknown",
+          created_at: formatierteZeit(),
+        },
+      ]);
       socket.emit("newBug", "Hello Server");
       setTitle("");
       setDescription("");
@@ -161,7 +221,7 @@ export default function BugReport() {
         </form>
         {message && <p>{message}</p>}
       </FormContainer>
-      <BugModule />
+      <BugModule bugs={bugs} />
     </>
   );
 }
