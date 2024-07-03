@@ -52,28 +52,47 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   const [error, setError] = useState("");
   const [newContact, setNewContact] = useState(newContactTemplate);
 
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   async function onSubmit() {
     if (!newContact.name) {
       setError("Name ist ein Pflichtfeld");
       return;
     }
-    if (!newContact.category) {
+    if (!selectedCategories) {
       setError("Kategorie ist ein Pflichtfeld");
       return;
     }
 
-    console.log(newContact);
-    handleAddContact(newContact);
+    const contactToSave = { ...newContact, category: selectedCategories.join(", ") };
+    console.log(contactToSave);
+
+    handleAddContact(contactToSave);
   }
 
   function handleChange(field, value) {
     setNewContact((prev) => ({ ...prev, [field]: value }));
   }
 
-  function renderInputFields() {
-    if (!newContact.category) return null;
+  function handleCategoryChange(category) {
+    setSelectedCategories((prev) => {
+      if (prev.includes(category)) {
+        return prev.filter((cat) => cat !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
+  }
 
-    return columnsByCategory[newContact.category].map((column) => {
+  function renderInputFields() {
+    if (selectedCategories.length === 0) return null;
+
+    const fields = new Set();
+    selectedCategories.forEach((category) => {
+      columnsByCategory[category].forEach((column) => fields.add(column));
+    });
+
+    return Array.from(fields).map((column) => {
       const Component = inputComponentType[column.id];
       if (!Component) return null;
 
@@ -102,19 +121,16 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
         <h2>Neuer Kontakt</h2>
         <div>
           {categories.map((cat, index) => (
-            <>
+            <div key={cat} style={{ display: "inline-block", marginRight: "10px" }}>
               <input
-                key={cat}
-                type="radio"
+                type="checkbox"
                 id={`categoryChoice${index}`}
                 name="categoryChoice"
                 value={cat}
-                onChange={() => handleChange("category", cat)}
+                onChange={() => handleCategoryChange(cat)}
               />
-              <label htmlFor={`categoryChoice${index}`} style={{ paddingRight: "10px" }}>
-                {cat}
-              </label>
-            </>
+              <label htmlFor={`categoryChoice${index}`}>{cat}</label>
+            </div>
           ))}
         </div>
 

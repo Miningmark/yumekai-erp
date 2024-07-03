@@ -41,12 +41,21 @@ const connection = mysql.createPool({
 export async function GET() {
   try {
     const [rows] = await connection.query("SELECT * FROM contacts ORDER BY name ASC");
-    // Konvertiere das Geburtsdatum
+
     const convertedRows = rows.map((row) => {
+      // Konvertiere das Geburtsdatum
       if (row.birth_date) {
         const utcDate = new Date(row.birth_date); // Konvertiere das Datum in UTC
         const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
         row.birth_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+      }
+      // Convert category from JSON string to array
+      if (typeof row.category === "string") {
+        try {
+          row.category = JSON.parse(row.category);
+        } catch (e) {
+          row.category = row.category.split(", ");
+        }
       }
       return row;
     });

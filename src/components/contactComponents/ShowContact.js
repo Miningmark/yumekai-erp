@@ -62,10 +62,25 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
     setEditableContact((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleCategoryChange = (category) => {
+    setEditableContact((prev) => {
+      const categories = prev.category.includes(category)
+        ? prev.category.filter((cat) => cat !== category)
+        : [...prev.category, category];
+      return { ...prev, category: categories };
+    });
+  };
+
   const renderInputFields = () => {
     if (!editableContact.category) return null;
 
-    return columnsByCategory[editableContact.category].map((column) => {
+    const allFields = editableContact.category
+      .map((category) => columnsByCategory[category])
+      .flat();
+
+    const uniqueFields = [...new Map(allFields.map((field) => [field.id, field])).values()];
+
+    return uniqueFields.map((column) => {
       const Component = inputComponentType[column.id];
       if (!Component) return null;
 
@@ -95,20 +110,19 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
         {isEditing && (
           <div>
             {categories.map((cat, index) => (
-              <>
+              <div key={cat} style={{ display: "inline-block", marginRight: "10px" }}>
                 <input
-                  key={cat}
-                  type="radio"
+                  type="checkbox"
                   id={`categoryChoice${index}`}
                   name="categoryChoice"
                   value={cat}
-                  checked={editableContact.category === cat}
-                  onChange={() => handleChange("category", cat)}
+                  checked={editableContact.category.includes(cat)}
+                  onChange={() => handleCategoryChange(cat)}
                 />
                 <label htmlFor={`categoryChoice${index}`} style={{ paddingRight: "10px" }}>
                   {cat}
                 </label>
-              </>
+              </div>
             ))}
           </div>
         )}

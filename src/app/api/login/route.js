@@ -12,9 +12,9 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  console.log("API login endpoint hit");
+  //console.log("API login endpoint hit");
   const { name, password } = await req.json();
-  console.log("Name and Password form login route", name, ", ", password);
+  //console.log("Name and Password form login route", name, ", ", password);
 
   //const hashedPassword = await bcrypt.hash("Admin123!", 10);
   //console.log("hashedPassword: ", hashedPassword);
@@ -54,14 +54,7 @@ export async function POST(req) {
       })
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
-    console.log("IP x-forwarded-for: ", req.headers.get("x-forwarded-for"));
-    console.log("IP remote-addr: ", req.headers.get("remote-addr"));
-    //console.log("IP connection.remoteAddress: ", req.connection.remoteAddress);
 
-    console.log(
-      "user from login API -------------------------------------------------------",
-      user
-    );
     // Update the lastlogin array
     let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
     lastlogins.unshift(` ${formattedDate};${userIp} `);
