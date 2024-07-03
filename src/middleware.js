@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getSession, login, logout } from "@/lib/cockieFunctions";
+import { getSession, login, logout, updateSession } from "@/lib/cockieFunctions";
 import {
   privateRoutes,
   authRoutes,
@@ -125,7 +125,7 @@ export async function middleware(req) {
     }
   }
 */
-  return NextResponse.next();
+  return await updateSession(req);
 }
 
 export const config = {

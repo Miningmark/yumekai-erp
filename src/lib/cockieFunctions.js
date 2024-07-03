@@ -48,17 +48,12 @@ export async function getSession() {
   return await decrypt(session);
 }
 
-export async function updateSession() {
-  console.log("update Session 1");
-  const session = cookies().get("session")?.value;
+export async function updateSession(request) {
+  const session = request.cookies.get("session")?.value;
   if (!session) return;
-  console.log("update Session 2");
 
   // Refresh the session so it doesn't expire
   const parsed = await decrypt(session);
-  console.log("update Session 3", parsed);
-  console.log("update Session 4", parsed.user);
-  console.log(" ");
   if (!parsed) return;
 
   parsed.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
