@@ -14,13 +14,17 @@ const StyledMenu = styled.nav`
   left: ${({ $sidemenuwidth }) => `${$sidemenuwidth}px`};
   width: ${({ $sidemenuwidth }) => `calc(100vw - ${$sidemenuwidth}px)`};
   height: 56px;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 500;
   transition: all 0.3s ease;
+
+  svg {
+    fill: ${({ theme }) => theme.textColor};
+  }
 
   &::before {
     content: "";
@@ -30,7 +34,7 @@ const StyledMenu = styled.nav`
     top: 56px;
     left: 0;
     border-radius: 50%;
-    box-shadow: -20px -20px 0 var(--light);
+    box-shadow: -20px -20px 0 ${({ theme }) => theme.color1};
     z-index: -1;
   }
 `;
@@ -57,15 +61,21 @@ const SearchContainer = styled.div`
   }
 `;
 const InputField = styled.input`
-  background-color: var(--grey);
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color2};
+  color: ${({ theme }) => theme.textColor};
   border: transparent;
   border-radius: 20px 0 0 20px;
   padding-left: 20px;
   outline: none;
 `;
 
-export default function StickyMenu({ sideMenuOpen, setSideMenuOpen, searchtext, handleSerchText }) {
+export default function StickyMenu({
+  sideMenuOpen,
+  setSideMenuOpen,
+  searchtext,
+  handleSerchText,
+  toggleTheme,
+}) {
   return (
     <StyledMenu $sidemenuwidth={sideMenuOpen ? "200" : "60"}>
       <MenuContainer>
@@ -83,7 +93,7 @@ export default function StickyMenu({ sideMenuOpen, setSideMenuOpen, searchtext, 
         </SearchContainer>
       </MenuContainer>
       <MenuContainer>
-        <IconBrightness />
+        <IconBrightness onClick={toggleTheme} />
         <Link href="/profile">
           <IconProfile />
         </Link>

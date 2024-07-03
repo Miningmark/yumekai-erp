@@ -1,5 +1,4 @@
-import { GlobalStyles } from "@/lib/global-styles";
-import StyledComponentsRegistry from "@/lib/styled-components-registry";
+import ThemeWrapper from "@/app/ThemeWrapper";
 
 export const metadata = {
   title: "YumeKai Planungsboard",
@@ -10,8 +9,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="de">
       <body>
-        <GlobalStyles />
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <ThemeWrapper>{children}</ThemeWrapper>
       </body>
     </html>
   );

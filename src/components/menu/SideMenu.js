@@ -24,7 +24,7 @@ const Sidebar = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   width: 200px;
   height: 100%;
   z-index: 2000;
@@ -76,8 +76,12 @@ const SideMenuItem = styled.li`
   padding: 4px 10px 4px 4px;
   position: relative;
 
+  svg {
+    fill: ${({ theme }) => theme.textColor};
+  }
+
   &.active {
-    background: var(--grey);
+    background-color: ${({ theme }) => theme.color2};
 
     &::before,
     &::after {
@@ -92,12 +96,12 @@ const SideMenuItem = styled.li`
 
     &::before {
       top: -40px;
-      box-shadow: 20px 20px 0 var(--grey);
+      box-shadow: 20px 20px 0 ${({ theme }) => theme.color2};
     }
 
     &::after {
       bottom: -40px;
-      box-shadow: 20px -20px 0 var(--grey);
+      box-shadow: 20px -20px 0 ${({ theme }) => theme.color2};
     }
 
     a {
@@ -123,12 +127,12 @@ const SideMenuItem = styled.li`
 const SideMenuLink = styled(Link)`
   width: 100%;
   height: 100%;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   display: flex;
   align-items: center;
   border-radius: 24px;
   font-size: 16px;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   white-space: nowrap;
   overflow-x: hidden;
   transition: all 0.3s ease;
@@ -156,12 +160,12 @@ const SideMenuLink = styled(Link)`
 const SideMenuButton = styled.button`
   width: 100%;
   height: 100%;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   display: flex;
   align-items: center;
   border-radius: 48px;
   font-size: 16px;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   white-space: nowrap;
   overflow-x: hidden;
   transition: all 0.3s ease;

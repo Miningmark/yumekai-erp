@@ -44,6 +44,7 @@ export default function Changelog() {
           <li>Fix Confirm login with enter key</li>
           <li>Fix BugReport Automatic reload of the bug list when a new Bug is added</li>
           <li>Fix New contacts cannot be changed directly after creation</li>
+          <li>Fix Login Session Zeit Problem</li>
         </ul>
       </LogContainer>
       <LogContainer>

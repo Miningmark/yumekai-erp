@@ -18,7 +18,7 @@ const Content = styled.div`
 
 export const PageContext = React.createContext(null);
 
-export default function MenuLayout({ children, searchtext, handleSerchText }) {
+export default function MenuLayout({ children, searchtext, handleSerchText, toggleTheme }) {
   const [sideMenuOpen, setSideMenuOpen] = useState(true);
 
   // Clone children and pass searchtext as a prop
@@ -38,6 +38,7 @@ export default function MenuLayout({ children, searchtext, handleSerchText }) {
         setSideMenuOpen={setSideMenuOpen}
         searchtext={searchtext}
         handleSerchText={handleSerchText}
+        toggleTheme={toggleTheme}
       />
       <Content $sidemenuwidth={sideMenuOpen ? "200" : "60"}>
         <PageContext.Provider value={searchtext}>{children}</PageContext.Provider>
