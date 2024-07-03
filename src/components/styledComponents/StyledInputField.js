@@ -13,10 +13,11 @@ export const InputLabel = styled.label`
   transform: translate(0, 0);
   transform-origin: 0 0;
   background: var(--grey);
-
+  /*
   @-moz-document url-prefix() {
     margin: 26px 4px;
   }
+    */
 `;
 
 export const InputField = styled.input`

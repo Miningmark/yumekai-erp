@@ -52,6 +52,7 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
   // Refs für die Input-Felder
   const givenNameRef = useRef(null);
   const surnameRef = useRef(null);
+  const postal_codeRef = useRef(null);
 
   // Funktion zum Fokussieren des Inputs
   const focusInput = (ref) => {
@@ -79,12 +80,16 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
       focusInput(givenNameRef);
       return;
     }
+    if (editableContact.postal_code < 0) {
+      setError("Die Postleitzahl kann nicht Negativ sein");
+      focusInput(postal_codeRef);
+      return;
+    }
 
     //TODO: wenn fehler beim speichern nicht in die lokale Liste eintagen und user fehler anzeigen.
     setError("");
     setIsEditing(false);
     handleEditContact(editableContact);
-    console.log("Saved contact:", editableContact);
   };
 
   const handleChange = (field, value) => {
@@ -127,7 +132,13 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
           }
           editable={isEditing}
           inputRef={
-            column.id === "given_name" ? givenNameRef : column.id === "surname" ? surnameRef : null
+            column.id === "given_name"
+              ? givenNameRef
+              : column.id === "surname"
+              ? surnameRef
+              : column.id === "postal_code"
+              ? postal_codeRef
+              : null
           } // Setze die Refs entsprechend
         />
       );

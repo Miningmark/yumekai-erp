@@ -56,6 +56,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   // Refs für die Input-Felder
   const givenNameRef = useRef(null);
   const surnameRef = useRef(null);
+  const postal_codeRef = useRef(null);
 
   // Funktion zum Fokussieren des Inputs
   const focusInput = (ref) => {
@@ -80,10 +81,13 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
       focusInput(givenNameRef);
       return;
     }
+    if (newContact.postal_code < 0) {
+      setError("Die Postleitzahl kann nicht Negativ sein");
+      focusInput(postal_codeRef);
+      return;
+    }
 
     const contactToSave = { ...newContact, category: selectedCategories.join(", ") };
-    console.log(contactToSave);
-
     handleAddContact(contactToSave);
   }
 
@@ -126,7 +130,13 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
             column.id === "postal_code" ? "number" : column.id === "birth_date" ? "date" : "text"
           }
           inputRef={
-            column.id === "given_name" ? givenNameRef : column.id === "surname" ? surnameRef : null
+            column.id === "given_name"
+              ? givenNameRef
+              : column.id === "surname"
+              ? surnameRef
+              : column.id === "postal_code"
+              ? postal_codeRef
+              : null
           } // Setze die Refs entsprechend
         />
       );

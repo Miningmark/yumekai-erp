@@ -265,7 +265,6 @@ export default function Contacts() {
   const columns = !search
     ? columnsByCategory[activeTab]
     : allColumns.filter((column) => !["id", "created_at"].includes(column.id));
-  console.log("currentCategoryContacts", currentCategoryContacts);
 
   function handleOnClose() {
     setActiveContact(null);
@@ -273,8 +272,6 @@ export default function Contacts() {
 
   async function handleEditContact(editContact) {
     const contactToSave = { ...editContact, category: editContact.category.join(", ") };
-    console.log("editContact", editContact);
-    console.log("contactToSave", contactToSave);
     const response = await fetch("/api/contacts", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
