@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import CharacterCount from "@/components/styledComponents/CharacterCount";
@@ -51,22 +51,33 @@ const categories = Object.keys(columnsByCategory);
 export default function AddNewContact({ handleCloseAddContactTask, handleAddContact }) {
   const [error, setError] = useState("");
   const [newContact, setNewContact] = useState(newContactTemplate);
-
   const [selectedCategories, setSelectedCategories] = useState([]);
 
+  // Refs für die Input-Felder
+  const givenNameRef = useRef(null);
+  const surnameRef = useRef(null);
+
+  // Funktion zum Fokussieren des Inputs
+  const focusInput = (ref) => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  };
+
   async function onSubmit() {
-    if (!newContact.given_name) {
-      setError("Vorname ist ein Pflichtfeld");
+    if (!selectedCategories.length) {
+      setError("Kategorie ist ein Pflichtfeld");
       return;
     }
-
     if (!newContact.surname) {
       setError("Nachname ist ein Pflichtfeld");
+      focusInput(surnameRef);
       return;
     }
 
-    if (!selectedCategories) {
-      setError("Kategorie ist ein Pflichtfeld");
+    if (!newContact.given_name) {
+      setError("Vorname ist ein Pflichtfeld");
+      focusInput(givenNameRef);
       return;
     }
 
@@ -114,7 +125,9 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
           type={
             column.id === "postal_code" ? "number" : column.id === "birth_date" ? "date" : "text"
           }
-          editable={true}
+          inputRef={
+            column.id === "given_name" ? givenNameRef : column.id === "surname" ? surnameRef : null
+          } // Setze die Refs entsprechend
         />
       );
     });

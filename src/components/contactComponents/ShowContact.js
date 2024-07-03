@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import {
   ModalOverlay,
@@ -45,30 +45,43 @@ const columnsByCategory = {
 const categories = Object.keys(columnsByCategory);
 
 export default function DisplayContactModal({ contact, handleOnClose, handleEditContact }) {
+  const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editableContact, setEditableContact] = useState(contact);
+
+  // Refs für die Input-Felder
+  const givenNameRef = useRef(null);
+  const surnameRef = useRef(null);
+
+  // Funktion zum Fokussieren des Inputs
+  const focusInput = (ref) => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleSaveClick = () => {
-    if (!editableContact.given_name) {
-      setError("Vorname ist ein Pflichtfeld");
-      return;
-    }
-
-    if (!editableContact.surname) {
-      setError("Nachname ist ein Pflichtfeld");
-      return;
-    }
-
-    if (!editableContact.category) {
+    if (!editableContact.category.length) {
       setError("Kategorie ist ein Pflichtfeld");
       return;
     }
-    //TODO: wenn fehler beim speichern nicht in die lokale Liste eintagen und user fehler anzeigen.
+    if (!editableContact.surname) {
+      setError("Nachname ist ein Pflichtfeld");
+      focusInput(surnameRef);
+      return;
+    }
+    if (!editableContact.given_name) {
+      setError("Vorname ist ein Pflichtfeld");
+      focusInput(givenNameRef);
+      return;
+    }
 
+    //TODO: wenn fehler beim speichern nicht in die lokale Liste eintagen und user fehler anzeigen.
+    setError("");
     setIsEditing(false);
     handleEditContact(editableContact);
     console.log("Saved contact:", editableContact);
@@ -113,6 +126,9 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
             column.id === "postal_code" ? "number" : column.id === "birth_date" ? "date" : "text"
           }
           editable={isEditing}
+          inputRef={
+            column.id === "given_name" ? givenNameRef : column.id === "surname" ? surnameRef : null
+          } // Setze die Refs entsprechend
         />
       );
     });
@@ -143,6 +159,7 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
           </div>
         )}
         <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <ModalButtonRightContainer>
           {isEditing ? (
             <GreenButton onClick={handleSaveClick}>Speichern</GreenButton>

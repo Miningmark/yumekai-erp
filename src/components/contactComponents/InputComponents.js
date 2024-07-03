@@ -35,7 +35,14 @@ export const inputComponentType = {
   gender: InputOptionSelect,
 };
 
-function InputOptionInput({ title, inputText, inputChange, type = "text", editable }) {
+function InputOptionInput({
+  title,
+  inputText,
+  inputChange,
+  type = "text",
+  editable = true,
+  inputRef,
+}) {
   return (
     <>
       <InputWrapper className="input">
@@ -48,6 +55,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text", editab
           value={inputText || ""}
           onChange={(e) => inputChange(type === "number" ? +e.target.value : e.target.value)}
           disabled={!editable}
+          ref={inputRef}
         />
         <InputLabel className="inputLabel" htmlFor={title}>
           {title}
@@ -57,7 +65,7 @@ function InputOptionInput({ title, inputText, inputChange, type = "text", editab
   );
 }
 
-function InputOptionTextArea({ title, inputText, inputChange, editable }) {
+function InputOptionTextArea({ title, inputText, inputChange, editable = true }) {
   return (
     <>
       <InputWrapper className="input">
@@ -80,7 +88,7 @@ function InputOptionTextArea({ title, inputText, inputChange, editable }) {
   );
 }
 
-function InputOptionSelect({ title, options, inputText, inputChange, editable }) {
+function InputOptionSelect({ title, options, inputText, inputChange, editable = true }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDropdownClick = () => {
