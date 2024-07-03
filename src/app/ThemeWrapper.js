@@ -49,7 +49,6 @@ export default function ThemeWrapper({ children }) {
     <>
       <ThemeProvider theme={theme[themeMode]}>
         <GlobalStyles />
-        <StyledTExt1>auebtuagbgo</StyledTExt1>
         <StyledComponentsRegistry>
           <PageContext.Provider value={toggleTheme}>{children}</PageContext.Provider>
         </StyledComponentsRegistry>
