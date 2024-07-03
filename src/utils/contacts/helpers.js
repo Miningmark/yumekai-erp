@@ -38,7 +38,8 @@ export const genders = ["Männlich", "Weiblich", "Divers"];
 export const allColumns = [
   { id: "id", name: "ID" },
   { id: "category", name: "Kategorie" },
-  { id: "name", name: "Name" },
+  { id: "surname", name: "Nachname" },
+  { id: "given_name", name: "Vorname" },
   { id: "nickname", name: "Rufname" },
   { id: "artist_name", name: "Künstlername" },
   { id: "company", name: "Firma" },
@@ -62,7 +63,7 @@ export const allColumns = [
 ];
 
 export const newContactTemplate = allColumns.reduce((acc, column) => {
-  if (column.id !== "id" && column.id !== "created_at") {
+  if (column.id !== "id" && column.id !== "created_at" && column.id !== "category") {
     acc[column.id] = null;
   }
   return acc;

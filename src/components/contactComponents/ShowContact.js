@@ -53,6 +53,22 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
   };
 
   const handleSaveClick = () => {
+    if (!editableContact.given_name) {
+      setError("Vorname ist ein Pflichtfeld");
+      return;
+    }
+
+    if (!editableContact.surname) {
+      setError("Nachname ist ein Pflichtfeld");
+      return;
+    }
+
+    if (!editableContact.category) {
+      setError("Kategorie ist ein Pflichtfeld");
+      return;
+    }
+    //TODO: wenn fehler beim speichern nicht in die lokale Liste eintagen und user fehler anzeigen.
+
     setIsEditing(false);
     handleEditContact(editableContact);
     console.log("Saved contact:", editableContact);

@@ -40,7 +40,7 @@ const connection = mysql.createPool({
 
 export async function GET() {
   try {
-    const [rows] = await connection.query("SELECT * FROM contacts ORDER BY name ASC");
+    const [rows] = await connection.query("SELECT * FROM contacts ORDER BY surname ASC");
 
     const convertedRows = rows.map((row) => {
       // Konvertiere das Geburtsdatum
@@ -71,7 +71,8 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const {
-      name,
+      given_name,
+      surname,
       nickname,
       artist_name,
       company,
@@ -96,7 +97,8 @@ export async function POST(req) {
 
     // Ensure all parameters are not undefined
     const params = [
-      name ?? null,
+      given_name ?? null,
+      surname ?? null,
       nickname ?? null,
       artist_name ?? null,
       company ?? null,
@@ -119,12 +121,12 @@ export async function POST(req) {
       gender ?? null,
     ];
 
-    if (!name || !category) {
+    if (!given_name || !surname || !category) {
       return NextResponse.json({ message: "Name and Category are required" }, { status: 400 });
     }
 
     const [insertResult] = await connection.execute(
-      "INSERT INTO contacts (name,nickname,artist_name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO contacts (given_name, surname,nickname,artist_name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
     const [result] = await connection.query("SELECT LAST_INSERT_ID() as insertId");

@@ -14,6 +14,7 @@ import {
 } from "@/components/styledComponents/StyledButton";
 
 import DisplayContactModal from "@/components/contactComponents/ShowContact";
+import { sortedCountries, genders, allColumns } from "@/utils/contacts/helpers";
 
 const ContactTabBackground = styled.div`
   width: calc(100% -40px);
@@ -104,32 +105,6 @@ const StyledTableBody = styled.tbody`
     text-overflow: ellipsis; /* Fügt "..." hinzu, wenn Text abgeschnitten wird */
   }
 `;
-
-const allColumns = [
-  { id: "id", name: "ID" },
-  { id: "category", name: "Kategorie" },
-  { id: "name", name: "Name" },
-  { id: "nickname", name: "Rufname" },
-  { id: "artist_name", name: "Künstlername" },
-  { id: "company", name: "Firma" },
-  { id: "club", name: "Verein" },
-  { id: "email", name: "E-Mail" },
-  { id: "phone", name: "Telefon" },
-  { id: "website", name: "Website" },
-  { id: "instagram", name: "Instagram" },
-  { id: "postal_code", name: "PLZ" },
-  { id: "city", name: "Stadt" },
-  { id: "street", name: "Straße" },
-  { id: "house_number", name: "Hausnr." },
-  { id: "country", name: "Land" },
-  { id: "contact_by", name: "Kontakt durch" },
-  { id: "notes", name: "Notizen" },
-  { id: "previous_collaboration", name: "Frühere Zusammenarbeit" },
-  { id: "created_at", name: "Erstellt am" },
-  { id: "birth_date", name: "Geburtsdatum" },
-  { id: "discord_name", name: "Discord Name" },
-  { id: "gender", name: "Geschlecht" },
-];
 
 const columnsByCategory = {
   Händler: allColumns.filter(
@@ -373,6 +348,8 @@ export default function Contacts() {
                       >
                         {column.id === "birth_date" && contact[column.id]
                           ? new Date(contact[column.id]).toLocaleDateString("de-DE") // Anzeige als tt.MM.yyyy
+                          : Array.isArray(contact[column.id])
+                          ? contact[column.id].join(", ")
                           : contact[column.id]}
                       </td>
                     ))}

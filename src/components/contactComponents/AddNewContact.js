@@ -55,10 +55,16 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   async function onSubmit() {
-    if (!newContact.name) {
-      setError("Name ist ein Pflichtfeld");
+    if (!newContact.given_name) {
+      setError("Vorname ist ein Pflichtfeld");
       return;
     }
+
+    if (!newContact.surname) {
+      setError("Nachname ist ein Pflichtfeld");
+      return;
+    }
+
     if (!selectedCategories) {
       setError("Kategorie ist ein Pflichtfeld");
       return;

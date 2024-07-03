@@ -12,7 +12,8 @@ import {
 } from "../styledComponents/StyledInputField";
 
 export const inputComponentType = {
-  name: InputOptionInput,
+  given_name: InputOptionInput,
+  surname: InputOptionInput,
   nickname: InputOptionInput,
   artist_name: InputOptionInput,
   company: InputOptionInput,
