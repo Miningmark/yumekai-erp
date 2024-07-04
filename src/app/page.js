@@ -19,7 +19,7 @@ const Container = styled.div`
   min-height: 100vh;
   width: 100vw;
   padding: 0 2rem;
-  background-color: var(--light);
+  background-color: ${({ theme }) => theme.color1};
 `;
 
 const Header = styled.header`

@@ -34,9 +34,11 @@ const ContactTabList = styled.div`
 const ContactTabButton = styled.div`
   width: 150px;
   height: 30px;
-  background-color: ${({ $activeBackground }) => $activeBackground};
-  border: solid 2px ${({ $activeBoarder }) => $activeBoarder};
-  color: var(--dark);
+  background-color: ${({ $activeBackground, theme }) =>
+    $activeBackground ? theme.color1 : theme.color2};
+  border: solid 2px
+    ${({ $activeBoarder, theme }) => ($activeBoarder ? theme.textColor : theme.color1)};
+  color: ${({ theme }) => theme.textColor};
   border-bottom: none;
   border-radius: 10px 10px 0 0;
   display: flex;
@@ -49,8 +51,8 @@ const ContactTabButton = styled.div`
   z-index: ${({ $tabIndex }) => $tabIndex};
 
   &:hover {
-    background-color: var(--dark-grey);
-    border: solid 2px var(--dark);
+    background-color: ${({ theme }) => theme.color2};
+    border: solid 2px ${({ theme }) => theme.textColor};
     border-bottom: none;
     transition: 0.5s;
   }
@@ -62,10 +64,10 @@ const ContactTabCard = styled.div`
   width: calc(100% - 24px);
   height: calc(100vh - 158px - 70px);
   overflow: auto;
-  background-color: var(--light); //var(--light)
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
   padding: 10px;
-  border: solid 2px var(--dark);
+  border: solid 2px ${({ theme }) => theme.textColor};
 `;
 
 const TableBackground = styled.div`
@@ -83,8 +85,8 @@ const StyledTableHead = styled.thead`
   th {
     position: sticky;
     top: 0px;
-    background-color: var(--grey);
-    border: 1px solid var(--dark);
+    background-color: ${({ theme }) => theme.color2};
+    border: 1px solid ${({ theme }) => theme.textColor};
     font-weight: bold;
     padding: 8px;
     z-index: 1;
@@ -97,7 +99,7 @@ const StyledTableHead = styled.thead`
 
 const StyledTableBody = styled.tbody`
   td {
-    border: 1px solid var(--dark);
+    border: 1px solid ${({ theme }) => theme.textColor};
     padding: 8px;
     max-width: 150px; /* Maximale Breite der Zellen */
     white-space: nowrap; /* Verhindert Zeilenumbrüche */
@@ -204,7 +206,7 @@ export default function Contacts() {
       setFilteredContacts(contacts);
     }
   }, [search, contacts]);
-
+  /*
   function handleSearch(e) {
     setSearchQuery(e.target.value);
     const filtered = contacts.filter((contact) =>
@@ -221,7 +223,7 @@ export default function Contacts() {
     const { name, value } = e.target;
     setNewContact({ ...newContact, [name]: value });
   }
-
+*/
   async function handleAddContact(newContact) {
     try {
       const response = await fetch("/api/contacts", {
@@ -270,7 +272,7 @@ export default function Contacts() {
     setActiveContact(null);
   }
 
-  async function handleEditContact(editContact) {
+  async function handleEditContact(editContact, theme) {
     const contactToSave = { ...editContact, category: editContact.category.join(", ") };
     const response = await fetch("/api/contacts", {
       method: "PATCH",
@@ -299,8 +301,8 @@ export default function Contacts() {
                 <ContactTabButton
                   key={category}
                   onClick={() => changeTab(category)}
-                  $activeBackground={category === activeTab ? "var(--light)" : "var(--grey)"}
-                  $activeBoarder={category === activeTab ? "var(--dark)" : "var(--dark-grey)"}
+                  $activeBackground={category === activeTab ? 1 : 0}
+                  $activeBoarder={category === activeTab ? 1 : 0}
                   $tabIndex={category === activeTab ? "1" : "0"}
                 >
                   {category}

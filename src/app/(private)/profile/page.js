@@ -21,7 +21,7 @@ const PageBackground = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 20px;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   gap: 20px;
 `;
 
@@ -37,7 +37,7 @@ const LoginList = styled.ul`
 `;
 
 const LoginListItem = styled.li`
-  background-color: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   padding: 10px;
   margin-bottom: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -51,7 +51,7 @@ const AccountChanges = styled.div`
 
 const ChangeSection = styled.section`
   padding: 0 20px 20px 20px;
-  background-color: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   border-radius: 10px;
   width: 220px;
 `;
@@ -62,7 +62,7 @@ const ToggleButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   border: none;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
 `;
 
 const PasswordRequirement = styled.div`

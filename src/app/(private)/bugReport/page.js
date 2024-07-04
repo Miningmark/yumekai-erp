@@ -25,8 +25,8 @@ import BugModule from "@/components/bugReport/BugModule";
 import { socket } from "@/app/socket";
 
 const FormContainer = styled.div`
-  color: var(--dark);
-  background-color: var(--light);
+  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme }) => theme.color1};
   padding: 20px;
   border-radius: 8px;
   max-width: 400px;

@@ -25,8 +25,8 @@ const ContainerBgmLogin = styled.div`
   min-height: 100vh;
   width: 100vw;
   padding: 0 2rem;
-  background-color: var(--light);
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
   gap: 20px;
 `;
 

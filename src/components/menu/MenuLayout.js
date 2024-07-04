@@ -10,7 +10,7 @@ const Content = styled.div`
   position: absolute;
   left: ${({ $sidemenuwidth }) => `${$sidemenuwidth}px`};
   width: ${({ $sidemenuwidth }) => `calc(100vw - ${$sidemenuwidth}px)`};
-  background-color: var(--grey);
+  background-color: ${({ theme }) => theme.color2};
   min-height: calc(100vh - 56px);
   padding-top: 56px;
   transition: all 0.3s ease;

@@ -18,8 +18,8 @@ const Overlay = styled.div`
 `;
 
 const UserListContainer = styled.div`
-  color: var(--dark);
-  background-color: var(--grey);
+  background-color: ${({ theme }) => theme.color2};
+  color: ${({ theme }) => theme.textColor};
   padding: 20px;
   border-radius: 8px;
   max-width: 600px;

@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+
+const SurveyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: ${({ theme }) => theme.textColor};
+`;
 
 export default function DashBoard() {
   const [data, setData] = useState(null);
@@ -29,14 +37,7 @@ export default function DashBoard() {
   return (
     <>
       <h1>YumeKai 2024 Umfrage</h1>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          color: "var(--dark)",
-        }}
-      >
+      <SurveyContainer>
         <p>
           Number of participants: <span>{data.count}</span>
         </p>
@@ -83,7 +84,7 @@ export default function DashBoard() {
             ))}
           </tbody>
         </table>
-      </div>
+      </SurveyContainer>
     </>
   );
 }

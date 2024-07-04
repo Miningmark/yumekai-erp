@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import StyledButton from "@/components/styledComponents/StyledButton";
+import { StyledButton } from "@/components/styledComponents/StyledButton";
 import AddNewUser from "@/components/adminComponents/AddNewUser";
 import UserListModal from "@/components/adminComponents/UserListModal";
 import { useState, useEffect } from "react";
@@ -35,8 +35,9 @@ export default function Home() {
   return (
     <PageBackground>
       <h1>Admin</h1>
-      <button onClick={handleOpenAddUserModal}>Add New User</button>
-      <button onClick={handleOpenUserListModal}>View Users</button>
+      <StyledButton onClick={handleOpenAddUserModal}>Add New User</StyledButton>
+      <br />
+      <StyledButton onClick={handleOpenUserListModal}>View Users</StyledButton>
 
       {isAddUserModalOpen && <AddNewUser handleClose={handleCloseAddUserModal} />}
       {isUserListModalOpen && <UserListModal handleClose={handleCloseUserListModal} />}

@@ -12,8 +12,8 @@ const LogContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--light);
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
   width: 80%;
   border-radius: var(--border-radius);
 

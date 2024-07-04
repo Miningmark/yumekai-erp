@@ -6,9 +6,9 @@ import { socket } from "@/app/socket";
 import { getSession, login, logout } from "@/lib/cockieFunctions";
 
 const BugPage = styled.div`
-  background-color: var(--light);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
   border-radius: 10px;
-  color: var(--dark);
   margin: 20px;
   padding-bottom: 20px;
 
@@ -36,7 +36,7 @@ const BugListItem = styled.li`
   padding: 0 10px;
   border-radius: 5px;
   margin: 0 20px;
-  background-color: var(--grey);
+  background-color: ${({ theme }) => theme.color2};
 `;
 
 export default function BugModule({ bugs }) {
