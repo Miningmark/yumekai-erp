@@ -22,7 +22,7 @@ const SoonContainer = styled.div`
   }
 `;
 
-const CummingSoonListItem = styled.li`
+const CommingSoonListItem = styled.li`
   padding-bottom: 5px;
 `;
 
@@ -32,21 +32,39 @@ export default function CommingSoon() {
       <h1>Comming Soon</h1>
       <SoonContainer>
         <ul>
-          <CummingSoonListItem>Kostenkalkulation</CummingSoonListItem>
-          <CummingSoonListItem>Ehrengäste Zeitplan</CummingSoonListItem>
-          <CummingSoonListItem>Verschiedene Automatismen</CummingSoonListItem>
-          <CummingSoonListItem>Benachrichtigungen</CummingSoonListItem>
-          <CummingSoonListItem>E-Mail sender</CummingSoonListItem>
-          <CummingSoonListItem>Einstellungen</CummingSoonListItem>
-          <CummingSoonListItem>Suchfunktion für Kanbanboard</CummingSoonListItem>
-          <CummingSoonListItem>Smartphone Support</CummingSoonListItem>
-          <CummingSoonListItem>Lightmode</CummingSoonListItem>
-          <CummingSoonListItem>Passwort zurücksetzen</CummingSoonListItem>
-          <CummingSoonListItem>Farb Legende für Kanban Board</CummingSoonListItem>
-          <CummingSoonListItem>
-            Last logins auf Profilseite IP fixen und reihenfolge ändern neu zu alt
-          </CummingSoonListItem>
-          <CummingSoonListItem>Admin Page überarbeiten</CummingSoonListItem>
+          <CommingSoonListItem>Kostenkalkulation</CommingSoonListItem>
+          <CommingSoonListItem>Ehrengäste Zeitplan</CommingSoonListItem>
+          <CommingSoonListItem>Verschiedene Automatismen</CommingSoonListItem>
+          <CommingSoonListItem>Benachrichtigungen</CommingSoonListItem>
+          <CommingSoonListItem>E-Mail sender</CommingSoonListItem>
+          <CommingSoonListItem>Einstellungen</CommingSoonListItem>
+          <CommingSoonListItem>Suchfunktion für Kanbanboard</CommingSoonListItem>
+          <CommingSoonListItem>Smartphone Support</CommingSoonListItem>
+          <CommingSoonListItem>Passwort zurücksetzen</CommingSoonListItem>
+          <CommingSoonListItem>Farb Legende für Kanban Board</CommingSoonListItem>
+          <CommingSoonListItem>Admin Page überarbeiten</CommingSoonListItem>
+          <CommingSoonListItem>Login dauer auf 3-7 Tage erhöhen</CommingSoonListItem>
+          <CommingSoonListItem>E-Mail benachrichtigung bei neuem Login</CommingSoonListItem>
+          <CommingSoonListItem>
+            Account sperren bei zu vielen fehlgeschlagenen Login versuchen 3 fehlschläge in 5 Min
+          </CommingSoonListItem>
+          <CommingSoonListItem>
+            Eingang neuer Kontaktanfragen anzeigen auf Dashboard{" "}
+          </CommingSoonListItem>
+          <CommingSoonListItem>Account freischalten mit E-Mail verifizierung</CommingSoonListItem>
+          <CommingSoonListItem>Profilbild Upload</CommingSoonListItem>
+          <CommingSoonListItem>YumeKai Chat?!</CommingSoonListItem>
+          <CommingSoonListItem>Individuelles Dashboard</CommingSoonListItem>
+          <CommingSoonListItem>Rechnungserstellung und Versand</CommingSoonListItem>
+          <CommingSoonListItem>Pretix ticketsystem import</CommingSoonListItem>
+          <CommingSoonListItem>Convention Stand liste mit Team und infos</CommingSoonListItem>
+          <CommingSoonListItem>Sponsoren wo abspeichern</CommingSoonListItem>
+          <CommingSoonListItem>
+            Nerdquiz liste ink. miniwebseite und Druckoptionen
+          </CommingSoonListItem>
+          <CommingSoonListItem>
+            News auf Dashboard u.a. was ist Aktuell neu oder geändert
+          </CommingSoonListItem>
         </ul>
       </SoonContainer>
     </SoonBackground>

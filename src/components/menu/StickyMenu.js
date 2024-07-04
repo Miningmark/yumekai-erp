@@ -36,6 +36,7 @@ const StyledMenu = styled.nav`
     border-radius: 50%;
     box-shadow: -20px -20px 0 ${({ theme }) => theme.color1};
     z-index: -1;
+    transition: all 0.3s ease;
   }
 `;
 

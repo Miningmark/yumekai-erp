@@ -52,6 +52,7 @@ const ColumnContent = styled.div`
     background: linear-gradient(to top, ${({ theme }) => theme.color1}, rgba(255, 255, 255, 0));
     display: block;
     transition: 1s;
+    border-radius: 0 0 10px 10px;
   }
 
   &.scrolled-top::before {

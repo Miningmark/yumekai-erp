@@ -40,11 +40,14 @@ export default function Changelog() {
           <li>Add Password guidelines</li>
           <li>Add Delete subtasks when creating a task</li>
           <li>Add Show Reported Bugs</li>
+          <li>Add Light/Dark-mode</li>
           <li>Fix Tasks without subtasks suddenly have 1 subtask</li>
           <li>Fix Confirm login with enter key</li>
           <li>Fix BugReport Automatic reload of the bug list when a new Bug is added</li>
           <li>Fix New contacts cannot be changed directly after creation</li>
-          <li>Fix Login Session Zeit Problem</li>
+          <li>Fix Login Session expires time problems</li>
+          <li>Fix some Graphic Bugs</li>
+          <li>Fix Last logins IP-Adress faulty</li>
         </ul>
       </LogContainer>
       <LogContainer>

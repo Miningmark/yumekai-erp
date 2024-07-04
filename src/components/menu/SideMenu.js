@@ -82,6 +82,7 @@ const SideMenuItem = styled.li`
 
   &.active {
     background-color: ${({ theme }) => theme.color2};
+    transition: all 0.3s ease;
 
     &::before,
     &::after {
@@ -97,11 +98,13 @@ const SideMenuItem = styled.li`
     &::before {
       top: -40px;
       box-shadow: 20px 20px 0 ${({ theme }) => theme.color2};
+      transition: all 0.3s ease;
     }
 
     &::after {
       bottom: -40px;
       box-shadow: 20px -20px 0 ${({ theme }) => theme.color2};
+      transition: all 0.3s ease;
     }
 
     a {
@@ -285,10 +288,13 @@ export default function SideMenu({ sideMenuOpen }) {
           </SideMenuLink>
         </SideMenuItem>
 
-        <SideMenuButton className="logout" onClick={handleLogout}>
-          <LogoutIcon />
-          Logout
-        </SideMenuButton>
+        <br />
+        <SideMenuItem>
+          <SideMenuButton className="logout" onClick={handleLogout}>
+            <LogoutIcon />
+            Logout
+          </SideMenuButton>
+        </SideMenuItem>
       </SideMenuList>
     </Sidebar>
   );
