@@ -8,7 +8,7 @@ const ColumnDiv = styled.div`
   min-width: 250px;
   height: calc(100vh - 163px - 45px);
   gap: 10px;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   padding: 10px 0 10px 0;
   border-radius: 10px;
 
@@ -42,14 +42,14 @@ const ColumnContent = styled.div`
 
   &::before {
     top: 62px;
-    background: linear-gradient(to bottom, var(--light), rgba(255, 255, 255, 0));
+    background: linear-gradient(to bottom, ${({ theme }) => theme.color1}, rgba(255, 255, 255, 0));
     display: none;
     transition: 1s;
   }
 
   &::after {
     bottom: 0;
-    background: linear-gradient(to top, var(--light), rgba(255, 255, 255, 0));
+    background: linear-gradient(to top, ${({ theme }) => theme.color1}, rgba(255, 255, 255, 0));
     display: block;
     transition: 1s;
   }

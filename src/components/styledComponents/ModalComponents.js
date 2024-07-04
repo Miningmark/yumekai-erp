@@ -57,12 +57,12 @@ export const ModalContent = styled.div`
   max-height: 80vh;
   overflow: auto;
   border-radius: var(--border-radius);
-  color: var(--dark);
-  background-color: var(--grey);
+  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme }) => theme.color2};
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 
   svg {
-    fill: var(--dark);
+    fill: ${({ theme }) => theme.textColor};
     cursor: pointer;
     position: absolute;
     top: 10px;
@@ -75,7 +75,7 @@ export const ModalCloseIcon = styled(IconClose)`
   top: 10px;
   right: 10px;
   cursor: pointer;
-  fill: var(--dark);
+  fill: ${({ theme }) => theme.textColor};
   width: 35px;
   height: 35px;
 

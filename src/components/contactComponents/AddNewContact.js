@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
-import CharacterCount from "@/components/styledComponents/CharacterCount";
 import {
   ModalOverlay,
   ModalInputField,

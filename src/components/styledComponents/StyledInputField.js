@@ -12,7 +12,7 @@ export const InputLabel = styled.label`
   white-space: nowrap;
   transform: translate(0, 0);
   transform-origin: 0 0;
-  background: var(--grey);
+  background-color: ${({ theme }) => theme.color2};
   /*
   @-moz-document url-prefix() {
     margin: 26px 4px;
@@ -24,12 +24,12 @@ export const InputField = styled.input`
   box-sizing: border-box;
   display: block;
   width: 100%;
-  border: 2px solid var(--dark);
+  border: 2px solid ${({ theme }) => theme.textColor};
   padding: 12px 8px;
   background: transparent;
   border-radius: 4px;
   position: relative;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
 
   &:focus + ${InputLabel}, &:not(:placeholder-shown) + ${InputLabel} {
     transform: translate(6px, -100%) scale(0.8);
@@ -46,12 +46,12 @@ export const InputArea = styled.textarea`
   box-sizing: border-box;
   display: block;
   width: 100%;
-  border: 2px solid var(--dark);
+  border: 2px solid ${({ theme }) => theme.textColor};
   padding: 12px 8px;
   background: transparent;
   border-radius: 4px;
   position: relative;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
 
   &:focus + ${InputLabel}, &:not(:placeholder-shown) + ${InputLabel} {
     transform: translate(0.25rem, -100%) scale(0.8);
@@ -82,7 +82,7 @@ export const DropdownLabel = styled.label`
   white-space: nowrap;
   transform: translate(0, 0);
   transform-origin: 0 0;
-  background: var(--grey);
+  background: ${({ theme }) => theme.color2};
 `;
 /*
 // Stil für das Dropdown-Menü
@@ -121,7 +121,7 @@ export const DropdownButton = styled.div`
   background: transparent;
   border-radius: 4px;
   position: relative;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   cursor: pointer;
 
   &:focus + ${DropdownLabel}, &:not([value=""]) + ${DropdownLabel} {
@@ -140,7 +140,7 @@ export const DropdownMenu = styled.ul`
   top: 100%;
   left: 0;
   width: 100%;
-  background: var(--light);
+  background-color: ${({ theme }) => theme.color1};
   border-radius: 10px;
   padding: 0;
   margin: 0;
@@ -151,8 +151,9 @@ export const DropdownMenu = styled.ul`
 export const DropdownItem = styled.li`
   padding: 12px 8px;
   cursor: pointer;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   &:hover {
-    background-color: var(--grey); /* Default to lightgray if variable is not set */
+    background-color: ${({ theme }) =>
+      theme.color2}; /* Default to lightgray if variable is not set */
   }
 `;

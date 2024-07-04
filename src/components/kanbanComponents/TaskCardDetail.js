@@ -15,8 +15,8 @@ const MiniModal = styled.div`
   border-radius: var(--border-radius);
   padding: 10px;
   display: ${({ $show }) => $show};
-  background-color: var(--light);
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
 
   p {
     cursor: pointer;
@@ -38,8 +38,8 @@ const ConfirmationModal = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid #888;
-  background-color: var(--light);
-  color: var(--dark);
+  background-color: ${({ theme }) => theme.color1};
+  color: ${({ theme }) => theme.textColor};
   color: var();
   border-radius: var(--border-radius);
   padding: 20px;
@@ -62,7 +62,7 @@ const TaskInfo = styled.div`
   position: absolute;
   right: 10px;
   font-size: 12px;
-  color: var(--dark);
+  color: ${({ theme }) => theme.textColor};
   text-align: right;
 
   p {
