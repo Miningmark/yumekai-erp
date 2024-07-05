@@ -10,6 +10,7 @@ export default function DashBoard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(to, subject, text);
     const res = await fetch("/api/email", {
       method: "POST",
       headers: {
