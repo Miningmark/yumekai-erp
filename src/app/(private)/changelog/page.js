@@ -32,7 +32,14 @@ export default function Changelog() {
     <LogBackground>
       <h1>Changelog</h1>
       <LogContainer>
-        <h2>Add new Pages and Functions</h2>
+        <h2>Add E-Mail functions</h2>
+        <VersionsNumber>V 0.3</VersionsNumber>
+        <ul>
+          <li>Add E-Mail transmitter</li>
+        </ul>
+      </LogContainer>
+      <LogContainer>
+        <h2>Add new Pages and functions</h2>
         <VersionsNumber>V 0.2</VersionsNumber>
         <ul>
           <li>Add Contact Page</li>
