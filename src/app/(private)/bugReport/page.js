@@ -183,6 +183,7 @@ export default function BugReport() {
 
   return (
     <>
+      <p>Hello</p>
       <FormContainer>
         <h1>Bug Report</h1>
         <form onSubmit={handleSubmit}>
