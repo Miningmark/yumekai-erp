@@ -5,18 +5,19 @@ import { useState } from "react";
 
 export default function DashBoard() {
   const [to, setTo] = useState("");
+  const [from, setFrom] = useState("test@miningmark.de");
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(to, subject, text);
+    console.log(from, to, subject, text);
     const res = await fetch("/api/email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ to, subject, text }),
+      body: JSON.stringify({ from, to, subject, text }),
     });
 
     if (res.ok) {
@@ -33,6 +34,27 @@ export default function DashBoard() {
       <br />
       <div>
         <form onSubmit={handleSubmit}>
+          <div>
+            <p>E-Mail von:</p>
+            <label>
+              <input
+                type="radio"
+                value="test@miningmark.de"
+                checked={from === "test@miningmark.de"}
+                onChange={(e) => setFrom(e.target.value)}
+              />
+              test@miningmark.de
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="rechnung@miningmark.de"
+                checked={from === "rechnung@miningmark.de"}
+                onChange={(e) => setFrom(e.target.value)}
+              />
+              rechnung@miningmark.de
+            </label>
+          </div>
           <input
             type="email"
             placeholder="Empfänger"
