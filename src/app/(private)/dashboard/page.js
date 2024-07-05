@@ -52,7 +52,7 @@ export default function DashBoard() {
             onChange={(e) => setText(e.target.value)}
             required
           />
-          <button type="submit">E-Mail Senden</button>
+          <button type="submit">E-Mail senden</button>
         </form>
       </div>
     </>
