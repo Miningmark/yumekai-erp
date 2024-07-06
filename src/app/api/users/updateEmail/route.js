@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/cockieFunctions";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -10,6 +11,9 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const session = await getSession();
 
   if (!session) {
@@ -40,8 +44,4 @@ export async function POST(req) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-}
-
-export async function GET(req) {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /**
   CREATE TABLE tasks (
@@ -37,7 +38,10 @@ const connection = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
-export async function GET() {
+export async function GET(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   try {
     const [rows] = await connection.query("SELECT * FROM tasks ORDER BY position ASC");
     return NextResponse.json(rows, { status: 200 });
@@ -48,6 +52,9 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { task } = await req.json();
   if (!task) {
     return NextResponse.json({ message: "Task data is required" }, { status: 400 });
@@ -74,6 +81,9 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { id, task } = await req.json();
 
   if (!id || !task) {
@@ -93,6 +103,9 @@ export async function PATCH(req) {
 }
 
 export async function DELETE(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { id, deletedBy } = await req.json();
 
   if (!id || !deletedBy) {
@@ -150,6 +163,9 @@ export async function DELETE(req) {
 }
 
 export async function PUT(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { tasks } = await req.json();
 
   if (!Array.isArray(tasks)) {

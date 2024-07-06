@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -10,6 +11,9 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   try {
     const body = await req.json();
     const { name, email, role, password, color } = body;
@@ -62,8 +66,4 @@ export async function POST(req) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-}
-
-export async function GET() {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

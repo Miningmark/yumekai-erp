@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -9,6 +10,9 @@ const connection = mysql.createPool({
 });
 
 export async function GET(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   try {
     // Query to get all survey data
     const [rows] = await connection.query("SELECT * FROM survey2024");

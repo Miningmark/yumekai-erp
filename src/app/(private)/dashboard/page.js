@@ -43,16 +43,16 @@ export default function DashBoard() {
                 checked={from === "test@miningmark.de"}
                 onChange={(e) => setFrom(e.target.value)}
               />
-              test@miningmark.de
+              test@
             </label>
             <label>
               <input
                 type="radio"
-                value="rechnung@miningmark.de"
-                checked={from === "rechnung@miningmark.de"}
+                value="system@miningmark.de"
+                checked={from === "system@miningmark.de"}
                 onChange={(e) => setFrom(e.target.value)}
               />
-              rechnung@miningmark.de
+              system@
             </label>
           </div>
           <input

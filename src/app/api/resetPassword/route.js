@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
-import nodemailer from "nodemailer";
 import crypto from "crypto";
 
 const connection = mysql.createPool({
@@ -32,26 +31,28 @@ export async function POST(req) {
         [resetToken, resetTokenExpiry, user.id]
       );
 
-      const resetUrl = `http://yumekai.miningmark.de/reset-password?token=${resetToken}`;
+      const resetUrl = `${process.env.BASE_URL}/reset-password?token=${resetToken}`;
 
-      const transporter = nodemailer.createTransport({
-        host: "webmail.your-server.de",
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
+      const response = await fetch(`${process.env.BASE_URL}/api/email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          from: "system@miningmark.de",
+          to: user.email,
+          subject: "Password Reset Request",
+          text: `Please click the following link to reset your password: ${resetUrl}`,
+          auth: process.env.EMAIL_AUTH,
+        }),
       });
 
-      const mailOptions = {
-        from: "test@miningmark.de",
-        to: user.email,
-        subject: "Password Reset Request",
-        text: `Please click the following link to reset your password: ${resetUrl}`,
-      };
-
-      await transporter.sendMail(mailOptions);
+      if (!response.ok) {
+        return NextResponse.json(
+          { message: "Internal server error by send E-Mail" },
+          { status: 500 }
+        );
+      }
 
       return NextResponse.json({ message: "Password reset email sent" }, { status: 200 });
     } catch (error) {

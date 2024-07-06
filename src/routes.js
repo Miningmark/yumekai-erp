@@ -9,6 +9,21 @@ export const privateRoutes = [
   { path: "/survey", roles: ["user", "orga", "admin"] },
 ];
 
+export const privateAPIRoutes = [
+  { path: "/api/bugReport", roles: ["user", "orga", "admin"] },
+  { path: "/api/columns", roles: ["user", "orga", "admin"] },
+  { path: "/api/contacts", roles: ["user", "orga", "admin"] },
+  { path: "/api/email", roles: ["admin"] },
+  { path: "/api/survey", roles: ["user", "orga", "admin"] },
+  { path: "/api/tasks", roles: ["user", "orga", "admin"] },
+  { path: "/api/users/addUser", roles: ["admin"] },
+  { path: "/api/users/editUser", roles: ["admin"] },
+  { path: "/api/users/updateEmail", roles: ["user", "orga", "admin"] },
+  { path: "/api/users/updatePassword", roles: ["user", "orga", "admin"] },
+  { path: "/api/users/userList", roles: ["user", "orga", "admin"] },
+  { path: "/api/users/userListFull", roles: ["admin"] },
+];
+
 export const authRoutes = ["/login", "/test/auth/signin", "/reset-password"];
 
 // When user is not logged in and tries to access protected routes redirect to login page

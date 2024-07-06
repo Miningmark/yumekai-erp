@@ -2,6 +2,7 @@ import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/cockieFunctions";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -11,7 +12,8 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  console.log("req aus route email update", req);
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
 
   const session = await getSession();
 
@@ -41,7 +43,6 @@ export async function POST(req) {
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    console.log("hashed Password: ", hashedNewPassword);
     await connection.execute("UPDATE users SET password = ? WHERE name = ?", [
       hashedNewPassword,
       session.user.name,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /*
     CREATE TABLE columns (
@@ -29,7 +30,10 @@ function generateRandomString(length) {
   return result;
 }
 
-export async function GET() {
+export async function GET(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   try {
     const [rows] = await connection.execute("SELECT * FROM columns ORDER BY position ASC");
     return NextResponse.json(rows);
@@ -40,6 +44,9 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { title, creator, position } = await req.json();
   console.log("req data: ", title, position, creator);
 
@@ -80,6 +87,9 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   const { id, newTitle } = await req.json();
   if (!id || !newTitle) {
     return NextResponse.json({ message: "ID and new title are required" }, { status: 400 });

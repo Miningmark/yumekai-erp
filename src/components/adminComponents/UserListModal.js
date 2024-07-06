@@ -49,7 +49,7 @@ export default function UserListModal({ handleClose }) {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch("/api/users/userList");
+        const response = await fetch("/api/users/userListFull");
         const data = await response.json();
         setUsers(data);
       } catch (error) {

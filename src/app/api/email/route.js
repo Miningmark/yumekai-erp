@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import mysql from "mysql2/promise";
+import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /**
  
@@ -25,11 +26,31 @@ const connection = mysql.createPool({
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { from = "test@miningmark.de", to, subject, text } = body;
-    console.log(from, to, subject, text);
+    const { from = "test@miningmark.de", to, subject, text, auth } = body;
+    //console.log(from, to, subject, text, auth);
+
+    if (!auth || auth != process.env.EMAIL_AUTH) {
+      console.log("KEIN ZUGRIFF");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
 
     if (!from || !to || !subject || !text) {
       return NextResponse.json({ message: "Alle Felder müssen ausgefüllt sein" }, { status: 400 });
+    }
+    let emailPassword = "";
+    switch (from) {
+      case "test@miningmark.de":
+        emailPassword = process.env.EMAIL_PASS_TEST;
+        break;
+      case "system@miningmark.de":
+        emailPassword = process.env.EMAIL_PASS_SYSTEM;
+        break;
+      case "rechnung@miningmark.de":
+        emailPassword = process.env.EMAIL_PASS_RECHNUNG;
+        break;
+
+      default:
+        break;
     }
 
     // Transporter erstellen
@@ -38,8 +59,8 @@ export async function POST(req) {
       port: 587, // oder 465 für SSL
       secure: false, // true für 465, false für andere Ports
       auth: {
-        user: from, //process.env.EMAIL_USER
-        pass: process.env.EMAIL_PASS,
+        user: from,
+        pass: emailPassword,
       },
     });
 
@@ -83,7 +104,10 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
+  const middlewareResponse = await apiAuthMiddleware(req);
+  if (middlewareResponse) return middlewareResponse;
+
   try {
     // Fetch all emails from the database
     const [rows] = await connection.execute("SELECT * FROM emails ORDER BY created_at DESC");
@@ -92,12 +116,4 @@ export async function GET() {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-}
-
-export async function PUT() {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
-}
-
-export async function DELETE() {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

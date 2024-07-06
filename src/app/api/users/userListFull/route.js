@@ -14,7 +14,9 @@ export async function GET(req) {
   if (middlewareResponse) return middlewareResponse;
 
   try {
-    const [rows] = await connection.execute("SELECT name, color FROM users");
+    const [rows] = await connection.execute(
+      "SELECT name, color, email, role, locked, failed_attempts FROM users"
+    );
     console.log("userList: ", rows);
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
