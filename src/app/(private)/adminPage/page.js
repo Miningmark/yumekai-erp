@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <PageBackground>
-      <h1>Admin</h1>
+      <h1>Admin Board</h1>
       <StyledButton onClick={handleOpenAddUserModal}>Add New User</StyledButton>
       <br />
       <StyledButton onClick={handleOpenUserListModal}>View Users</StyledButton>
