@@ -49,20 +49,6 @@ export async function POST(req) {
 
     const now = Date.now();
 
-    // Check if the account should be locked based on failed attempts
-    if (
-      user.failed_attempts >= MAX_FAILED_ATTEMPTS &&
-      now - new Date(user.last_failed_attempt).getTime() < LOCK_TIME
-    ) {
-      // Permanently lock the account
-      console.log("wird gesperrt---------------------------------------------------");
-      await connection.execute("UPDATE users SET locked = 1 WHERE id = ?", [user.id]);
-      return NextResponse.json(
-        { message: "Account is permanently locked. Please contact support." },
-        { status: 403 }
-      );
-    }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -70,6 +56,24 @@ export async function POST(req) {
 
       // Update failed attempts and last failed attempt timestamp
       const failedAttempts = (user.failed_attempts || 0) + 1;
+
+      // Check if the account should be locked based on failed attempts
+      if (
+        failedAttempts >= MAX_FAILED_ATTEMPTS &&
+        now - new Date(user.last_failed_attempt).getTime() < LOCK_TIME
+      ) {
+        // Permanently lock the account
+        console.log("wird gesperrt---------------------------------------------------");
+        await connection.execute(
+          "UPDATE users SET failed_attempts = 3, locked = 1, last_failed_attempt = ? WHERE id = ?",
+          [new Date(), user.id]
+        );
+        return NextResponse.json(
+          { message: "Account is permanently locked. Please contact support." },
+          { status: 403 }
+        );
+      }
+
       await connection.execute(
         "UPDATE users SET failed_attempts = ?, last_failed_attempt = ? WHERE id = ?",
         [failedAttempts, new Date(), user.id]

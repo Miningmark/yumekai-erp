@@ -73,7 +73,7 @@ export default function Login() {
       router.push("/dashboard");
     } else {
       if (response.status === 403) {
-        setErrorMessage("Zugriff verweigert. Der Account ist momentan gesperrt.");
+        setErrorMessage("Zugriff verweigert. Der Account ist gesperrt.");
       } else {
         setErrorMessage("Falscher Benutzername oder Passwort.");
       }
