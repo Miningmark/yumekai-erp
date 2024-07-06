@@ -20,7 +20,7 @@ export async function POST(req) {
     }
 
     const lastlogins = [];
-    lastlogins.unshift(` --;-- `);
+    const lastloginsSave = JSON.stringify(lastlogins);
 
     // Check if the username already exists
     const [nameRows] = await connection.execute("SELECT id FROM users WHERE name = ?", [name]);
@@ -44,13 +44,13 @@ export async function POST(req) {
       role,
       hashedPassword,
       color,
-      JSON.stringify(lastlogins),
+      lastloginsSave,
     ]);
 
     // Insert new user
     const [result] = await connection.execute(
       "INSERT INTO users (name, email, role, password, color, lastlogins) VALUES (?, ?, ?, ?, ?, ?)",
-      [name, email, role, hashedPassword, color, JSON.stringify(lastlogins)]
+      [name, email, role, hashedPassword, color, lastloginsSave]
     );
 
     if (result.affectedRows > 0) {

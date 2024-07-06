@@ -9,7 +9,7 @@ export const privateRoutes = [
   { path: "/survey", roles: ["user", "orga", "admin"] },
 ];
 
-export const authRoutes = ["/login", "/test/auth/signin"];
+export const authRoutes = ["/login", "/test/auth/signin", "/reset-password"];
 
 // When user is not logged in and tries to access protected routes redirect to login page
 export const DEFAULT_REDIRECT_LOGIN_URL = "/login";

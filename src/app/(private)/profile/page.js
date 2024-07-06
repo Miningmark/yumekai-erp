@@ -124,10 +124,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    console.log(session.user);
     if (session && session.user && session.user.lastlogins) {
       const parsedLogins = session.user.lastlogins.map((login) => {
         const [date, ip] = login.split(";");
-        return { date: date, location: ip.trim() };
+        return { date: date, location: ip }; //ip.trim()
       });
       setLogins(parsedLogins);
     }

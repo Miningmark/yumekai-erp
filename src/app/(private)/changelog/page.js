@@ -32,10 +32,15 @@ export default function Changelog() {
     <LogBackground>
       <h1>Changelog</h1>
       <LogContainer>
-        <h2>Add E-Mail functions</h2>
+        <h2>Add E-Mail and Security functions</h2>
         <VersionsNumber>V 0.3</VersionsNumber>
         <ul>
           <li>Add E-Mail transmitter</li>
+          <li>Add Password reset function at login page</li>
+          <li>
+            Add Account will be blocked if the password is entered incorrectly 3 times within 5
+            minutes
+          </li>
         </ul>
       </LogContainer>
       <LogContainer>

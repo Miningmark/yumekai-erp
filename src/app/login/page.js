@@ -72,8 +72,33 @@ export default function Login() {
     if (response.ok) {
       router.push("/dashboard");
     } else {
-      setErrorMessage("Incorrect Username or Password");
+      if (response.status === 403) {
+        setErrorMessage("Zugriff verweigert. Der Account ist momentan gesperrt.");
+      } else {
+        setErrorMessage("Falscher Benutzername oder Passwort.");
+      }
+
       console.error("response from loginpage", response);
+    }
+  }
+
+  async function handleResetPassword() {
+    const username = prompt("Bitte geben Sie Ihren Benutzernamen ein:");
+    if (username) {
+      const response = await fetch("/api/resetPassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: username }),
+      });
+
+      if (response.ok) {
+        alert("Eine E-Mail mit dem Link zum Zurücksetzen des Passworts wurde gesendet.");
+      } else {
+        const data = await response.json();
+        alert(data.message || "Fehler beim Senden der E-Mail.");
+      }
     }
   }
 
@@ -116,6 +141,10 @@ export default function Login() {
         {errorMessage && <LoginError>{errorMessage}</LoginError>}
         <br />
         <StyledButton type="submit">Submit</StyledButton>
+        <br />
+        <StyledButton type="button" onClick={handleResetPassword}>
+          Reset Password
+        </StyledButton>
       </form>
     </ContainerBgmLogin>
   );

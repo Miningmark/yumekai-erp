@@ -74,7 +74,6 @@ export default function AddNewUser({ handleClose }) {
     setError("");
 
     try {
-      const lastlogins = "--;--";
       const response = await fetch("/api/users/addUser", {
         method: "POST",
         headers: {
@@ -86,7 +85,6 @@ export default function AddNewUser({ handleClose }) {
           role,
           password,
           color,
-          lastlogins,
         }),
       });
 

@@ -11,6 +11,9 @@ const connection = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
+const LOCK_TIME = 5 * 60 * 1000; // 5 minutes
+const MAX_FAILED_ATTEMPTS = 3;
+
 export async function POST(req) {
   //console.log("API login endpoint hit");
   const { name, password } = await req.json();
@@ -25,7 +28,7 @@ export async function POST(req) {
 
   try {
     const [rows] = await connection.execute(
-      "SELECT id, role, email, name, password, lastlogins FROM users WHERE name = ?",
+      "SELECT id, role, email, name, password, lastlogins, failed_attempts, last_failed_attempt, locked FROM users WHERE name = ?",
       [name]
     );
 
@@ -35,12 +38,64 @@ export async function POST(req) {
     }
 
     const user = rows[0];
+
+    // Check if the account is permanently locked
+    if (user.locked) {
+      return NextResponse.json(
+        { message: "Account is permanently locked. Please contact support." },
+        { status: 403 }
+      );
+    }
+
+    const now = Date.now();
+
+    // Check if the account should be locked based on failed attempts
+    if (
+      user.failed_attempts >= MAX_FAILED_ATTEMPTS &&
+      now - new Date(user.last_failed_attempt).getTime() < LOCK_TIME
+    ) {
+      // Permanently lock the account
+      console.log("wird gesperrt---------------------------------------------------");
+      await connection.execute("UPDATE users SET locked = 1 WHERE id = ?", [user.id]);
+      return NextResponse.json(
+        { message: "Account is permanently locked. Please contact support." },
+        { status: 403 }
+      );
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       console.log("---Falsches Password---");
+
+      // Update failed attempts and last failed attempt timestamp
+      const failedAttempts = (user.failed_attempts || 0) + 1;
+      await connection.execute(
+        "UPDATE users SET failed_attempts = ?, last_failed_attempt = ? WHERE id = ?",
+        [failedAttempts, new Date(), user.id]
+      );
+
+      if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+        return NextResponse.json(
+          { message: "Account is locked. Please try again later." },
+          { status: 403 }
+        );
+      }
+
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
+
+    // Reset failed attempts on successful login
+    await connection.execute(
+      "UPDATE users SET failed_attempts = 0, last_failed_attempt = NULL WHERE id = ?",
+      [user.id]
+    );
+
+    console.log("Rows lastlogins: ", user);
+
+    const convertedUser = { ...user, lastlogins: JSON.parse(user.lastlogins) };
+    const firstLogin = convertedUser.lastlogins.length === 0 ? true : false;
+    //TODO: first login Passwort change
 
     // Get the current timestamp, IP, and location
     const formattedDate = new Date()
@@ -55,21 +110,22 @@ export async function POST(req) {
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
 
+    console.log("lastlogins: ", convertedUser.lastlogins);
     // Update the lastlogin array
-    let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
-    lastlogins.unshift(` ${formattedDate};${userIp} `);
+    //let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
+    convertedUser.lastlogins.unshift(` ${formattedDate};${userIp} `);
 
     // Trim the array to a maximum of 5 elements
-    lastlogins = lastlogins.slice(0, 5);
-    //console.log("LASTS LOGINS: ", lastlogins);
+    convertedUser.lastlogins = convertedUser.lastlogins.slice(0, 5);
+    console.log("LASTS LOGINS: ", convertedUser.lastlogins);
 
     // Update the database
     await connection.execute("UPDATE users SET lastlogins = ? WHERE id = ?", [
-      JSON.stringify(lastlogins),
+      JSON.stringify(convertedUser.lastlogins),
       user.id,
     ]);
 
-    await setSession({ ...user, lastlogins: lastlogins });
+    await setSession({ ...user, lastlogins: convertedUser.lastlogins });
 
     return NextResponse.json(
       {
@@ -77,7 +133,7 @@ export async function POST(req) {
         email: user.email,
         name: user.name,
         id: user.id,
-        lastlogins: lastlogins,
+        lastlogins: convertedUser.lastlogins,
       },
       { status: 200 }
     );
