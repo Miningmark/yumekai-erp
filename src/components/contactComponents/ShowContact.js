@@ -139,7 +139,7 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
               : column.id === "postal_code"
               ? postal_codeRef
               : null
-          } // Setze die Refs entsprechend
+          }
         />
       );
     });

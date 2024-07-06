@@ -1,9 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import { socket } from "@/app/socket";
-import { getSession, login, logout } from "@/lib/cockieFunctions";
 
 const BugPage = styled.div`
   background-color: ${({ theme }) => theme.color1};

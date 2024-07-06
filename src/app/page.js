@@ -73,7 +73,7 @@ export default function Home() {
       </Header>
       <Main>
         <Hero>
-          <Image src={yumekaiLogo} alt="Hero Image" width={300} height={300} />
+          <Image src={yumekaiLogo} alt="YumeKai Logo" width={300} height={300} />
           <Link href="/login">
             <LoginButton>Login</LoginButton>
           </Link>

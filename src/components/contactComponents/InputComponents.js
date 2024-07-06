@@ -107,7 +107,7 @@ function InputOptionSelect({ title, options, inputText, inputChange, editable = 
       <InputWrapper>
         <DropdownButton
           onClick={handleDropdownClick}
-          $dropdownopen={isOpen ? `var(--secondary-color)` : `var(--dark)`}
+          $dropdownopen={isOpen ? 1 : 0}
           disabled={!editable}
         >
           {inputText ? inputText : "-- Auswahl --"}

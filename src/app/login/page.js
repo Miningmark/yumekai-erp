@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import { redirect } from "next/navigation";
 
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import {
@@ -34,6 +33,7 @@ const LoginError = styled.p`
   color: var(--danger);
   text-align: center;
 `;
+
 const PageInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,12 +62,6 @@ export default function Login() {
       },
       body: JSON.stringify({ name: name, password: password }),
     });
-    /**
-      headers: {
-        "Content-Type": "application/json",
-        "Referrer-Policy": "no-referrer-when-downgrade",
-      },
-     */
 
     if (response.ok) {
       router.push("/dashboard");

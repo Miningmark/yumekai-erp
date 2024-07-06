@@ -116,7 +116,9 @@ export const DropdownButton = styled.div`
   box-sizing: border-box;
   display: block;
   width: 100%;
-  border: 2px solid ${(prop) => prop.$dropdownopen};
+  border: 2px solid
+    ${({ $dropdownopen, theme }) =>
+      $dropdownopen == 1 ? "var(--secondary-color)" : theme.textColor};
   padding: 12px 8px;
   background: transparent;
   border-radius: 4px;

@@ -136,7 +136,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
               : column.id === "postal_code"
               ? postal_codeRef
               : null
-          } // Setze die Refs entsprechend
+          }
         />
       );
     });
@@ -163,7 +163,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
         </div>
 
         <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
         <ModalButtonRightContainer>
           <GreenButton onClick={onSubmit}>Kontakt Speichern</GreenButton>
         </ModalButtonRightContainer>

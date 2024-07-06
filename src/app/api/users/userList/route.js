@@ -15,13 +15,9 @@ export async function GET(req) {
 
   try {
     const [rows] = await connection.execute("SELECT name, color FROM users");
-    console.log("userList: ", rows);
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-}
-export async function POST() {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

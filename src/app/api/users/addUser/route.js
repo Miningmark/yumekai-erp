@@ -17,7 +17,6 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { name, email, role, password, color } = body;
-    console.log("body: ", { name, email, role, password, color });
 
     if (!name || !email || !role || !password || !color) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });

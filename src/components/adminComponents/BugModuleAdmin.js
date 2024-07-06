@@ -3,7 +3,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { socket } from "@/app/socket";
-import { getSession, login, logout } from "@/lib/cockieFunctions";
 
 const BugPage = styled.div`
   background-color: ${({ theme }) => theme.color1};
@@ -47,51 +46,16 @@ const CheckboxContainer = styled.div`
 `;
 
 export default function BugModule() {
-  const [session, setSession] = useState(null);
   const [bugs, setBugs] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
 
   useEffect(() => {
     fetchBugs();
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
     socket.on("loadNewBug", fetchBugs);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
       socket.off("loadNewBug", fetchBugs);
     };
-  }, []);
-
-  useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
-  }, [socket.connected]);
-
-  function onConnect() {
-    setIsConnected(true);
-    setTransport(socket.io.engine.transport.name);
-
-    socket.io.engine.on("upgrade", (transport) => {
-      setTransport(transport.name);
-    });
-  }
-
-  function onDisconnect() {
-    setIsConnected(false);
-    setTransport("N/A");
-  }
-
-  useEffect(() => {
-    async function checkSession() {
-      setSession(await getSession());
-    }
-
-    checkSession();
   }, []);
 
   async function fetchBugs() {
@@ -108,7 +72,7 @@ export default function BugModule() {
     }
   }
 
-  const handleCheckboxChange = async (bugId, currentValue) => {
+  async function handleCheckboxChange(bugId, currentValue) {
     try {
       const response = await fetch(`/api/bugReport`, {
         method: "PATCH",
@@ -128,7 +92,7 @@ export default function BugModule() {
     } catch (error) {
       console.error("Error updating bug report", error);
     }
-  };
+  }
 
   return (
     <BugPage>

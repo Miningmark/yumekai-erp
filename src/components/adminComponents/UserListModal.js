@@ -67,14 +67,13 @@ export default function UserListModal({ handleClose }) {
 
   async function handleConfirmDelete() {
     try {
-      const name = userToDelete.name;
       const response = await fetch(`/api/users/editUser`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
+          id: userToDelete.id,
         }),
       });
 
@@ -83,10 +82,8 @@ export default function UserListModal({ handleClose }) {
         throw new Error(data.message);
       }
 
-      // Remove the deleted user from the user list
       setUsers(users.filter((u) => u.id !== userToDelete.id));
 
-      // Close the confirm delete modal
       setConfirmDeleteModalOpen(false);
     } catch (error) {
       console.error("Failed to delete user:", error);

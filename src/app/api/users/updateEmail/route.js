@@ -34,10 +34,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "Email already exists" }, { status: 400 });
     }
 
-    await connection.execute("UPDATE users SET email = ? WHERE name = ?", [
-      email,
-      session.user.name,
-    ]);
+    await connection.execute("UPDATE users SET email = ? WHERE id = ?", [email, session.user.id]);
 
     return NextResponse.json({ message: "Email updated successfully" }, { status: 200 });
   } catch (error) {

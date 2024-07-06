@@ -36,7 +36,7 @@ export default function ThemeWrapper({ children }) {
       color2: "#25252c", //grey
     },
   };
-
+  /*
   const childrenWithProps = React.Children.map(children, (child) => {
     // Check if child is a valid React element
     if (React.isValidElement(child)) {
@@ -44,7 +44,7 @@ export default function ThemeWrapper({ children }) {
     }
     return child;
   });
-
+*/
   return (
     <>
       <ThemeProvider theme={theme[themeMode]}>

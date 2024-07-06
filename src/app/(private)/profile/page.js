@@ -209,7 +209,7 @@ export default function Home() {
           <h2>E-Mail ändern</h2>
           <form onSubmit={handleEmailSubmit}>
             <div>
-              <LoginLabel htmlFor="email">E-Mail</LoginLabel>
+              <LoginLabel htmlFor="email">Neue E-Mail Adresse</LoginLabel>
               <LoginInput type="email" id="email" value={email} onChange={handleEmailChange} />
             </div>
             <br />

@@ -44,8 +44,6 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
     // Check if the new name is unique
     const isNameUnique = users.every((u) => u.id === user.id || u.name !== name);
     if (!isNameUnique) {
-      console.log(users);
-      console.log(user);
       setError("Der Benutzername ist bereits vergeben.");
       return;
     }
@@ -113,7 +111,7 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
           <RedButton onClick={handleClose}>Abbrechen</RedButton>
           <GreenButton onClick={handleSubmit}>Aktualisieren</GreenButton>
         </ButtonContainer>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
       </FormContainer>
     </Overlay>
   );

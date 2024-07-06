@@ -28,9 +28,7 @@ export async function POST(req) {
   }
 
   try {
-    const [rows] = await connection.execute("SELECT * FROM users WHERE name = ?", [
-      session.user.name,
-    ]);
+    const [rows] = await connection.execute("SELECT * FROM users WHERE id = ?", [session.user.id]);
 
     if (rows.length === 0) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });

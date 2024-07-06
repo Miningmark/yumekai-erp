@@ -12,10 +12,11 @@ const connection = mysql.createPool({
 export async function DELETE(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
-  const { name } = await req.json();
+
+  const { id } = await req.json();
 
   try {
-    const [result] = await connection.execute("DELETE FROM users WHERE name = ?", [name]);
+    const [result] = await connection.execute("DELETE FROM users WHERE id = ?", [id]);
 
     if (result.affectedRows > 0) {
       return NextResponse.json({ message: "User deleted successfully" }, { status: 200 });
@@ -31,6 +32,7 @@ export async function DELETE(req) {
 export async function PUT(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   const { id, name, email, role, color } = await req.json();
 
   if (!name || !email || !role || !color) {
