@@ -56,15 +56,6 @@ const ChangeSection = styled.section`
   width: 220px;
 `;
 
-const ToggleButton = styled.button`
-  margin-left: 10px;
-  padding: 6px;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  color: ${({ theme }) => theme.textColor};
-`;
-
 const PasswordRequirement = styled.div`
   color: ${(props) => props.$requirement};
   font-size: 0.9em;
@@ -124,36 +115,35 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log(session.user);
     if (session && session.user && session.user.lastlogins) {
       const parsedLogins = session.user.lastlogins.map((login) => {
         const [date, ip] = login.split(";");
-        return { date: date, location: ip }; //ip.trim()
+        return { date: date, location: ip };
       });
       setLogins(parsedLogins);
     }
   }, [session]);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  function handleEmailChange(event) {
+    setEmail(event.target.value);
+  }
 
-  const handleCurrentPasswordChange = (e) => {
-    setCurrentPassword(e.target.value);
-  };
+  function handleCurrentPasswordChange(event) {
+    setCurrentPassword(event.target.value);
+  }
 
-  const handleNewPasswordChange = (e) => {
-    setNewPassword(e.target.value);
-  };
+  function handleNewPasswordChange(event) {
+    setNewPassword(event.target.value);
+  }
 
-  const handleConfirmNewPasswordChange = (e) => {
-    setConfirmNewPassword(e.target.value);
-  };
+  function handleConfirmNewPasswordChange(event) {
+    setConfirmNewPassword(event.target.value);
+  }
 
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
+  async function handleEmailSubmit(event) {
+    event.preventDefault();
+
     try {
-      console.log("credentials");
       const response = await fetch("/api/users/updateEmail", {
         method: "POST",
         headers: {
@@ -173,7 +163,7 @@ export default function Home() {
     } catch (error) {
       alert(error.message);
     }
-  };
+  }
 
   async function handleLogout() {
     const response = await logout();
@@ -182,8 +172,9 @@ export default function Home() {
     }
   }
 
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
+  async function handlePasswordSubmit(event) {
+    event.preventDefault();
+
     if (newPassword !== confirmNewPassword) {
       alert("Das neue Passwort und die Bestätigung stimmen nicht überein.");
       return;
@@ -201,18 +192,14 @@ export default function Home() {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update password");
+        throw new Error(data.message || "Fehler beim Aktualisieren des Passworts");
       }
 
       alert("Passwort erfolgreich aktualisiert");
     } catch (error) {
       alert(error.message);
     }
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
+  }
 
   return (
     <PageBackground>
@@ -274,7 +261,6 @@ export default function Home() {
               <PasswordRequirements password={newPassword} />
             </div>
             <br />
-
             <div>
               <LoginLabel htmlFor="confirmNewPassword">Neues Passwort bestätigen</LoginLabel>
               <LoginInputWrapper>
@@ -299,6 +285,7 @@ export default function Home() {
           </form>
         </ChangeSection>
       </AccountChanges>
+
       <Section>
         <h2>Letzte Logins</h2>
         <LoginList>

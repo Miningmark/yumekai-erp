@@ -6,8 +6,9 @@ import { apiAuthMiddleware } from "@/apiMiddleware";
 
    CREATE TABLE contacts (
       id INT AUTO_INCREMENT PRIMARY KEY,
-      category VARCHAR(50) NOT NULL,
-      name VARCHAR(50) NOT NULL,
+      category VARCHAR(255) NOT NULL,
+      given_name VARCHAR(50) NOT NULL,
+      surname VARCHAR(50) NOT NULL,
       nickname VARCHAR(50),
       artist_name VARCHAR(50),
       company VARCHAR(50),
@@ -42,13 +43,14 @@ const connection = mysql.createPool({
 export async function GET(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
     const [rows] = await connection.query("SELECT * FROM contacts ORDER BY surname ASC");
 
     const convertedRows = rows.map((row) => {
       // Konvertiere das Geburtsdatum
       if (row.birth_date) {
-        const utcDate = new Date(row.birth_date); // Konvertiere das Datum in UTC
+        const utcDate = new Date(row.birth_date);
         const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
         row.birth_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
       }
@@ -73,6 +75,7 @@ export async function GET(req) {
 export async function POST(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
     const body = await req.json();
     const {
@@ -131,7 +134,7 @@ export async function POST(req) {
     }
 
     const [insertResult] = await connection.execute(
-      "INSERT INTO contacts (given_name, surname,nickname,artist_name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO contacts (given_name, surname, nickname, artist_name, company, club, email, phone, website, instagram, postal_code, city, street, house_number, country, contact_by, notes, previous_collaboration, category, birth_date, discord_name, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       params
     );
     const [result] = await connection.query("SELECT LAST_INSERT_ID() as insertId");
@@ -158,6 +161,7 @@ export async function POST(req) {
 export async function PATCH(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
     const body = await req.json();
     const { id, created_at, ...updatedFields } = body;

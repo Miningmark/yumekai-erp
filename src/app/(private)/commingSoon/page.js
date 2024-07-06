@@ -1,4 +1,5 @@
 "use client";
+
 import styled from "styled-components";
 
 const SoonBackground = styled.div`
@@ -45,9 +46,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>Admin Page überarbeiten</CommingSoonListItem>
           <CommingSoonListItem>Login dauer auf 3-7 Tage erhöhen</CommingSoonListItem>
           <CommingSoonListItem>E-Mail benachrichtigung bei neuem Login</CommingSoonListItem>
-          <CommingSoonListItem>
-            Account sperren bei zu vielen fehlgeschlagenen Login versuchen 3 fehlschläge in 5 Min
-          </CommingSoonListItem>
           <CommingSoonListItem>
             Eingang neuer Kontaktanfragen anzeigen auf Dashboard{" "}
           </CommingSoonListItem>

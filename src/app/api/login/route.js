@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 
-import { getSession, login, logout, setSession } from "@/lib/cockieFunctions";
+import { setSession } from "@/lib/cockieFunctions";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -33,7 +33,7 @@ export async function POST(req) {
     );
 
     if (rows.length === 0) {
-      console.log("---Falscher Name---");
+      //console.log("---Falscher Name---");
       return NextResponse.json({ message: "Invalid name or password" }, { status: 401 });
     }
 
@@ -52,7 +52,7 @@ export async function POST(req) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      console.log("---Falsches Password---");
+      //console.log("---Falsches Password---");
 
       // Update failed attempts and last failed attempt timestamp
       const failedAttempts = (user.failed_attempts || 0) + 1;
@@ -63,7 +63,7 @@ export async function POST(req) {
         now - new Date(user.last_failed_attempt).getTime() < LOCK_TIME
       ) {
         // Permanently lock the account
-        console.log("wird gesperrt---------------------------------------------------");
+        //console.log("wird gesperrt---------------------------------------------------");
         await connection.execute(
           "UPDATE users SET failed_attempts = 3, locked = 1, last_failed_attempt = ? WHERE id = ?",
           [new Date(), user.id]
@@ -95,13 +95,13 @@ export async function POST(req) {
       [user.id]
     );
 
-    console.log("Rows lastlogins: ", user);
+    //console.log("Rows lastlogins: ", user);
 
     const convertedUser = { ...user, lastlogins: JSON.parse(user.lastlogins) };
     const firstLogin = convertedUser.lastlogins.length === 0 ? true : false;
     //TODO: first login Passwort change
+    //console.log("first Login: ", firstLogin);
 
-    // Get the current timestamp, IP, and location
     const formattedDate = new Date()
       .toLocaleString("de-DE", {
         year: "numeric",
@@ -114,14 +114,12 @@ export async function POST(req) {
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
 
-    console.log("lastlogins: ", convertedUser.lastlogins);
-    // Update the lastlogin array
-    //let lastlogins = user.lastlogins ? JSON.parse(user.lastlogins) : [];
+    //console.log("lastlogins: ", convertedUser.lastlogins);
     convertedUser.lastlogins.unshift(` ${formattedDate};${userIp} `);
 
     // Trim the array to a maximum of 5 elements
     convertedUser.lastlogins = convertedUser.lastlogins.slice(0, 5);
-    console.log("LASTS LOGINS: ", convertedUser.lastlogins);
+    //console.log("LASTS LOGINS: ", convertedUser.lastlogins);
 
     // Update the database
     await connection.execute("UPDATE users SET lastlogins = ? WHERE id = ?", [
@@ -129,7 +127,14 @@ export async function POST(req) {
       user.id,
     ]);
 
-    await setSession({ ...user, lastlogins: convertedUser.lastlogins });
+    const sessionUser = {
+      email: user.email,
+      name: user.name,
+      id: user.id,
+      role: user.role,
+    };
+
+    await setSession({ ...sessionUser, lastlogins: convertedUser.lastlogins });
 
     return NextResponse.json(
       {

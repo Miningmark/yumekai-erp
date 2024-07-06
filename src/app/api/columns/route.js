@@ -69,8 +69,6 @@ export async function POST(req) {
     })
     .replace(",", "");
 
-  console.log("SQL Table data: ", title, droppableId, position, creator, formattedDate);
-
   try {
     const [result] = await connection.execute(
       "INSERT INTO columns (title, droppableId, position, creator, created) VALUES (?, ?, ?, ?, ?)",

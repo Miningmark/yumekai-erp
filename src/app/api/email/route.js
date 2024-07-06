@@ -53,7 +53,6 @@ export async function POST(req) {
         break;
     }
 
-    // Transporter erstellen
     const transporter = nodemailer.createTransport({
       host: "webmail.your-server.de", // SMTP-Host von Hetzner
       port: 587, // oder 465 für SSL
@@ -64,7 +63,6 @@ export async function POST(req) {
       },
     });
 
-    // E-Mail Optionen definieren
     const mailOptions = {
       from,
       to,
@@ -72,12 +70,9 @@ export async function POST(req) {
       text,
     };
 
-    // E-Mail senden und speichern
     try {
-      // E-Mail senden
       await transporter.sendMail(mailOptions);
 
-      // E-Mail in der Datenbank speichern
       const [result] = await connection.execute(
         "INSERT INTO emails (email_from, email_to, email_subject, email_text, created_at) VALUES (?, ?, ?, ?, NOW())",
         [from, to, subject, text]
@@ -93,10 +88,7 @@ export async function POST(req) {
       }
     } catch (error) {
       console.error(error);
-      return NextResponse.json(
-        { message: "Fehler beim Senden der E-Mail", details: error },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: "Fehler beim Senden der E-Mail" }, { status: 500 });
     }
   } catch (error) {
     console.error(error);
@@ -109,7 +101,6 @@ export async function GET(req) {
   if (middlewareResponse) return middlewareResponse;
 
   try {
-    // Fetch all emails from the database
     const [rows] = await connection.execute("SELECT * FROM emails ORDER BY created_at DESC");
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {

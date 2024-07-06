@@ -14,12 +14,6 @@ import { getSession } from "@/lib/cockieFunctions";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
 
-const columnsAlt = [
-  { id: "todo", title: "TODO" },
-  { id: "inProgress", title: "In Progress" },
-  { id: "completed", title: "Completed" },
-];
-
 const taskList = [
   {
     id: 1,
@@ -68,8 +62,6 @@ export default function Kanban() {
   const [columns, setColumns] = useState(null);
   const [renameColumnModalOpen, setRenameColumnModalOpen] = useState(false);
   const [columnToRename, setColumnToRename] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
   const [newColumnModal, setNewColumnModal] = useState(false);
 
   useEffect(() => {
@@ -87,38 +79,14 @@ export default function Kanban() {
     fetchData();
     checkSession();
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
     socket.on("loadNewTasks", fetchTasksAndUpdateState);
     socket.on("loadNewColumns", fetchColumnsAndUpdateState);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
       socket.off("loadNewTasks", fetchTasksAndUpdateState);
       socket.off("loadNewColumns", fetchColumnsAndUpdateState);
     };
   }, []);
-
-  useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
-  }, [socket.connected]);
-
-  function onConnect() {
-    setIsConnected(true);
-    setTransport(socket.io.engine.transport.name);
-
-    socket.io.engine.on("upgrade", (transport) => {
-      setTransport(transport.name);
-    });
-  }
-
-  function onDisconnect() {
-    setIsConnected(false);
-    setTransport("N/A");
-  }
 
   async function fetchTasksAndUpdateState() {
     const tasksData = await fetchTasks();
@@ -167,10 +135,10 @@ export default function Kanban() {
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
         socket.emit("newTask", "Hello Server");
       } else {
-        console.error("Failed to delete task:", response.status);
+        console.error("Fehler beim Löschen der Aufgabe:", response.status);
       }
     } catch (error) {
-      console.error("Failed to delete task:", error);
+      console.error("Fehler beim Löschen der Aufgabe:", error);
     }
   }
 
@@ -214,10 +182,10 @@ export default function Kanban() {
         socket.emit("newTask", "Hello Server");
         closeTaskEdit();
       } else {
-        console.error("Failed to update task:", response.status);
+        console.error("Fehler beim bearbeiten der Aufgabe:", response.status);
       }
     } catch (error) {
-      console.error("Failed to update task:", error);
+      console.error("Fehler beim Speichern der Aufgabe:", error);
     }
   }
 
@@ -293,10 +261,10 @@ export default function Kanban() {
       });
       socket.emit("newTask", "Hello Server");
       if (!response.ok) {
-        throw new Error("Failed to update tasks");
+        throw new Error("Fehler beim Aktualisieren der Aufgabe.");
       }
     } catch (error) {
-      console.error("Failed to update tasks:", error);
+      console.error("Fehler beim Aktualisieren der Aufgabe:", error);
       setTasks(tasks);
     }
   }
@@ -330,9 +298,7 @@ export default function Kanban() {
       });
 
       if (response.ok) {
-        // Wenn die Aufgabe erfolgreich hinzugefügt wurde, aktualisiere den Zustand
         const responseData = await response.json();
-        // Überprüfe, ob die Antwort die ID des neu erstellten Tasks enthält
         if (responseData && responseData.insertId) {
           setTasks([
             ...tasks,
@@ -341,13 +307,13 @@ export default function Kanban() {
           socket.emit("newTask", "Hello Server");
           closeAddNewTask();
         } else {
-          console.error("Failed to add task: Response does not contain insertId");
+          console.error("Fehler beim erstellen der Aufgabe: Antwort enthält keine insertId");
         }
       } else {
-        console.error("Failed to add task:", response.status);
+        console.error("Fehler beim erstellen der Aufgabe:", response.status);
       }
     } catch (error) {
-      console.error("Failed to add task:", error);
+      console.error("Fehler beim erstellen der Aufgabe:", error);
     }
   }
 
@@ -374,10 +340,10 @@ export default function Kanban() {
         setColumns([...columns, newColumn]);
         socket.emit("newColumn", "Hello Server");
       } else {
-        console.error("Failed to add column:", response.status);
+        console.error("Fehler beim erstellen der Spalte:", response.status);
       }
     } catch (error) {
-      console.error("Failed to add column:", error);
+      console.error("Fehler beim erstellen der Spalte:", error);
     }
     setNewColumnModal(false);
   }
@@ -405,10 +371,10 @@ export default function Kanban() {
         );
         socket.emit("newColumn", "Hello Server");
       } else {
-        console.error("Failed to rename column:", response.status);
+        console.error("Fehler beim umbenennen der Spalte:", response.status);
       }
     } catch (error) {
-      console.error("Failed to rename column:", error);
+      console.error("Fehler beim umbenennen der Spalte:", error);
     }
   }
 
@@ -479,9 +445,11 @@ export default function Kanban() {
           handleEditTask={editTask}
         />
       )}
+
       {newColumnModal && (
         <NewColumn onClose={handleCloseNewColumn} newColumnName={handleNewColumn}></NewColumn>
       )}
+
       {renameColumnModalOpen && (
         <RenameColumnModal
           column={columnToRename}

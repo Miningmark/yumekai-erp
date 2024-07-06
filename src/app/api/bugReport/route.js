@@ -26,6 +26,7 @@ const connection = mysql.createPool({
 export async function POST(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
     const body = await req.json();
     const { title, description, reporter } = body;
@@ -43,7 +44,7 @@ export async function POST(req) {
     if (result.affectedRows > 0) {
       return NextResponse.json({ message: "Bug report erfolgreich gesendet" }, { status: 200 });
     } else {
-      return NextResponse.json({ message: "Fehler beim Senden des bug reports" }, { status: 500 });
+      return NextResponse.json({ message: "Fehler beim Senden des Bug reports" }, { status: 500 });
     }
   } catch (error) {
     console.error(error);
@@ -54,8 +55,8 @@ export async function POST(req) {
 export async function GET(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
-    // Fetch all bug reports from the database
     const [rows] = await connection.execute("SELECT * FROM bugreport WHERE finished = 0");
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
@@ -67,6 +68,7 @@ export async function GET(req) {
 export async function PATCH(req) {
   const middlewareResponse = await apiAuthMiddleware(req);
   if (middlewareResponse) return middlewareResponse;
+
   try {
     const body = await req.json();
     const { id, finished } = body;
@@ -75,7 +77,6 @@ export async function PATCH(req) {
       return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
-    // Update the finished status of the bug report
     const [result] = await connection.execute("UPDATE bugreport SET finished = ? WHERE id = ?", [
       finished,
       id,
@@ -93,8 +94,4 @@ export async function PATCH(req) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
-}
-
-export async function PUT() {
-  return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
 }

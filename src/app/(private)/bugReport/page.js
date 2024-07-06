@@ -1,24 +1,15 @@
 "use client";
 
 import styled from "styled-components";
-import {
-  StyledButton,
-  GreenButton,
-  RedButton,
-  DisabledGreenButton,
-} from "@/components/styledComponents/StyledButton";
-import { useState, useEffect, useRef } from "react";
+import { GreenButton, DisabledGreenButton } from "@/components/styledComponents/StyledButton";
+import { useState, useEffect } from "react";
 
-import { getSession, login, logout } from "@/lib/cockieFunctions";
+import { getSession } from "@/lib/cockieFunctions";
 import CharacterCount from "@/components/styledComponents/CharacterCount";
 import {
-  ModalOverlay,
   ModalInputField,
   ModalTextArea,
-  ModalSubtaskInput,
   ModalButtonRightContainer,
-  ModalContent,
-  ModalCloseIcon,
   ModalImputTitle,
 } from "@/components/styledComponents/ModalComponents";
 import BugModule from "@/components/bugReport/BugModule";
@@ -40,79 +31,26 @@ const FormContainer = styled.div`
   }
 `;
 
-function formatierteZeit() {
-  let jetzt = new Date();
-
-  // Datumskomponenten extrahieren
-  let tag = jetzt.getDate();
-  let monat = jetzt.getMonth() + 1; // Monate sind 0-basiert, daher +1
-  let jahr = jetzt.getFullYear();
-
-  // Zeitkomponenten extrahieren
-  let stunden = jetzt.getHours();
-  let minuten = jetzt.getMinutes();
-  let sekunden = jetzt.getSeconds();
-
-  // Führende Nullen hinzufügen, falls nötig
-  tag = (tag < 10 ? "0" : "") + tag;
-  monat = (monat < 10 ? "0" : "") + monat;
-  stunden = (stunden < 10 ? "0" : "") + stunden;
-  minuten = (minuten < 10 ? "0" : "") + minuten;
-  sekunden = (sekunden < 10 ? "0" : "") + sekunden;
-
-  // Das gewünschte Format erstellen
-  return `${tag}.${monat}.${jahr}, ${stunden}:${minuten}:${sekunden}`;
-}
-
 export default function BugReport() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const [session, setSession] = useState(null);
   const [bugs, setBugs] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
 
   useEffect(() => {
-    fetchBugs();
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("loadNewBug", fetchBugs);
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("loadNewBug", fetchBugs);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
-  }, [socket.connected]);
-
-  function onConnect() {
-    setIsConnected(true);
-    setTransport(socket.io.engine.transport.name);
-
-    socket.io.engine.on("upgrade", (transport) => {
-      setTransport(transport.name);
-    });
-  }
-
-  function onDisconnect() {
-    setIsConnected(false);
-    setTransport("N/A");
-  }
-
-  useEffect(() => {
-    async function checkSession() {
+    async function loadSession() {
       setSession(await getSession());
     }
 
-    checkSession();
+    loadSession();
+    fetchBugs();
+
+    socket.on("loadNewBug", fetchBugs);
+
+    return () => {
+      socket.off("loadNewBug", fetchBugs);
+    };
   }, []);
 
   async function fetchBugs() {
@@ -129,26 +67,19 @@ export default function BugReport() {
     }
   }
 
-  useEffect(() => {
-    async function loadSession() {
-      setSession(await getSession());
-    }
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-    loadSession();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title.trim()) {
-      setMessage("Bitte geben Sie einen Titel ein.");
-      return;
-    }
-
-    if (!description.trim()) {
-      setMessage("Bitte geben Sie eine Beschreibung ein.");
-      return;
-    }
+    const formattedDate = new Date()
+      .toLocaleString("de-DE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+      .replace(",", "");
 
     const response = await fetch("/api/bugReport", {
       method: "POST",
@@ -168,14 +99,14 @@ export default function BugReport() {
           title: title,
           description: description,
           reporter: session?.user?.name || "Unknown",
-          created_at: formatierteZeit(),
+          created_at: formattedDate,
         },
       ]);
       socket.emit("newBug", "Hello Server");
       setTitle("");
       setDescription("");
     }
-  };
+  }
 
   if (!session) {
     return <p>Loading</p>;

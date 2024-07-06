@@ -1,4 +1,5 @@
 "use client";
+
 import styled from "styled-components";
 
 const LogBackground = styled.div`
@@ -41,6 +42,7 @@ export default function Changelog() {
             Add Account will be blocked if the password is entered incorrectly 3 times within 5
             minutes
           </li>
+          <li>Add different Backend Security features</li>
         </ul>
       </LogContainer>
       <LogContainer>

@@ -146,6 +146,6 @@ export async function GET(req) {
     );
   } catch (err) {
     console.error("Fehler beim Abrufen der Daten:", err);
-    res.status(500).json({ error: "Daten konnten nicht abgerufen werden." });
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

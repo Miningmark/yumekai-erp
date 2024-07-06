@@ -5,16 +5,15 @@ import AddNewContact from "@/components/contactComponents/AddNewContact";
 import styled from "styled-components";
 import { PageContext } from "@/components/menu/MenuLayout";
 import React from "react";
-
 import {
   StyledButton,
   GreenButton,
   RedButton,
   DisabledGreenButton,
 } from "@/components/styledComponents/StyledButton";
-
 import DisplayContactModal from "@/components/contactComponents/ShowContact";
 import { sortedCountries, genders, allColumns } from "@/utils/contacts/helpers";
+import { socket } from "@/app/socket";
 
 const ContactTabBackground = styled.div`
   width: calc(100% -40px);
@@ -174,23 +173,28 @@ export default function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newContact, setNewContact] = useState(null);
   const [activeTab, setActiveTab] = useState("Händler");
   const [activeContact, setActiveContact] = useState(null);
 
+  //Suchtext vom stickyMenu
   const search = React.useContext(PageContext);
-  //console.log("12345", search);
 
   useEffect(() => {
-    async function fetchContacts() {
-      const response = await fetch("/api/contacts");
-      const data = await response.json();
-      setContacts(data);
-      setFilteredContacts(data);
-    }
-
     fetchContacts();
+
+    socket.on("loadNewContact", fetchContacts);
+
+    return () => {
+      socket.off("loadNewContact", fetchContacts);
+    };
   }, []);
+
+  async function fetchContacts() {
+    const response = await fetch("/api/contacts");
+    const data = await response.json();
+    setContacts(data);
+    setFilteredContacts(data);
+  }
 
   useEffect(() => {
     if (search) {
@@ -206,24 +210,7 @@ export default function Contacts() {
       setFilteredContacts(contacts);
     }
   }, [search, contacts]);
-  /*
-  function handleSearch(e) {
-    setSearchQuery(e.target.value);
-    const filtered = contacts.filter((contact) =>
-      allColumns.some(
-        (column) =>
-          contact[column.id] &&
-          contact[column.id].toString().toLowerCase().includes(e.target.value.toLowerCase())
-      )
-    );
-    setFilteredContacts(filtered);
-  }
 
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setNewContact({ ...newContact, [name]: value });
-  }
-*/
   async function handleAddContact(newContact) {
     try {
       const response = await fetch("/api/contacts", {
@@ -235,21 +222,20 @@ export default function Contacts() {
       if (response.ok) {
         const responseData = await response.json();
         if (responseData && responseData.insertId) {
+          socket.emit("newContact", "Hello Server");
           setContacts([...contacts, { ...newContact, id: responseData.insertId }]);
           setFilteredContacts([...contacts, { ...newContact, id: responseData.insertId }]);
           setShowModal(false);
         } else {
-          console.error("Failed to add contact: Response does not contain insertId. ");
+          console.error("Fehler beim hinzufügen des Kontakts: Antwort enthält keine insertId. ");
         }
       } else {
-        console.error("Failed to add contact. ", response.status);
+        console.error("Fehler beim hinzufügen des Kontakts. ", response.status);
       }
     } catch (error) {
-      console.error("Failed to add contact:", error);
+      console.error("Fehler beim hinzufügen des Kontakts:", error);
     }
   }
-
-  //console.log("contacts", contacts);
 
   function changeTab(category) {
     setActiveTab(category);
@@ -272,20 +258,27 @@ export default function Contacts() {
     setActiveContact(null);
   }
 
-  async function handleEditContact(editContact, theme) {
+  async function handleEditContact(editContact) {
     const contactToSave = { ...editContact, category: editContact.category.join(", ") };
-    const response = await fetch("/api/contacts", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contactToSave),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setContacts(
-        contacts.map((contact) => (contact.id === editContact.id ? editContact : contact))
-      );
-    } else {
-      console.error("Fehler beim Speichern des Kontakts. ", data);
+    try {
+      const response = await fetch("/api/contacts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactToSave),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        socket.emit("newContact", "Hello Server");
+        setContacts(
+          contacts.map((contact) => (contact.id === editContact.id ? editContact : contact))
+        );
+      } else {
+        console.error("Fehler beim Speichern des Kontakts. ", data);
+      }
+    } catch (error) {
+      console.error("Fehler beim Bearbeiten des Kontakts:", error);
     }
   }
 

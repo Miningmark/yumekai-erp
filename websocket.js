@@ -28,6 +28,11 @@ nextApp.prepare().then(() => {
       console.log("newBug:", data);
       socket.broadcast.emit("loadNewBug", "new");
     });
+
+    socket.on("newContact", (data) => {
+      console.log("newContact:", data);
+      socket.broadcast.emit("loadNewContact", "new");
+    });
   });
 
   const PORT = process.env.PORT || 3000;

@@ -36,6 +36,6 @@ export const LoginIconButton = styled.button`
   & svg {
     width: 100%;
     height: auto;
-    fill: ${({ theme }) => theme.color1};
+    fill: var(--light);
   }
 `;

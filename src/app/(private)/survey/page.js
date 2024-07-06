@@ -10,7 +10,7 @@ const SurveyContainer = styled.div`
   color: ${({ theme }) => theme.textColor};
 `;
 
-export default function DashBoard() {
+export default function Survey() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -18,13 +18,13 @@ export default function DashBoard() {
       try {
         const response = await fetch("/api/survey");
         if (!response.ok) {
-          throw new Error("Failed to fetch survey data");
+          throw new Error("Fehler beim laden der Umfragedaten");
         }
         const data = await response.json();
         setData(data);
         return data;
       } catch (error) {
-        console.error("Failed to fetch survey data:", error);
+        console.error("Fehler beim laden der Umfragedaten:", error);
       }
     }
     fetchData();
