@@ -17,7 +17,7 @@ export default function DashBoard() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to, subject, text }),
+      body: JSON.stringify({ from, to, subject, text, auth: "email-test" }),
     });
 
     if (res.ok) {
