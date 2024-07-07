@@ -15,7 +15,7 @@ export async function GET(req) {
 
   try {
     const [rows] = await connection.execute(
-      "SELECT name, color, email, role, locked, failed_attempts FROM users"
+      "SELECT id, name, color, email, role, locked, failed_attempts FROM users"
     );
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
