@@ -41,7 +41,7 @@ export default function NewColumn({ onClose, newColumnName }) {
           onChange={(e) => setNewTitle(e.target.value)}
           maxLength={maxLength + 1}
         />
-        <CharacterCount $tooLong={tooLong ? "var(--danger)" : "var(--dark)"}>
+        <CharacterCount $tooLong={tooLong ? 1 : 0}>
           {newTitle.length}/{maxLength} zeichen
         </CharacterCount>
         <ModalActions>

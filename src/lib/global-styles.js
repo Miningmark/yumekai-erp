@@ -46,6 +46,7 @@ export const GlobalStyles = createGlobalStyle`
         padding-top: 25px;
         color: var(--secondary-color);
     }
+    
     h2{
         color: var(--secondary-color);
     }

@@ -125,7 +125,7 @@ export default function BugReport() {
             onChange={(e) => setTitle(e.target.value)}
             maxLength={51}
           />
-          <CharacterCount $tooLong={title.length > 50 ? "var(--danger)" : "var(--dark)"}>
+          <CharacterCount $tooLong={title.length > 50 ? 1 : 0}>
             {title.length}/50 Zeichen
           </CharacterCount>
           <ModalImputTitle>Beschreibung (max. 500 zeichen)</ModalImputTitle>
@@ -136,7 +136,7 @@ export default function BugReport() {
             rows="6"
             maxLength={501}
           />
-          <CharacterCount $tooLong={description.length > 500 ? "var(--danger)" : "var(--dark)"}>
+          <CharacterCount $tooLong={description.length > 500 ? 1 : 0}>
             {description.length}/500 Zeichen
           </CharacterCount>
           <ModalButtonRightContainer>

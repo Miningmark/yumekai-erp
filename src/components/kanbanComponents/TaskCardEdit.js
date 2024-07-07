@@ -73,7 +73,7 @@ export default function TaskCardEdit({ task, handleCloseTaskEdit, handleEditTask
             onChange={handleInputChange}
             maxLength={21}
           />
-          <CharacterCount $tooLong={editTask.title.length > 20 ? "var(--danger)" : "var(--dark)"}>
+          <CharacterCount $tooLong={editTask.title.length > 20 ? 1 : 0}>
             {editTask.title.length}/20 Zeichen
           </CharacterCount>
           <ModalImputTitle>Beschreibung</ModalImputTitle>

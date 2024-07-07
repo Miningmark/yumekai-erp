@@ -57,7 +57,7 @@ export default function AddNewTask({
     }
 
     if (!editor) {
-      setError("Bitte wählen Sie einen Editor aus.");
+      setError("Bitte wählen Sie einen Bearbeiter aus.");
       return;
     }
 
@@ -105,7 +105,7 @@ export default function AddNewTask({
           onChange={(e) => setTitle(e.target.value)}
           maxLength={21}
         />
-        <CharacterCount $tooLong={title.length > 20 ? "var(--danger)" : "var(--dark)"}>
+        <CharacterCount $tooLong={title.length > 20 ? 1 : 0}>
           {title.length}/20 Zeichen
         </CharacterCount>
         <ModalImputTitle>Beschreibung</ModalImputTitle>

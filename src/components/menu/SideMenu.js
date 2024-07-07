@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { getSession, login, logout } from "@/lib/cockieFunctions";
+import { getSession, logout } from "@/lib/cockieFunctions";
 
 // Import SVG icons
 import IconLogo from "/public/assets/icons/yumekai_color_font.svg";

@@ -14,21 +14,25 @@ nextApp.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
+    //Kanban
     socket.on("newTask", (data) => {
       console.log("newTask:", data);
       socket.broadcast.emit("loadNewTasks", "new");
     });
 
+    //Kanban
     socket.on("newColumn", (data) => {
       console.log("newColumn:", data);
       socket.broadcast.emit("loadNewColumns", "new");
     });
 
+    //BugReport
     socket.on("newBug", (data) => {
       console.log("newBug:", data);
       socket.broadcast.emit("loadNewBug", "new");
     });
 
+    //Contacts
     socket.on("newContact", (data) => {
       console.log("newContact:", data);
       socket.broadcast.emit("loadNewContact", "new");

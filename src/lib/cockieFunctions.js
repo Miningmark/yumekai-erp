@@ -2,16 +2,16 @@
 
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-const secretKey = "secret";
+const secretKey = process.env.AUTH_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000))
+    .setExpirationTime(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)) //1 Day
     .sign(key);
 }
 
@@ -28,7 +28,6 @@ export async function decrypt(input) {
 }
 
 export async function setSession(user) {
-  console.log("user from cockietest", user);
   const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
   const session = await encrypt({ user, expires });
 
@@ -56,7 +55,7 @@ export async function updateSession(request) {
   const parsed = await decrypt(session);
   if (!parsed) return;
 
-  parsed.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+  parsed.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); //1 Day
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",
@@ -65,7 +64,4 @@ export async function updateSession(request) {
     expires: parsed.expires,
   });
   return res;
-  //const expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-  //const session = await encrypt({ user, expires });
-  //cookies().set("session", session, { expires, httpOnly: true });
 }

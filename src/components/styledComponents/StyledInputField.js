@@ -155,7 +155,6 @@ export const DropdownItem = styled.li`
   cursor: pointer;
   color: ${({ theme }) => theme.textColor};
   &:hover {
-    background-color: ${({ theme }) =>
-      theme.color2}; /* Default to lightgray if variable is not set */
+    background-color: ${({ theme }) => theme.color2};
   }
 `;

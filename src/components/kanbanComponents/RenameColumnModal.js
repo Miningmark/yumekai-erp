@@ -41,8 +41,8 @@ export default function RenameColumnModal({ column, onClose, onRename }) {
           onChange={(e) => setNewTitle(e.target.value)}
           maxLength={maxLength + 1}
         />
-        <CharacterCount $tooLong={tooLong ? "var(--danger)" : "var(--dark)"}>
-          {newTitle.length}/{maxLength} zeichen
+        <CharacterCount $tooLong={tooLong ? 1 : 0}>
+          {newTitle.length}/{maxLength} Zeichen
         </CharacterCount>
         <ModalActions>
           <RedButton onClick={onClose}>Abbrechen</RedButton>
