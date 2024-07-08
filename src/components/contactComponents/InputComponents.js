@@ -35,7 +35,19 @@ export const inputComponentType = {
   gender: InputOptionSelect,
 };
 
-function InputOptionInput({
+export const inputComponentConStandType = {
+  location: InputOptionInput,
+  start_date: InputOptionInput,
+  end_date: InputOptionInput,
+  con_name: InputOptionInput,
+  hotel: InputOptionInput,
+  website: InputOptionInput,
+  helpers: InputOptionTextArea,
+  special_notes: InputOptionTextArea,
+  workshops: InputOptionTextArea,
+};
+
+export function InputOptionInput({
   title,
   inputText,
   inputChange,
@@ -65,7 +77,7 @@ function InputOptionInput({
   );
 }
 
-function InputOptionTextArea({ title, inputText, inputChange, editable = true }) {
+export function InputOptionTextArea({ title, inputText, inputChange, editable = true }) {
   return (
     <>
       <InputWrapper className="input">
@@ -88,7 +100,7 @@ function InputOptionTextArea({ title, inputText, inputChange, editable = true })
   );
 }
 
-function InputOptionSelect({ title, options, inputText, inputChange, editable = true }) {
+export function InputOptionSelect({ title, options, inputText, inputChange, editable = true }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDropdownClick = () => {

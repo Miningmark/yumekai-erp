@@ -18,6 +18,8 @@ import Icon6 from "/public/assets/icons/newspaper.svg";
 import Icon7 from "/public/assets/icons/report.svg";
 import Icon8 from "/public/assets/icons/query_stats.svg";
 import Icon9 from "/public/assets/icons/contacts.svg";
+import Icon10 from "/public/assets/icons/theater_comedy.svg";
+
 import LogoutIcon from "/public/assets/icons/logout.svg";
 
 const Sidebar = styled.div`
@@ -264,6 +266,13 @@ export default function SideMenu({ sideMenuOpen }) {
           <SideMenuLink href="/contacts">
             <Icon9 />
             Kontakte
+          </SideMenuLink>
+        </SideMenuItem>
+
+        <SideMenuItem className={pathname === "/conStand" ? "active" : ""}>
+          <SideMenuLink href="/conStand">
+            <Icon10 />
+            Infostand
           </SideMenuLink>
         </SideMenuItem>
 

@@ -7,6 +7,7 @@ export const privateRoutes = [
   { path: "/commingSoon", roles: ["user", "orga", "admin"] },
   { path: "/bugReport", roles: ["user", "orga", "admin"] },
   { path: "/survey", roles: ["user", "orga", "admin"] },
+  { path: "/conStand", roles: ["user", "orga", "admin"] },
 ];
 
 export const privateAPIRoutes = [
@@ -22,6 +23,7 @@ export const privateAPIRoutes = [
   { path: "/api/users/updatePassword", roles: ["user", "orga", "admin"] },
   { path: "/api/users/userList", roles: ["user", "orga", "admin"] },
   { path: "/api/users/userListFull", roles: ["admin"] },
+  { path: "/api/conStand", roles: ["user", "orga", "admin"] },
 ];
 
 export const authRoutes = ["/login", "/test/auth/signin", "/reset-password"];
