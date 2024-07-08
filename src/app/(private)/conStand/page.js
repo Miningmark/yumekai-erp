@@ -169,6 +169,7 @@ export default function ConventionStands() {
   return (
     <>
       <h2>Infostanände</h2>
+      <p>Test</p>
       <GreenButton onClick={() => setShowModal(true)}>Add Infostand</GreenButton>
       <ConventionStandTabBackground>
         <ConventionStandTabCard>
