@@ -53,6 +53,7 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
   const givenNameRef = useRef(null);
   const surnameRef = useRef(null);
   const postal_codeRef = useRef(null);
+  const websiteRef = useRef(null);
 
   // Funktion zum Fokussieren des Inputs
   const focusInput = (ref) => {
@@ -93,6 +94,15 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
   };
 
   const handleChange = (field, value) => {
+    if (field === "instagram") {
+      // Extract the username if the value is a URL
+      const usernameMatch = value.match(
+        /(?:https?:\/\/)?(?:www\.)?instagram\.com\/([A-Za-z0-9_.]+)/
+      );
+      if (usernameMatch) {
+        value = usernameMatch[1]; // Extract the username part
+      }
+    }
     setEditableContact((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -138,6 +148,8 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
               ? surnameRef
               : column.id === "postal_code"
               ? postal_codeRef
+              : column.id === "website"
+              ? websiteRef
               : null
           }
         />

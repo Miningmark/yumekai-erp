@@ -27,6 +27,7 @@ export default function AddNewConventionStand({ onClose, onAdd, allHelpers }) {
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const conNameRef = useRef(null);
+  const websiteRef = useRef(null);
 
   const focusInput = (ref) => {
     if (ref.current) {
@@ -98,6 +99,8 @@ export default function AddNewConventionStand({ onClose, onAdd, allHelpers }) {
               ? startDateRef
               : column.id === "end_date"
               ? endDateRef
+              : column.id === "website"
+              ? websiteRef
               : null
           }
           handleOnClick={column.id === "helpers" ? handleOpenHelperModal : null}

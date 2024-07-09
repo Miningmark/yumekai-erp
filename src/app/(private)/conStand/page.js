@@ -14,6 +14,7 @@ import DisplayConventionStandModal from "@/components/conventionStandComponents/
 import AddNewConventionStand from "@/components/conventionStandComponents/AddNewConventionStand";
 import { socket } from "@/app/socket";
 import { newConStandTemplate, allColumns } from "@/utils/conStand/helpers";
+import { useRouter } from "next/navigation";
 
 const ConventionStandTabBackground = styled.div`
   width: calc(100% - 40px);
@@ -114,6 +115,7 @@ export default function ConventionStands() {
   const [activeStand, setActiveStand] = useState(null);
   const [activeTab, setActiveTab] = useState("zukunft");
   const [allHelpers, setAllHelpers] = useState(null);
+  const router = useRouter();
 
   // Search text from stickyMenu
   const search = React.useContext(PageContext);
@@ -236,6 +238,14 @@ export default function ConventionStands() {
     setActiveTab(category);
   }
 
+  function openUrl(url) {
+    if (!url) {
+      return;
+    }
+    const formattedUrl = url.startsWith("http") ? url : `http://${url}`;
+    window.open(formattedUrl);
+  }
+
   if (!stands || !allHelpers) {
     return <p>Loading</p>;
   }
@@ -299,6 +309,7 @@ export default function ConventionStands() {
                         title={stand[column.id]}
                         onClick={() => {
                           setActiveStand(stand);
+                          column.id === "website" && openUrl(stand[column.id]);
                         }}
                       >
                         {(column.id === "start_date" || column.id === "end_date") &&

@@ -30,6 +30,7 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const conNameRef = useRef(null);
+  const websiteRef = useRef(null);
 
   // Funktion zum Fokussieren des Inputs
   function focusInput(ref) {
@@ -106,6 +107,8 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
               ? startDateRef
               : column.id === "end_date"
               ? endDateRef
+              : column.id === "website"
+              ? websiteRef
               : null
           }
           editable={isEditing}

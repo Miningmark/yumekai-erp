@@ -56,6 +56,7 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   const givenNameRef = useRef(null);
   const surnameRef = useRef(null);
   const postal_codeRef = useRef(null);
+  const websiteRef = useRef(null);
 
   // Funktion zum Fokussieren des Inputs
   const focusInput = (ref) => {
@@ -91,6 +92,15 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
   }
 
   function handleChange(field, value) {
+    if (field === "instagram") {
+      // Extract the username if the value is a URL
+      const usernameMatch = value.match(
+        /(?:https?:\/\/)?(?:www\.)?instagram\.com\/([A-Za-z0-9_.]+)/
+      );
+      if (usernameMatch) {
+        value = usernameMatch[1]; // Extract the username part
+      }
+    }
     setNewContact((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -135,6 +145,8 @@ export default function AddNewContact({ handleCloseAddContactTask, handleAddCont
               ? surnameRef
               : column.id === "postal_code"
               ? postal_codeRef
+              : column.id === "website"
+              ? websiteRef
               : null
           }
         />

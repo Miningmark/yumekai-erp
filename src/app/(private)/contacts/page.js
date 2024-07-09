@@ -282,6 +282,21 @@ export default function Contacts() {
     }
   }
 
+  function openUrl(url) {
+    if (!url) {
+      return;
+    }
+    const formattedUrl = url.startsWith("http") ? url : `http://${url}`;
+    window.open(formattedUrl);
+  }
+
+  function openInsta(name) {
+    if (!name) {
+      return;
+    }
+    window.open(`https://www.instagram.com/${name}/`);
+  }
+
   return (
     <>
       <h1>Kontakte</h1>
@@ -335,7 +350,8 @@ export default function Contacts() {
                         key={column.id}
                         title={contact[column.id]}
                         onClick={() => {
-                          console.log("Contact: ", contact, contact.id);
+                          column.id === "website" && openUrl(contact[column.id]);
+                          column.id === "instagram" && openInsta(contact[column.id]);
                           setActiveContact(contact);
                         }}
                       >
