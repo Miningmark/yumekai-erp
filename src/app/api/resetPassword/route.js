@@ -32,7 +32,7 @@ export async function POST(req) {
       );
 
       const resetUrl = `${process.env.BASE_URL}/reset-password?token=${resetToken}`;
-
+      console.log("API URL E-MAIL", `${process.env.BASE_URL}/api/email`);
       const response = await fetch(`${process.env.BASE_URL}/api/email`, {
         method: "POST",
         headers: {

@@ -27,7 +27,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const { from = "test@miningmark.de", to, subject, text, auth } = body;
-    //console.log(from, to, subject, text, auth);
+    console.log("E-MAIL Send: ", from, to, subject, text, auth);
 
     if (!auth || (auth != process.env.EMAIL_AUTH && auth != "email-test")) {
       console.log("KEIN ZUGRIFF");
@@ -72,11 +72,13 @@ export async function POST(req) {
 
     try {
       await transporter.sendMail(mailOptions);
+      console.log("EMAIL in Db speichern");
 
       const [result] = await connection.execute(
         "INSERT INTO emails (email_from, email_to, email_subject, email_text, created_at) VALUES (?, ?, ?, ?, NOW())",
         [from, to, subject, text]
       );
+      console.log("E-MAIL Result", result);
 
       if (result.affectedRows > 0) {
         return NextResponse.json(
