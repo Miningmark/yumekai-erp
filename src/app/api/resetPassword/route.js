@@ -46,7 +46,7 @@ export async function POST(req) {
           auth: process.env.EMAIL_AUTH,
         }),
       });
-
+      console.log("API EMAIL Response", response);
       if (!response.ok) {
         return NextResponse.json(
           { message: "Internal server error by send E-Mail" },
