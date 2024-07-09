@@ -52,6 +52,8 @@ export async function POST(req) {
           { message: "Internal server error by send E-Mail" },
           { status: 500 }
         );
+      } else {
+        console.error("Internal server error by send E-Mail: ", response);
       }
 
       return NextResponse.json({ message: "Password reset email sent" }, { status: 200 });
