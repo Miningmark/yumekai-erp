@@ -17,7 +17,7 @@ import { newConStandTemplate, allColumns } from "@/utils/conStand/helpers";
 
 const ConventionStandTabBackground = styled.div`
   width: calc(100% - 40px);
-  height: calc(100vh - 158px);
+  height: calc(100vh - 190px);
   margin: 20px;
   padding: 0;
   display: flex;
@@ -29,7 +29,7 @@ const ConventionStandTabCard = styled.div`
   position: absolute;
   top: 30px;
   width: calc(100% - 24px);
-  height: calc(100vh - 158px - 70px);
+  height: calc(100vh - 190px - 70px);
   overflow: auto;
   background-color: ${({ theme }) => theme.color1};
   color: ${({ theme }) => theme.textColor};
@@ -39,7 +39,7 @@ const ConventionStandTabCard = styled.div`
 
 const TableBackground = styled.div`
   position: relative;
-  height: calc(100vh - 158px - 70px);
+  height: calc(100vh - 190px - 70px);
   overflow-x: auto;
 `;
 
@@ -75,17 +75,52 @@ const StyledTableBody = styled.tbody`
   }
 `;
 
+const ConventionStandTabList = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const ConventionStandTabButton = styled.div`
+  width: 150px;
+  height: 30px;
+  background-color: ${({ $activeBackground, theme }) =>
+    $activeBackground ? theme.color1 : theme.color2};
+  border: solid 2px
+    ${({ $activeBoarder, theme }) => ($activeBoarder ? theme.textColor : theme.color1)};
+  color: ${({ theme }) => theme.textColor};
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: 0.5s;
+  cursor: pointer;
+  z-index: ${({ $tabIndex }) => $tabIndex};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.color2};
+    border: solid 2px ${({ theme }) => theme.textColor};
+    border-bottom: none;
+    transition: 0.5s;
+  }
+`;
+
 export default function ConventionStands() {
-  const [stands, setStands] = useState([]);
-  const [filteredStands, setFilteredStands] = useState([]);
+  const [stands, setStands] = useState(null);
+  const [filteredStands, setFilteredStands] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [activeStand, setActiveStand] = useState(null);
+  const [activeTab, setActiveTab] = useState("zukunft");
+  const [allHelpers, setAllHelpers] = useState(null);
 
   // Search text from stickyMenu
   const search = React.useContext(PageContext);
 
   useEffect(() => {
     fetchStands();
+    fetchHelpers();
 
     socket.on("loadNewStand", fetchStands);
 
@@ -95,16 +130,34 @@ export default function ConventionStands() {
   }, []);
 
   async function fetchStands() {
-    const response = await fetch("/api/conStand");
+    const response = await fetch("/api/conStand/stand");
     const data = await response.json();
     setStands(data);
     setFilteredStands(data);
+  }
+  async function fetchHelpers() {
+    try {
+      const response = await fetch("/api/conStand/helpers");
+      const data = await response.json();
+      setAllHelpers(data);
+    } catch (error) {
+      console.error("Failed to fetch helpers:", error);
+    }
   }
 
   useEffect(() => {
     if (search) {
       const filtered = stands.filter((stand) =>
-        ["location", "con_name", "hotel", "special_notes", "workshops", "helpers"].some(
+        [
+          "location",
+          "con_name",
+          "hotel",
+          "special_notes",
+          "workshops",
+          "helpers",
+          "start_date",
+          "end_date",
+        ].some(
           (field) =>
             stand[field] && stand[field].toString().toLowerCase().includes(search.toLowerCase())
         )
@@ -117,9 +170,21 @@ export default function ConventionStands() {
 
   const columns = allColumns.filter((column) => !["id", "created_at"].includes(column.id));
 
+  function getFilteredStandsByTab() {
+    const now = new Date();
+    if (search) {
+      return filteredStands;
+    }
+    if (activeTab === "zukunft") {
+      return filteredStands.filter((stand) => new Date(stand.end_date) >= now);
+    } else {
+      return filteredStands.filter((stand) => new Date(stand.end_date) < now);
+    }
+  }
+
   async function handleAddStand(newStand) {
     try {
-      const response = await fetch("/api/conStand", {
+      const response = await fetch("/api/conStand/stand", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newStand),
@@ -135,6 +200,7 @@ export default function ConventionStands() {
           },
         ]);
       }
+      socket.emit("newStand", "Hello Server");
     } catch (error) {
       console.error("Error adding stand:", error);
     }
@@ -147,7 +213,7 @@ export default function ConventionStands() {
   async function handleEditConStand(editConStand) {
     const convertedStand = { ...editConStand, helpers: JSON.stringify(editConStand.helpers) };
     try {
-      const response = await fetch("/api/conStand", {
+      const response = await fetch("/api/conStand/stand", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(convertedStand),
@@ -166,12 +232,52 @@ export default function ConventionStands() {
     }
   }
 
+  function changeTab(category) {
+    setActiveTab(category);
+  }
+
+  if (!stands || !allHelpers) {
+    return <p>Loading</p>;
+  }
+
   return (
     <>
-      <h2>Infostanände</h2>
-      <p>Test 2</p>
+      <h1>Infostanände</h1>
       <GreenButton onClick={() => setShowModal(true)}>Add Infostand</GreenButton>
       <ConventionStandTabBackground>
+        <ConventionStandTabList>
+          {!search ? (
+            <>
+              <ConventionStandTabButton
+                onClick={() => changeTab("zukunft")}
+                $activeBackground={"zukunft" === activeTab ? 1 : 0}
+                $activeBoarder={"zukunft" === activeTab ? 1 : 0}
+                $tabIndex={"zukunft" === activeTab ? "1" : "0"}
+              >
+                zukunft
+              </ConventionStandTabButton>
+              <ConventionStandTabButton
+                onClick={() => changeTab("vergangenheit")}
+                $activeBackground={"vergangenheit" === activeTab ? 1 : 0}
+                $activeBoarder={"vergangenheit" === activeTab ? 1 : 0}
+                $tabIndex={"vergangenheit" === activeTab ? "1" : "0"}
+              >
+                vergangenheit
+              </ConventionStandTabButton>
+            </>
+          ) : (
+            <>
+              <ConventionStandTabButton
+                $activeBackground={"var(--light)"}
+                $activeBoarder={"var(--dark)"}
+                $tabIndex={"1"}
+              >
+                Suche
+              </ConventionStandTabButton>
+            </>
+          )}
+        </ConventionStandTabList>
+
         <ConventionStandTabCard>
           <TableBackground>
             <StyledTable>
@@ -185,19 +291,28 @@ export default function ConventionStands() {
                 </tr>
               </StyledTableHead>
               <StyledTableBody>
-                {filteredStands.map((stand) => (
+                {getFilteredStandsByTab().map((stand) => (
                   <tr key={stand.id}>
                     {columns.map((column) => (
                       <td
                         key={column.id}
                         title={stand[column.id]}
                         onClick={() => {
-                          console.log("Infostand: ", stand, stand.id);
                           setActiveStand(stand);
                         }}
                       >
-                        {column.id === "start_date" && stand[column.id]
+                        {(column.id === "start_date" || column.id === "end_date") &&
+                        stand[column.id]
                           ? new Date(stand[column.id]).toLocaleDateString("de-DE") // Anzeige als tt.MM.yyyy
+                          : column.id === "helpers"
+                          ? stand.helpers
+                              .map((helperID) => {
+                                const helperData = allHelpers.find(
+                                  (helper) => helper.id == helperID
+                                );
+                                return `${helperData.given_name} ${helperData.surname}`;
+                              })
+                              .join(", ")
                           : Array.isArray(stand[column.id])
                           ? stand[column.id].join(", ")
                           : stand[column.id]}
@@ -214,10 +329,15 @@ export default function ConventionStands() {
             stand={activeStand}
             onClose={() => setActiveStand(null)}
             onEditStand={handleEditConStand}
+            allHelpers={allHelpers}
           />
         )}
         {showModal && (
-          <AddNewConventionStand onAdd={handleAddStand} onClose={handleCloseAddConStand} />
+          <AddNewConventionStand
+            onAdd={handleAddStand}
+            onClose={handleCloseAddConStand}
+            allHelpers={allHelpers}
+          />
         )}
       </ConventionStandTabBackground>
     </>

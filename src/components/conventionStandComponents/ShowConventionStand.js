@@ -17,11 +17,13 @@ import {
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import { inputComponentConStandType } from "@/components/contactComponents/InputComponents";
 import { newConStandTemplate, allColumns } from "@/utils/conStand/helpers";
+import HelperSelectionModal from "@/components/conventionStandComponents/HelperSelectionModal";
 
-export default function DisplayConventionStandModal({ stand, onClose, onEditStand }) {
+export default function DisplayConventionStandModal({ stand, onClose, onEditStand, allHelpers }) {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editableStand, setEditableStand] = useState(stand);
+  const [showHelperModal, setShowHelperModal] = useState(false);
 
   // Refs für die Input-Felder
   const locationRef = useRef(null);
@@ -61,14 +63,18 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
       focusInput(conNameRef);
       return;
     }
-    console.log("editableStand: ", editableStand);
+
     onEditStand(editableStand);
     onClose();
   }
 
-  const handleChange = (field, value) => {
+  function handleChange(field, value) {
     setEditableStand((prev) => ({ ...prev, [field]: value }));
-  };
+  }
+
+  function handleOpenHelperModal() {
+    setShowHelperModal(true);
+  }
 
   function renderInputFields() {
     return Array.from(allColumns).map((column) => {
@@ -79,7 +85,16 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
         <Component
           key={column.id}
           title={column.name}
-          inputText={editableStand[column.id]}
+          inputText={
+            column.id === "helpers"
+              ? editableStand.helpers
+                  .map((helperID) => {
+                    const helperData = allHelpers.find((helper) => helper.id == helperID);
+                    return `${helperData.given_name} ${helperData.surname}`;
+                  })
+                  .join(", ")
+              : editableStand[column.id]
+          }
           inputChange={(value) => handleChange(column.id, value)}
           type={column.id === "start_date" ? "date" : column.id === "end_date" ? "date" : "text"}
           inputRef={
@@ -94,9 +109,16 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
               : null
           }
           editable={isEditing}
+          handleOnClick={
+            isEditing ? (column.id === "helpers" ? handleOpenHelperModal : null) : null
+          }
         />
       );
     });
+  }
+
+  function handleAddHelpers(helpersIDs) {
+    handleChange("helpers", helpersIDs);
   }
 
   return (
@@ -104,7 +126,7 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
       <ModalOverlay onClick={onClose}>
         <ModalContentLarge onClick={(e) => e.stopPropagation()}>
           <ModalCloseIcon onClick={onClose} />
-          <h2>New Convention Stand</h2>
+          <h2>Infostand</h2>
           <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <ModalButtonRightContainer>
@@ -117,6 +139,14 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
           </ModalButtonRightContainer>
         </ModalContentLarge>
       </ModalOverlay>
+      {showHelperModal && (
+        <HelperSelectionModal
+          onClose={() => setShowHelperModal(false)}
+          onSelectHelpers={handleAddHelpers}
+          selectedHelpers={editableStand.helpers}
+          allHelpers={allHelpers}
+        />
+      )}
     </>
   );
 }

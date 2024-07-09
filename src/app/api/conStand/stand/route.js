@@ -104,7 +104,7 @@ export async function PATCH(req) {
 
   try {
     const body = await req.json();
-    const { id, ...updatedFields } = body;
+    const { id, created_at, ...updatedFields } = body;
 
     if (!id) {
       return NextResponse.json({ message: "ID is required" }, { status: 400 });

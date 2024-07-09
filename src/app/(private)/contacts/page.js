@@ -16,8 +16,8 @@ import { sortedCountries, genders, allColumns } from "@/utils/contacts/helpers";
 import { socket } from "@/app/socket";
 
 const ContactTabBackground = styled.div`
-  width: calc(100% -40px);
-  height: calc(100vh -158px);
+  width: calc(100% - 40px);
+  height: calc(100vh - 190px);
   margin: 20px;
   padding: 0;
   display: flex;
@@ -61,7 +61,7 @@ const ContactTabCard = styled.div`
   position: absolute;
   top: 30px;
   width: calc(100% - 24px);
-  height: calc(100vh - 158px - 70px);
+  height: calc(100vh - 190px - 70px);
   overflow: auto;
   background-color: ${({ theme }) => theme.color1};
   color: ${({ theme }) => theme.textColor};
@@ -71,7 +71,7 @@ const ContactTabCard = styled.div`
 
 const TableBackground = styled.div`
   position: relative;
-  height: calc(100vh - 158px - 70px);
+  height: calc(100vh - 190px - 70px);
   overflow-x: auto;
 `;
 
@@ -222,10 +222,10 @@ export default function Contacts() {
       if (response.ok) {
         const responseData = await response.json();
         if (responseData && responseData.insertId) {
-          socket.emit("newContact", "Hello Server");
           setContacts([...contacts, { ...newContact, id: responseData.insertId }]);
           setFilteredContacts([...contacts, { ...newContact, id: responseData.insertId }]);
           setShowModal(false);
+          socket.emit("newContact", "Hello Server");
         } else {
           console.error("Fehler beim hinzufügen des Kontakts: Antwort enthält keine insertId. ");
         }
@@ -314,6 +314,7 @@ export default function Contacts() {
             </>
           )}
         </ContactTabList>
+
         <ContactTabCard>
           <TableBackground>
             <StyledTable>

@@ -16,10 +16,12 @@ import {
 import { GreenButton } from "@/components/styledComponents/StyledButton";
 import { inputComponentConStandType } from "@/components/contactComponents/InputComponents";
 import { newConStandTemplate, allColumns } from "@/utils/conStand/helpers";
+import HelperSelectionModal from "@/components/conventionStandComponents/HelperSelectionModal";
 
-export default function AddNewConventionStand({ onClose, onAdd }) {
+export default function AddNewConventionStand({ onClose, onAdd, allHelpers }) {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState(newConStandTemplate);
+  const [showHelperModal, setShowHelperModal] = useState(false);
 
   const locationRef = useRef(null);
   const startDateRef = useRef(null);
@@ -53,15 +55,18 @@ export default function AddNewConventionStand({ onClose, onAdd }) {
       focusInput(conNameRef);
       return;
     }
-    console.log("formData: ", formData);
 
     onAdd(formData);
     onClose();
   };
 
-  const handleChange = (field, value) => {
+  function handleChange(field, value) {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  }
+
+  function handleOpenHelperModal() {
+    setShowHelperModal(true);
+  }
 
   function renderInputFields() {
     return Array.from(allColumns).map((column) => {
@@ -72,34 +77,60 @@ export default function AddNewConventionStand({ onClose, onAdd }) {
         <Component
           key={column.id}
           title={column.name}
-          inputText={formData[column.id]}
+          inputText={
+            column.id === "helpers"
+              ? formData.helpers
+                  .map((helperID) => {
+                    const helperData = allHelpers.find((helper) => helper.id == helperID);
+                    return `${helperData.given_name} ${helperData.surname}`;
+                  })
+                  .join(", ")
+              : formData[column.id]
+          }
           inputChange={(value) => handleChange(column.id, value)}
           type={column.id === "start_date" ? "date" : column.id === "end_date" ? "date" : "text"}
           inputRef={
-            column.id === "given_name"
-              ? givenNameRef
-              : column.id === "surname"
-              ? surnameRef
-              : column.id === "postal_code"
-              ? postal_codeRef
+            column.id === "con_name"
+              ? conNameRef
+              : column.id === "location"
+              ? locationRef
+              : column.id === "start_date"
+              ? startDateRef
+              : column.id === "end_date"
+              ? endDateRef
               : null
           }
+          handleOnClick={column.id === "helpers" ? handleOpenHelperModal : null}
         />
       );
     });
   }
 
+  function handleAddHelpers(helpersIDs) {
+    handleChange("helpers", helpersIDs);
+  }
+
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContentLarge onClick={(e) => e.stopPropagation()}>
-        <ModalCloseIcon onClick={onClose} />
-        <h2>New Convention Stand</h2>
-        <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
-        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
-        <ModalButtonRightContainer>
-          <GreenButton onClick={onSubmit}>Speichern</GreenButton>
-        </ModalButtonRightContainer>
-      </ModalContentLarge>
-    </ModalOverlay>
+    <>
+      <ModalOverlay onClick={onClose}>
+        <ModalContentLarge onClick={(e) => e.stopPropagation()}>
+          <ModalCloseIcon onClick={onClose} />
+          <h2>Neuer Infostand</h2>
+          <InputFieldsContainer>{renderInputFields()}</InputFieldsContainer>
+          {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
+          <ModalButtonRightContainer>
+            <GreenButton onClick={onSubmit}>Speichern</GreenButton>
+          </ModalButtonRightContainer>
+        </ModalContentLarge>
+      </ModalOverlay>
+      {showHelperModal && (
+        <HelperSelectionModal
+          onClose={() => setShowHelperModal(false)}
+          onSelectHelpers={handleAddHelpers}
+          selectedHelpers={formData.helpers}
+          allHelpers={allHelpers}
+        />
+      )}
+    </>
   );
 }

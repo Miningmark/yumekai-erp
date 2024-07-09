@@ -37,6 +37,12 @@ nextApp.prepare().then(() => {
       console.log("newContact:", data);
       socket.broadcast.emit("loadNewContact", "new");
     });
+
+    //Con-Stand
+    socket.on("newStand", (data) => {
+      console.log("newStand:", data);
+      socket.broadcast.emit("loadNewStand", "new");
+    });
   });
 
   const PORT = process.env.PORT || 3000;

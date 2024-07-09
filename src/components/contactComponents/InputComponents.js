@@ -42,7 +42,7 @@ export const inputComponentConStandType = {
   con_name: InputOptionInput,
   hotel: InputOptionInput,
   website: InputOptionInput,
-  helpers: InputOptionTextArea,
+  helpers: InputOptionTextAreaWithOutInput,
   special_notes: InputOptionTextArea,
   workshops: InputOptionTextArea,
 };
@@ -91,6 +91,39 @@ export function InputOptionTextArea({ title, inputText, inputChange, editable = 
           onChange={(e) => inputChange(e.target.value)}
           rows="3"
           disabled={!editable}
+        />
+        <InputLabel className="inputLabel" htmlFor={title}>
+          {title}
+        </InputLabel>
+      </InputWrapper>
+    </>
+  );
+}
+
+export function InputOptionTextAreaWithOutInput({ title, inputText, handleOnClick }) {
+  return (
+    <>
+      <InputWrapper className="input">
+        <div
+          onClick={handleOnClick}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+          }}
+        />
+        <InputArea
+          className="inputField"
+          placeholder=""
+          type="text"
+          name={title}
+          id={title}
+          value={inputText || ""}
+          rows="3"
+          disabled
         />
         <InputLabel className="inputLabel" htmlFor={title}>
           {title}
