@@ -43,6 +43,11 @@ export default function Changelog() {
             minutes
           </li>
           <li>Add different Backend Security features</li>
+          <li>Add Con-Stand Page</li>
+          <li>
+            Add Clicking on the website or Instagram name opens the corresponding page in a new tab
+            (at contacts, con-stand)
+          </li>
         </ul>
       </LogContainer>
       <LogContainer>
