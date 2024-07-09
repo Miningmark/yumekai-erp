@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { sendMail } from "@/utils/sendEmail";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -34,6 +35,13 @@ export async function POST(req) {
       const baseUrl = process.env.BASE_URL;
       const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
       console.log("API URL E-MAIL", `${baseUrl}/api/email`);
+      const response = await sendMail({
+        from: "system@miningmark.de",
+        to: user.email,
+        subject: "Password Reset Request",
+        text: `Please click the following link to reset your password: ${resetUrl}`,
+      });
+      /*
       const response = await fetch(`${baseUrl}/api/email`, {
         method: "POST",
         headers: {
@@ -47,14 +55,14 @@ export async function POST(req) {
           auth: process.env.EMAIL_AUTH,
         }),
       });
-      console.log("API EMAIL Response", response);
-      if (!response.ok) {
+      */
+      console.log("EMAIL Response: ", response);
+      if (response.status == 500) {
+        console.error("Internal server error by send E-Mail: ", response);
         return NextResponse.json(
           { message: "Internal server error by send E-Mail" },
           { status: 500 }
         );
-      } else {
-        console.error("Internal server error by send E-Mail: ", response);
       }
 
       return NextResponse.json({ message: "Password reset email sent" }, { status: 200 });
