@@ -48,6 +48,7 @@ export default function Changelog() {
             Add Clicking on the website or Instagram name opens the corresponding page in a new tab
             (at contacts, con-stand)
           </li>
+          <li>Add Account has been blocked due to failed login E-mail to user</li>
         </ul>
       </LogContainer>
       <LogContainer>

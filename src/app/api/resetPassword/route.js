@@ -34,29 +34,14 @@ export async function POST(req) {
 
       const baseUrl = process.env.BASE_URL;
       const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
-      console.log("API URL E-MAIL", `${baseUrl}/api/email`);
+
       const response = await sendMail({
         from: "system@miningmark.de",
         to: user.email,
         subject: "Password Reset Request",
         text: `Please click the following link to reset your password: ${resetUrl}`,
       });
-      /*
-      const response = await fetch(`${baseUrl}/api/email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "system@miningmark.de",
-          to: user.email,
-          subject: "Password Reset Request",
-          text: `Please click the following link to reset your password: ${resetUrl}`,
-          auth: process.env.EMAIL_AUTH,
-        }),
-      });
-      */
-      console.log("EMAIL Response: ", response);
+
       if (response.status == 500) {
         console.error("Internal server error by send E-Mail: ", response);
         return NextResponse.json(

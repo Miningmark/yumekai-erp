@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import mysql from "mysql2/promise";
 import { apiAuthMiddleware } from "@/apiMiddleware";
+import { sendMail } from "@/utils/sendEmail";
 
 /**
  
@@ -33,65 +34,20 @@ export async function POST(req) {
       console.log("KEIN ZUGRIFF");
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-
-    if (!from || !to || !subject || !text) {
-      return NextResponse.json({ message: "Alle Felder müssen ausgefüllt sein" }, { status: 400 });
-    }
-    let emailPassword = "";
-    switch (from) {
-      case "test@miningmark.de":
-        emailPassword = process.env.EMAIL_PASS_TEST;
-        break;
-      case "system@miningmark.de":
-        emailPassword = process.env.EMAIL_PASS_SYSTEM;
-        break;
-      case "rechnung@miningmark.de":
-        emailPassword = process.env.EMAIL_PASS_RECHNUNG;
-        break;
-
-      default:
-        break;
-    }
-
-    const transporter = nodemailer.createTransport({
-      host: "webmail.your-server.de", // SMTP-Host von Hetzner
-      port: 587, // oder 465 für SSL
-      secure: false, // true für 465, false für andere Ports
-      auth: {
-        user: from,
-        pass: emailPassword,
-      },
+    const response = await sendMail({
+      from: from,
+      to: to,
+      subject: subject,
+      text: text,
     });
-
-    const mailOptions = {
-      from,
-      to,
-      subject,
-      text,
-    };
-
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log("EMAIL in Db speichern");
-
-      const [result] = await connection.execute(
-        "INSERT INTO emails (email_from, email_to, email_subject, email_text, created_at) VALUES (?, ?, ?, ?, NOW())",
-        [from, to, subject, text]
+    if (response.status == 500) {
+      console.error("Internal server error by send E-Mail: ", response);
+      return NextResponse.json(
+        { message: "Internal server error by send E-Mail" },
+        { status: 500 }
       );
-      console.log("E-MAIL Result", result);
-
-      if (result.affectedRows > 0) {
-        return NextResponse.json(
-          { message: "E-Mail erfolgreich gesendet und gespeichert" },
-          { status: 200 }
-        );
-      } else {
-        return NextResponse.json({ message: "Fehler beim Speichern der E-Mail" }, { status: 500 });
-      }
-    } catch (error) {
-      console.error(error);
-      return NextResponse.json({ message: "Fehler beim Senden der E-Mail" }, { status: 500 });
     }
+    return NextResponse.json({ message: "E-Mail succesfully sendet" }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

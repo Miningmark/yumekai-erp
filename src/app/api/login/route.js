@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
+import { sendMail } from "@/utils/sendEmail";
 
 import { setSession } from "@/lib/cockieFunctions";
 
@@ -68,6 +69,21 @@ export async function POST(req) {
           "UPDATE users SET failed_attempts = 3, locked = 1, last_failed_attempt = ? WHERE id = ?",
           [new Date(), user.id]
         );
+        const response = await sendMail({
+          from: "system@miningmark.de",
+          to: user.email,
+          subject: "Account wurde Gesperrt",
+          text: `Dein YumeKai-Planungsboard zugang wurde Gesperrt aufgrund zuviel fehlgeschlagener Login versuche.`,
+        });
+
+        if (response.status == 500) {
+          console.error("Internal server error by send E-Mail: ", response);
+          return NextResponse.json(
+            { message: "Internal server error by send E-Mail" },
+            { status: 500 }
+          );
+        }
+
         return NextResponse.json(
           { message: "Account is permanently locked. Please contact support." },
           { status: 403 }
