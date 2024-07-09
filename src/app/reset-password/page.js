@@ -83,13 +83,13 @@ export default function ResetPassword() {
       setErrorMessage("Passwörter nicht identisch");
       return;
     }
-
+    console.log("Token, Password: ", { token, newPassword });
     const response = await fetch("/api/resetPassword", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token, newPassword }),
+      body: JSON.stringify({ token, password: newPassword }),
     });
 
     if (response.ok) {

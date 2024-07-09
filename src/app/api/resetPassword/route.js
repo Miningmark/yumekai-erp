@@ -13,6 +13,7 @@ const connection = mysql.createPool({
 
 export async function POST(req) {
   const { token, password, name } = await req.json();
+  console.log("token, password, name: ", token, password, name);
 
   if (name && !token && !password) {
     //Create Reset token
