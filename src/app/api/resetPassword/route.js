@@ -31,9 +31,10 @@ export async function POST(req) {
         [resetToken, resetTokenExpiry, user.id]
       );
 
-      const resetUrl = `${process.env.BASE_URL}/reset-password?token=${resetToken}`;
-      console.log("API URL E-MAIL", `${process.env.BASE_URL}/api/email`);
-      const response = await fetch(`${process.env.BASE_URL}/api/email`, {
+      const baseUrl = process.env.BASE_URL;
+      const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+      console.log("API URL E-MAIL", `${baseUrl}/api/email`);
+      const response = await fetch(`${baseUrl}/api/email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
