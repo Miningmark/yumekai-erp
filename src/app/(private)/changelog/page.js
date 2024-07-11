@@ -49,6 +49,7 @@ export default function Changelog() {
             (at contacts, con-stand)
           </li>
           <li>Add Account has been blocked due to failed login E-mail to user</li>
+          <li>Add Hide unused fields when viewing contact</li>
         </ul>
       </LogContainer>
       <LogContainer>

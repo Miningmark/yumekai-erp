@@ -82,7 +82,7 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
       return;
     }
     if (editableContact.postal_code < 0) {
-      setError("Die Postleitzahl kann nicht Negativ sein");
+      setError("Die Postleitzahl kann nicht negativ sein");
       focusInput(postal_codeRef);
       return;
     }
@@ -124,7 +124,11 @@ export default function DisplayContactModal({ contact, handleOnClose, handleEdit
 
     const uniqueFields = [...new Map(allFields.map((field) => [field.id, field])).values()];
 
-    return uniqueFields.map((column) => {
+    const fieldsToShow = isEditing
+      ? uniqueFields
+      : uniqueFields.filter((column) => editableContact[column.id]);
+
+    return fieldsToShow.map((column) => {
       const Component = inputComponentType[column.id];
       if (!Component) return null;
 
