@@ -50,6 +50,7 @@ export default function Changelog() {
           </li>
           <li>Add Account has been blocked due to failed login E-mail to user</li>
           <li>Add Hide unused fields when viewing contact</li>
+          <li>Add first Dashboard module (next Cons)</li>
         </ul>
       </LogContainer>
       <LogContainer>
