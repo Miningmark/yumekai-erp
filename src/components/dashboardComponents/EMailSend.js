@@ -30,7 +30,7 @@ export default function EMailSend() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(from, to, subject, text);
-    const res = await fetch("/api/email", {
+    const res = await fetch("/api/email/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

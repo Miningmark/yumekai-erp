@@ -33,6 +33,14 @@ export default function Changelog() {
     <LogBackground>
       <h1>Changelog</h1>
       <LogContainer>
+        <h2>Add Security functions</h2>
+        <VersionsNumber>V 0.4</VersionsNumber>
+        <ul>
+          <li>Add new role system</li>
+          <li>Add last logins ip lookup (country, region)</li>
+        </ul>
+      </LogContainer>
+      <LogContainer>
         <h2>Add E-Mail and Security functions</h2>
         <VersionsNumber>V 0.3</VersionsNumber>
         <ul>

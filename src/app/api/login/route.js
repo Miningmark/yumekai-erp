@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { sendMail } from "@/utils/sendEmail";
 
 import { setSession } from "@/lib/cockieFunctions";
+import ipLookup from "@/utils/ipLookup";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -129,9 +130,12 @@ export async function POST(req) {
       })
       .replace(",", "");
     const userIp = req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
+    const location = await ipLookup(userIp);
 
     //console.log("lastlogins: ", convertedUser.lastlogins);
-    convertedUser.lastlogins.unshift(` ${formattedDate};${userIp} `);
+    convertedUser.lastlogins.unshift(
+      ` ${formattedDate};${userIp};${location.country};${location.region}`
+    );
 
     // Trim the array to a maximum of 5 elements
     convertedUser.lastlogins = convertedUser.lastlogins.slice(0, 5);
@@ -149,7 +153,6 @@ export async function POST(req) {
     );
 
     const userRoles = roles.map((role) => role.name);
-    console.log(userRoles);
 
     const sessionUser = {
       email: user.email,
@@ -162,7 +165,7 @@ export async function POST(req) {
 
     return NextResponse.json(
       {
-        role: user.role,
+        roles: userRoles,
         email: user.email,
         name: user.name,
         id: user.id,

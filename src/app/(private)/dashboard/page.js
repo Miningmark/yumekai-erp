@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import NextFiveConventions from "@/components/dashboardComponents/NextFiveConventions";
 import EMailSend from "@/components/dashboardComponents/EMailSend";
+import IPTest from "@/components/dashboardComponents/IPTest";
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ export default function DashBoard() {
       <DashboardContainer>
         <EMailSend />
         <NextFiveConventions />
+        <IPTest />
       </DashboardContainer>
     </>
   );

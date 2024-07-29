@@ -117,8 +117,8 @@ export default function Home() {
   useEffect(() => {
     if (session && session.user && session.user.lastlogins) {
       const parsedLogins = session.user.lastlogins.map((login) => {
-        const [date, ip] = login.split(";");
-        return { date: date, location: ip };
+        const [date, ip, country, region] = login.split(";");
+        return { date: date, ip: ip, country: country, region: region };
       });
       setLogins(parsedLogins);
     }
@@ -291,7 +291,8 @@ export default function Home() {
         <LoginList>
           {logins.map((login, index) => (
             <LoginListItem key={index}>
-              Datum: {login.date} <br /> IP: {login.location}
+              Datum: {login.date} <br /> IP: {login.ip} <br /> Land: {login.country} <br /> Region:
+              {login.region}
             </LoginListItem>
           ))}
         </LoginList>
