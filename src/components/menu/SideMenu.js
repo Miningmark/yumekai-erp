@@ -200,6 +200,7 @@ export default function SideMenu({ sideMenuOpen }) {
   const [session, setSession] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
+  console.log(session);
 
   useEffect(() => {
     async function checkSession() {
@@ -214,6 +215,11 @@ export default function SideMenu({ sideMenuOpen }) {
     if (response) {
       router.push("/");
     }
+  }
+
+  function hasRole(roles) {
+    if (!session || !session.user || !session.user.roles) return false;
+    return roles.some((role) => session.user.roles.includes(role));
   }
 
   return (
@@ -246,7 +252,7 @@ export default function SideMenu({ sideMenuOpen }) {
           </SideMenuLink>
         </SideMenuItem>
 */}
-        {session && session.user.role == "admin" && (
+        {hasRole(["admin"]) && (
           <SideMenuItem className={pathname === "/adminPage" ? "active" : ""}>
             <SideMenuLink href="/adminPage">
               <Icon4 />

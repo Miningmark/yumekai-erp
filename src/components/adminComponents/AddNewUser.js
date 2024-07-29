@@ -35,7 +35,7 @@ const ButtonContainer = styled.div`
 export default function AddNewUser({ handleClose }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("user");
+  const [roles, setRoles] = useState([]);
   const [color, setColor] = useState("#000000");
   const [error, setError] = useState("");
   const [password, setPassword] = useState(generatePassword());
@@ -66,7 +66,7 @@ export default function AddNewUser({ handleClose }) {
   }
 
   async function onSubmit() {
-    if (!name.trim() || !email.trim() || !role.trim()) {
+    if (!name.trim() || !email.trim() || roles.length === 0) {
       setError("Bitte füllen Sie alle Felder aus.");
       return;
     }
@@ -82,7 +82,7 @@ export default function AddNewUser({ handleClose }) {
         body: JSON.stringify({
           name,
           email,
-          role,
+          roles,
           password,
           color,
         }),
@@ -99,6 +99,15 @@ export default function AddNewUser({ handleClose }) {
       console.error(error);
     }
   }
+
+  const handleRoleChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setRoles([...roles, value]);
+    } else {
+      setRoles(roles.filter((role) => role !== value));
+    }
+  };
 
   return (
     <Overlay onClick={handleClose}>
@@ -119,11 +128,20 @@ export default function AddNewUser({ handleClose }) {
           onChange={(e) => setEmail(e.target.value)}
         />
         <p>Rolle</p>
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="user">User</option>
-          <option value="orga">Orga</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div>
+          <label>
+            <input type="checkbox" value="1" onChange={handleRoleChange} /> Admin
+          </label>
+          <label>
+            <input type="checkbox" value="2" onChange={handleRoleChange} /> User
+          </label>
+          <label>
+            <input type="checkbox" value="3" onChange={handleRoleChange} /> Orga
+          </label>
+          <label>
+            <input type="checkbox" value="4" onChange={handleRoleChange} /> Social Media
+          </label>
+        </div>
         <p>Farbe</p>
         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
         <p>Password</p>

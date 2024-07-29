@@ -17,11 +17,11 @@ export async function middleware(req) {
   const route = url.pathname;
 
   const isLoggedIn = !!session;
-  const userRole = session?.user?.role;
+  const userRoles = session?.user?.roles || [];
 
   //console.log("Route from middleware:", route);
   //console.log("Is Logged In from middleware:", isLoggedIn);
-  //console.log("User Role from middleware:", userRole);
+  //console.log("User Roles from middleware:", userRoles);
 
   function checkAuthRoute(authRoute) {
     return route.startsWith(authRoute);
@@ -45,7 +45,8 @@ export async function middleware(req) {
       //console.log("Redirecting to login because user is not logged in from middleware");
       return NextResponse.redirect(new URL(DEFAULT_REDIRECT_LOGIN_URL, url));
     }
-    if (!privateRoute.roles.includes(userRole)) {
+    const hasAccess = privateRoute.roles.some((role) => userRoles.includes(role));
+    if (!hasAccess) {
       //console.log("Redirecting to forbidden because user does not have the required role from middleware");
       return NextResponse.redirect(new URL(DEFAULT_REDIRECT_FORBIDDEN_URL, url));
     }

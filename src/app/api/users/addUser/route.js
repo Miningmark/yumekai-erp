@@ -3,6 +3,23 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { apiAuthMiddleware } from "@/apiMiddleware";
 
+/**
+ 
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE user_roles (
+    user_id INT,
+    role_id INT,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+ */
+
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -16,9 +33,9 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const { name, email, role, password, color } = body;
+    const { name, email, roles, password, color } = body;
 
-    if (!name || !email || !role || !password || !color) {
+    if (!name || !email || !roles || !password || !color) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
 
@@ -44,7 +61,7 @@ export async function POST(req) {
     console.log("SQL statement zur übergabe", [
       name,
       email,
-      role,
+      roles,
       hashedPassword,
       color,
       lastloginsSave,
@@ -53,8 +70,17 @@ export async function POST(req) {
     // Insert new user
     const [result] = await connection.execute(
       "INSERT INTO users (name, email, role, password, color, lastlogins) VALUES (?, ?, ?, ?, ?, ?)",
-      [name, email, role, hashedPassword, color, lastloginsSave]
+      [name, email, "user", hashedPassword, color, lastloginsSave]
     );
+
+    const userId = result.insertId;
+
+    for (const roleId of roles) {
+      await connection.execute("INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)", [
+        userId,
+        roleId,
+      ]);
+    }
 
     if (result.affectedRows > 0) {
       return NextResponse.json({ message: "User added successfully" }, { status: 200 });

@@ -9,7 +9,7 @@ export async function apiAuthMiddleware(req) {
   const route = url.pathname;
 
   const isLoggedIn = !!session;
-  const userRole = session?.user?.role;
+  const userRoles = session?.user?.roles || [];
 
   if (!isLoggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -17,8 +17,11 @@ export async function apiAuthMiddleware(req) {
 
   const privateRoute = privateAPIRoutes.find((r) => r.path === route);
 
-  if (privateRoute && !privateRoute.roles.includes(userRole)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (privateRoute) {
+    const hasAccess = privateRoute.roles.some((role) => userRoles.includes(role));
+    if (!hasAccess) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   return null;

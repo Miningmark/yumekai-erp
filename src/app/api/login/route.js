@@ -143,11 +143,19 @@ export async function POST(req) {
       user.id,
     ]);
 
+    const [roles] = await connection.execute(
+      "SELECT roles.name FROM roles JOIN user_roles ON roles.id = user_roles.role_id WHERE user_roles.user_id = ?",
+      [user.id]
+    );
+
+    const userRoles = roles.map((role) => role.name);
+    console.log(userRoles);
+
     const sessionUser = {
       email: user.email,
       name: user.name,
       id: user.id,
-      role: user.role,
+      roles: userRoles,
     };
 
     await setSession({ ...sessionUser, lastlogins: convertedUser.lastlogins });
