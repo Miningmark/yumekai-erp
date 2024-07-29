@@ -96,7 +96,7 @@ export default function AddNewUser({ handleClose }) {
       handleClose();
     } catch (error) {
       setError(error.message || "Fehler beim Hinzufügen des Benutzers.");
-      console.error(error);
+      //console.error(error);
     }
   }
 

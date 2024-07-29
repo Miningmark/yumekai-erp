@@ -291,7 +291,7 @@ export default function Home() {
         <LoginList>
           {logins.map((login, index) => (
             <LoginListItem key={index}>
-              Datum: {login.date} <br /> IP: {login.ip} <br /> Land: {login.country} <br /> Region:
+              Datum: {login.date} <br /> IP: {login.ip} <br /> Land: {login.country} <br /> Region:{" "}
               {login.region}
             </LoginListItem>
           ))}

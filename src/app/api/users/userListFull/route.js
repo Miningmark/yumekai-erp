@@ -8,11 +8,22 @@ const connection = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
-export async function GET(req) {
+export async function GET() {
   try {
     const [rows] = await connection.execute(
-      "SELECT id, name, color, email, role, locked, failed_attempts FROM users"
+      "SELECT id, name, color, email, locked, failed_attempts FROM users"
     );
+
+    for (const user of rows) {
+      const [roles] = await connection.execute(
+        "SELECT roles.name FROM roles JOIN user_roles ON roles.id = user_roles.role_id WHERE user_roles.user_id = ?",
+        [user.id]
+      );
+
+      const userRoles = roles.map((role) => role.name);
+      user.roles = userRoles;
+    }
+
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);

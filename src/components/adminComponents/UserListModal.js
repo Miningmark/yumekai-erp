@@ -40,7 +40,7 @@ const ButtonContainer = styled.div`
 `;
 
 export default function UserListModal({ handleClose }) {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [userToEdit, setUserToEdit] = useState(null);
   const [isConfirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
@@ -100,6 +100,10 @@ export default function UserListModal({ handleClose }) {
   }
   function handleUpdateUsers(updatedUsers) {
     setUsers([...updatedUsers]);
+  }
+
+  if (!users) {
+    return null;
   }
 
   return (

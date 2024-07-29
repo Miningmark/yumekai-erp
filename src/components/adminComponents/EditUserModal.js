@@ -35,7 +35,7 @@ const ButtonContainer = styled.div`
 export default function EditUserModal({ user, handleClose, handleUpdateUsers, users }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [role, setRole] = useState(user.role);
+  const [roles, setRoles] = useState(user.roles);
   const [color, setColor] = useState(user.color);
   const [error, setError] = useState("");
   const [id, setId] = useState(user.id);
@@ -59,7 +59,7 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
           id,
           name,
           email,
-          role,
+          roles,
           color,
         }),
       });
@@ -70,16 +70,25 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
       }
 
       const updatedUsers = users.map((u) =>
-        u.id === user.id ? { ...u, name, email, role, color } : u
+        u.id === user.id ? { ...u, name, email, roles, color } : u
       );
 
       handleUpdateUsers(updatedUsers);
       handleClose();
     } catch (error) {
       setError(error.message || "Fehler beim Bearbeiten des Benutzers.");
-      console.error(error);
+      //console.error(error);
     }
   }
+
+  const handleRoleChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setRoles([...roles, value]);
+    } else {
+      setRoles(roles.filter((role) => role !== value));
+    }
+  };
 
   return (
     <Overlay onClick={handleClose}>
@@ -100,11 +109,44 @@ export default function EditUserModal({ user, handleClose, handleUpdateUsers, us
           onChange={(e) => setEmail(e.target.value)}
         />
         <p>Rolle</p>
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="user">Benutzer</option>
-          <option value="orga">Orga</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              value="admin"
+              onChange={handleRoleChange}
+              checked={roles.includes("admin")}
+            />{" "}
+            Admin
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="user"
+              onChange={handleRoleChange}
+              checked={roles.includes("user")}
+            />{" "}
+            User
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="orga"
+              onChange={handleRoleChange}
+              checked={roles.includes("orga")}
+            />{" "}
+            Orga
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="socialmedia"
+              onChange={handleRoleChange}
+              checked={roles.includes("socialmedia")}
+            />{" "}
+            Social Media
+          </label>
+        </div>
         <p>Color</p>
         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
         <ButtonContainer>

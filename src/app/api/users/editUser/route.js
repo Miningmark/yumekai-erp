@@ -8,6 +8,26 @@ const connection = mysql.createPool({
   database: process.env.DB_DATABASE,
 });
 
+async function getRoleIds(roleNames) {
+  if (roleNames.length === 0) return []; // No roles to look up
+
+  // Create a string of placeholders for the SQL query
+  const placeholders = roleNames.map(() => "?").join(",");
+
+  // Execute the query with the role names as parameters
+  const [rows] = await connection.execute(
+    `SELECT id, name FROM roles WHERE name IN (${placeholders})`,
+    roleNames
+  );
+
+  // Create a mapping from role name to role ID
+  const roleMap = new Map();
+  rows.forEach((row) => roleMap.set(row.name, row.id));
+
+  // Map role names to their corresponding IDs
+  return roleNames.map((name) => roleMap.get(name));
+}
+
 export async function DELETE(req) {
   const { id } = await req.json();
 
@@ -26,9 +46,9 @@ export async function DELETE(req) {
 }
 
 export async function PUT(req) {
-  const { id, name, email, role, color } = await req.json();
+  const { id, name, email, roles, color } = await req.json();
 
-  if (!name || !email || !role || !color) {
+  if (!name || !email || !roles || !color) {
     return NextResponse.json({ message: "All fields are required" }, { status: 400 });
   }
 
@@ -50,13 +70,28 @@ export async function PUT(req) {
       return NextResponse.json({ message: "Name already exists" }, { status: 400 });
     }
 
-    await connection.execute(
-      "UPDATE users SET name = ?, email = ?, role = ?, color = ? WHERE id = ?",
-      [name, email, role, color, id]
-    );
+    await connection.execute("UPDATE users SET name = ?, email = ?, color = ? WHERE id = ?", [
+      name,
+      email,
+      color,
+      id,
+    ]);
+
+    const roleIds = await getRoleIds(roles);
+
+    // Remove existing roles
+    await connection.execute("DELETE FROM user_roles WHERE user_id = ?", [id]);
+
+    // Insert new roles
+    for (const roleId of roleIds) {
+      await connection.execute("INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)", [
+        id,
+        roleId,
+      ]);
+    }
 
     return NextResponse.json({ message: "User updated successfully" }, { status: 200 });
-  } catch {
+  } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
