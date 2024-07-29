@@ -44,9 +44,6 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   const { title, creator, position } = await req.json();
   console.log("req data: ", title, position, creator);
 
@@ -85,9 +82,6 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   const { id, newTitle } = await req.json();
   if (!id || !newTitle) {
     return NextResponse.json({ message: "ID and new title are required" }, { status: 400 });

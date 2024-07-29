@@ -29,7 +29,7 @@ export async function POST(req) {
 
   try {
     const [rows] = await connection.execute(
-      "SELECT id, role, email, name, password, lastlogins, failed_attempts, last_failed_attempt, locked FROM users WHERE name = ?",
+      "SELECT id, email, name, password, lastlogins, failed_attempts, last_failed_attempt, locked FROM users WHERE name = ?",
       [name]
     );
 

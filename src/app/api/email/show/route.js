@@ -1,5 +1,5 @@
-import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import mysql from "mysql2/promise";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -10,7 +10,7 @@ const connection = mysql.createPool({
 
 export async function GET(req) {
   try {
-    const [rows] = await connection.execute("SELECT name, color FROM users");
+    const [rows] = await connection.execute("SELECT * FROM emails ORDER BY created_at DESC");
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);

@@ -1,7 +1,6 @@
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /**
  
@@ -28,9 +27,6 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const body = await req.json();
     const { name, email, roles, password, color } = body;
@@ -58,19 +54,10 @@ export async function POST(req) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log("SQL statement zur übergabe", [
-      name,
-      email,
-      roles,
-      hashedPassword,
-      color,
-      lastloginsSave,
-    ]);
-
     // Insert new user
     const [result] = await connection.execute(
-      "INSERT INTO users (name, email, role, password, color, lastlogins) VALUES (?, ?, ?, ?, ?, ?)",
-      [name, email, "user", hashedPassword, color, lastloginsSave]
+      "INSERT INTO users (name, email, password, color, lastlogins) VALUES (?, ?, ?, ?, ?)",
+      [name, email, hashedPassword, color, lastloginsSave]
     );
 
     const userId = result.insertId;

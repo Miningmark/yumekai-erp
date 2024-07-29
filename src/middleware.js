@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession, updateSession } from "@/lib/cockieFunctions";
 import {
   privateRoutes,
+  privateAPIRoutes,
   authRoutes,
   DEFAULT_REDIRECT_LOGIN_URL,
   DEFAULT_REDIRECT_HOME_URL,
@@ -52,6 +53,26 @@ export async function middleware(req) {
     }
   }
 
+  // Handle API routes
+  if (route.startsWith("/api/")) {
+    // Allow unauthenticated access to /api/login
+    if (route === "/api/login" || route === "/api/resetPassword") {
+      return NextResponse.next();
+    }
+
+    if (!isLoggedIn) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const apiRoute = privateAPIRoutes.find((r) => r.path === route);
+    if (apiRoute) {
+      const hasAccess = apiRoute.roles.some((role) => userRoles.includes(role));
+      if (!hasAccess) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+      }
+    }
+  }
+
   return await updateSession(req);
 }
 
@@ -59,13 +80,12 @@ export const config = {
   matcher: [
     /*
      * Match all paths except for:
-     * 1. /api/ routes
-     * 2. /_next/ (Next.js internals)
-     * 3. /_proxy/ (special page for OG tags proxying)
-     * 4. /_static (inside /public)
-     * 5. /_vercel (Vercel internals)
-     * 6. Static files (e.g. /favicon.ico, /sitemap.xml, /robots.txt, etc.)
+     * 1. /_next/ (Next.js internals)
+     * 2. /_proxy/ (special page for OG tags proxying)
+     * 3. /_static (inside /public)
+     * 4. /_vercel (Vercel internals)
+     * 5. Static files (e.g. /favicon.ico, /sitemap.xml, /robots.txt, etc.)
      */
-    "/((?!api/|_next/|_proxy/|_static|_vercel|[\\w-]+\\.\\w+).*)",
+    "/((?!_next/|_proxy/|_static|_vercel|[\\w-]+\\.\\w+).*)",
   ],
 };

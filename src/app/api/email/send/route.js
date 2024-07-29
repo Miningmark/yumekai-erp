@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import mysql from "mysql2/promise";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 import { sendMail } from "@/utils/sendEmail";
 
 /**
@@ -30,10 +28,6 @@ export async function POST(req) {
     const { from = "test@miningmark.de", to, subject, text, auth } = body;
     console.log("E-MAIL Send: ", from, to, subject, text, auth);
 
-    if (!auth || (auth != process.env.EMAIL_AUTH && auth != "email-test")) {
-      console.log("KEIN ZUGRIFF");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
     const response = await sendMail({
       from: from,
       to: to,
@@ -48,19 +42,6 @@ export async function POST(req) {
       );
     }
     return NextResponse.json({ message: "E-Mail succesfully sendet" }, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
-  }
-}
-
-export async function GET(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
-  try {
-    const [rows] = await connection.execute("SELECT * FROM emails ORDER BY created_at DESC");
-    return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

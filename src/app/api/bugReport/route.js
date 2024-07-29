@@ -1,6 +1,5 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /*
 SQL Table
@@ -24,9 +23,6 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const body = await req.json();
     const { title, description, reporter } = body;
@@ -53,9 +49,6 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const [rows] = await connection.execute("SELECT * FROM bugreport WHERE finished = 0");
     return NextResponse.json(rows, { status: 200 });
@@ -66,9 +59,6 @@ export async function GET(req) {
 }
 
 export async function PATCH(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const body = await req.json();
     const { id, finished } = body;

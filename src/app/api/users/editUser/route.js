@@ -1,6 +1,5 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -10,9 +9,6 @@ const connection = mysql.createPool({
 });
 
 export async function DELETE(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   const { id } = await req.json();
 
   try {
@@ -30,9 +26,6 @@ export async function DELETE(req) {
 }
 
 export async function PUT(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   const { id, name, email, role, color } = await req.json();
 
   if (!name || !email || !role || !color) {

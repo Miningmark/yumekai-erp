@@ -1,7 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/cockieFunctions";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -11,9 +10,6 @@ const connection = mysql.createPool({
 });
 
 export async function POST(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   const session = await getSession();
 
   if (!session) {

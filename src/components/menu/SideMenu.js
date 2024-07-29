@@ -200,7 +200,6 @@ export default function SideMenu({ sideMenuOpen }) {
   const [session, setSession] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
-  console.log(session);
 
   useEffect(() => {
     async function checkSession() {

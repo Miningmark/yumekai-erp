@@ -1,6 +1,5 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /*
 
@@ -41,9 +40,6 @@ const connection = mysql.createPool({
 });
 
 export async function GET(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const [rows] = await connection.query("SELECT * FROM contacts ORDER BY surname ASC");
 
@@ -73,9 +69,6 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const body = await req.json();
     const {
@@ -159,9 +152,6 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const body = await req.json();
     const { id, created_at, ...updatedFields } = body;
