@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
-import { apiAuthMiddleware } from "@/apiMiddleware";
 
 /*
     CREATE TABLE columns (
@@ -31,9 +30,6 @@ function generateRandomString(length) {
 }
 
 export async function GET(req) {
-  const middlewareResponse = await apiAuthMiddleware(req);
-  if (middlewareResponse) return middlewareResponse;
-
   try {
     const [rows] = await connection.execute("SELECT * FROM columns ORDER BY position ASC");
     return NextResponse.json(rows);
