@@ -19,6 +19,7 @@ import Icon7 from "/public/assets/icons/report.svg";
 import Icon8 from "/public/assets/icons/query_stats.svg";
 import Icon9 from "/public/assets/icons/contacts.svg";
 import Icon10 from "/public/assets/icons/theater_comedy.svg";
+import Icon11 from "/public/assets/icons/thumb_up.svg";
 
 import LogoutIcon from "/public/assets/icons/logout.svg";
 
@@ -280,6 +281,15 @@ export default function SideMenu({ sideMenuOpen }) {
             Infostand
           </SideMenuLink>
         </SideMenuItem>
+
+        {hasRole(["socialmedia", "orga", "admin"]) && (
+          <SideMenuItem className={pathname === "/socialMedia" ? "active" : ""}>
+            <SideMenuLink href="/socialMedia">
+              <Icon11 />
+              Social Media
+            </SideMenuLink>
+          </SideMenuItem>
+        )}
 
         <SideMenuItem className={pathname === "/changelog" ? "active" : ""}>
           <SideMenuLink href="/changelog">

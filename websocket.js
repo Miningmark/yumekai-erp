@@ -43,6 +43,18 @@ nextApp.prepare().then(() => {
       console.log("newStand:", data);
       socket.broadcast.emit("loadNewStand", "new");
     });
+
+    //Posts
+    socket.on("newPosts", (data) => {
+      console.log("newPosts:", data);
+      socket.broadcast.emit("loadNewPosts", "new");
+    });
+
+    //PostsColumns
+    socket.on("newPostsColumns", (data) => {
+      console.log("newPostsColumns:", data);
+      socket.broadcast.emit("loadNewPostsColumns", "new");
+    });
   });
 
   const PORT = process.env.PORT || 3000;

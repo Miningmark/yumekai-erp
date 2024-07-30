@@ -6,8 +6,10 @@ export const privateRoutes = [
   { path: "/changelog", roles: ["user", "orga", "admin"] },
   { path: "/commingSoon", roles: ["user", "orga", "admin"] },
   { path: "/bugReport", roles: ["user", "orga", "admin"] },
-  { path: "/survey", roles: ["user", "orga", "admin"] },
-  { path: "/conStand", roles: ["user", "orga", "admin"] },
+  { path: "/survey", roles: ["orga", "admin"] },
+  { path: "/conStand", roles: ["orga", "admin"] },
+  { path: "/contacts", roles: ["user", "orga", "admin"] },
+  { path: "/spcialMedia", roles: ["socialmedia", "orga", "admin"] },
 ];
 
 export const privateAPIRoutes = [

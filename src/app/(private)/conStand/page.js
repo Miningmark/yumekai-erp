@@ -147,9 +147,6 @@ export default function ConventionStands() {
     }
   }
 
-  //TODO: Remove console.log
-  console.log("allHelpers", allHelpers);
-
   useEffect(() => {
     if (search) {
       const filtered = stands.filter((stand) =>
