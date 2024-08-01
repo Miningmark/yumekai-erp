@@ -128,18 +128,6 @@ export default function SocialMedia() {
     }
   }
 
-  function formatDateForMySQL(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const seconds = String(d.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
-
   async function editTask(changeTask) {
     try {
       // Prepare the updated task data
@@ -150,7 +138,6 @@ export default function SocialMedia() {
         ...changeTask,
         subtasks: subtasksString,
         subtaskschecked: subtasksCheckedString,
-        created: formatDateForMySQL(changeTask.created), // Format the created date
       };
 
       const response = await fetch("/api/posts/tasks", {

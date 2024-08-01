@@ -62,12 +62,14 @@ export default function NextFiveConventions() {
 
   return (
     <NextFiveContainer>
-      <h2>Nächste Cons</h2>
+      <h2>Nächste Infostände</h2>
       {nextCons.map((con) => (
         <ConCard key={con.id}>
           <h3>{con.con_name}</h3>
           <p>Ort: {con.location}</p>
-          <p>Datum: {convertDateFormat(con.start_date)}</p>
+          <p>
+            Datum: {convertDateFormat(con.start_date)} - {convertDateFormat(con.end_date)}
+          </p>
         </ConCard>
       ))}
     </NextFiveContainer>

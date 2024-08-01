@@ -96,9 +96,10 @@ export async function PATCH(req) {
       { status: 400 }
     );
   }
+  const { created, ...taskUpdate } = task;
 
   try {
-    await connection.query("UPDATE posts SET ? WHERE id = ?", [task, id]);
+    await connection.query("UPDATE posts SET ? WHERE id = ?", [taskUpdate, id]);
     return NextResponse.json({ message: "Post updated successfully" }, { status: 200 });
   } catch (error) {
     console.error(error);
@@ -182,8 +183,8 @@ export async function PUT(req) {
         }
 
         await conn.query(
-          `INSERT INTO posts (id, title, planned, status, editor, description, subtasks, subtaskschecked, creator, created, position) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `INSERT INTO posts (id, title, planned, status, editor, description, subtasks, subtaskschecked, creator, position) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE 
              title = VALUES(title), 
              planned = VALUES(planned),
@@ -192,8 +193,7 @@ export async function PUT(req) {
              description = VALUES(description), 
              subtasks = VALUES(subtasks), 
              subtaskschecked = VALUES(subtaskschecked), 
-             creator = VALUES(creator), 
-             created = VALUES(created), 
+             creator = VALUES(creator),
              position = VALUES(position)`,
           [
             task.id,
@@ -205,7 +205,6 @@ export async function PUT(req) {
             task.subtasks,
             task.subtaskschecked,
             task.creator,
-            task.created,
             task.position,
           ]
         );

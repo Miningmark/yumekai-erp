@@ -1,5 +1,10 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import {
+  convertDateFormat,
+  convertDateUTCtoCEST,
+  convertTimeStampFormat,
+} from "@/utils/timeFunctions";
 
 /**
   CREATE TABLE tasks (
@@ -11,7 +16,7 @@ import { NextResponse } from "next/server";
     subtasks TEXT,
     subtaskschecked TEXT,
     creator VARCHAR(50),
-    created VARCHAR(50),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     position INT 
   );
 
@@ -24,9 +29,9 @@ import { NextResponse } from "next/server";
     subtasks TEXT,
     subtaskschecked TEXT,
     creator VARCHAR(50),
-    created VARCHAR(50),
-    deleted_by VARCHAR(50);
-    deleted_at DATETIME;
+    created TIMESTAMP,
+    deleted_by VARCHAR(50),
+    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
  */
 
@@ -40,7 +45,14 @@ const connection = mysql.createPool({
 export async function GET(req) {
   try {
     const [rows] = await connection.query("SELECT * FROM tasks ORDER BY position ASC");
-    return NextResponse.json(rows, { status: 200 });
+
+    const convertedRows = rows.map((row) => {
+      if (row.created) {
+        row.created = convertTimeStampFormat(row.created);
+      }
+      return row;
+    });
+    return NextResponse.json(convertedRows, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
@@ -82,9 +94,10 @@ export async function PATCH(req) {
       { status: 400 }
     );
   }
+  const { created, ...taskUpdate } = task;
 
   try {
-    await connection.query("UPDATE tasks SET ? WHERE id = ?", [task, id]);
+    await connection.query("UPDATE tasks SET ? WHERE id = ?", [taskUpdate, id]);
     return NextResponse.json({ message: "Task updated successfully" }, { status: 200 });
   } catch (error) {
     console.error(error);
@@ -114,7 +127,7 @@ export async function DELETE(req) {
 
       // Insert the task into tasksdeleted with deleted_by and deleted_at
       await conn.query(
-        "INSERT INTO tasksdeleted (id, title, status, editor, description, subtasks, subtaskschecked, creator, created, deleted_by, deleted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO tasksdeleted (id, title, status, editor, description, subtasks, subtaskschecked, creator, created, deleted_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           task.id,
           task.title,
@@ -126,7 +139,6 @@ export async function DELETE(req) {
           task.creator,
           task.created,
           deletedBy,
-          new Date(), // current timestamp
         ]
       );
 
@@ -168,8 +180,8 @@ export async function PUT(req) {
         }
 
         await conn.query(
-          `INSERT INTO tasks (id, title, status, editor, description, subtasks, subtaskschecked, creator, created, position) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `INSERT INTO tasks (id, title, status, editor, description, subtasks, subtaskschecked, creator, position) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE 
              title = VALUES(title), 
              status = VALUES(status), 
@@ -178,7 +190,6 @@ export async function PUT(req) {
              subtasks = VALUES(subtasks), 
              subtaskschecked = VALUES(subtaskschecked), 
              creator = VALUES(creator), 
-             created = VALUES(created), 
              position = VALUES(position)`,
           [
             task.id,
@@ -189,7 +200,6 @@ export async function PUT(req) {
             task.subtasks,
             task.subtaskschecked,
             task.creator,
-            task.created,
             task.position,
           ]
         );

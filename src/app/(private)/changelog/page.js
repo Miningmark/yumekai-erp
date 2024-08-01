@@ -33,11 +33,13 @@ export default function Changelog() {
     <LogBackground>
       <h1>Changelog</h1>
       <LogContainer>
-        <h2>Add Security functions</h2>
+        <h2>Add Security functions and new Page</h2>
         <VersionsNumber>V 0.4</VersionsNumber>
         <ul>
           <li>Add new role system</li>
           <li>Add last logins ip lookup (country, region)</li>
+          <li>Add Social Media calendar Page</li>
+          <li>Fix errors in the time and date output</li>
         </ul>
       </LogContainer>
       <LogContainer>

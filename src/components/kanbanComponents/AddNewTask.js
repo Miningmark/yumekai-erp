@@ -68,17 +68,6 @@ export default function AddNewTask({
 
     setError("");
 
-    const formattedDate = new Date()
-      .toLocaleString("de-DE", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      })
-      .replace(",", "");
-
     const newTask = {
       title,
       status: columns.find((columnTable) => columnTable.title == column).droppableId,
@@ -87,7 +76,6 @@ export default function AddNewTask({
       subtasks: subtasks.map((subtask) => subtask.text),
       subtaskschecked: subtasks.map(() => false),
       creator: session?.user?.name || "Unknown",
-      created: formattedDate,
     };
     addNewTask(newTask);
   }

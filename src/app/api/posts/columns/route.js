@@ -8,7 +8,7 @@ import mysql from "mysql2/promise";
         position INT NOT NULL,
         droppableId VARCHAR(10) NOT NULL,
         creator VARCHAR(30) NOT NULL,
-        created VARCHAR(20) NOT NULL
+        created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 */
 
@@ -51,24 +51,14 @@ export async function POST(req) {
   }
 
   const droppableId = generateRandomString(10);
-  const formattedDate = new Date()
-    .toLocaleString("de-DE", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    })
-    .replace(",", "");
 
   try {
     const [result] = await connection.execute(
-      "INSERT INTO posts_columns (title, droppableId, position, creator, created) VALUES (?, ?, ?, ?, ?)",
-      [title, droppableId, position, creator, formattedDate]
+      "INSERT INTO posts_columns (title, droppableId, position, creator) VALUES (?, ?, ?, ?)",
+      [title, droppableId, position, creator]
     );
     return NextResponse.json(
-      { id: result.insertId, title, droppableId, position, creator, formattedDate },
+      { id: result.insertId, title, droppableId, position, creator },
       { status: 201 }
     );
   } catch (error) {

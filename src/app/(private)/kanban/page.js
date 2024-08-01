@@ -64,6 +64,8 @@ export default function Kanban() {
   const [columnToRename, setColumnToRename] = useState(null);
   const [newColumnModal, setNewColumnModal] = useState(false);
 
+  console.log(tasks);
+
   useEffect(() => {
     async function fetchData() {
       const [usersData, columnsData, tasksData] = await Promise.all([
@@ -142,18 +144,6 @@ export default function Kanban() {
     }
   }
 
-  function formatDateForMySQL(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const seconds = String(d.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
-
   async function editTask(changeTask) {
     try {
       // Prepare the updated task data
@@ -164,7 +154,6 @@ export default function Kanban() {
         ...changeTask,
         subtasks: subtasksString,
         subtaskschecked: subtasksCheckedString,
-        created: formatDateForMySQL(changeTask.created), // Format the created date
       };
 
       const response = await fetch("/api/tasks", {
@@ -302,7 +291,12 @@ export default function Kanban() {
         if (responseData && responseData.insertId) {
           setTasks([
             ...tasks,
-            { ...newTask, position: highestTaskPosition + 1, id: responseData.insertId },
+            {
+              ...newTask,
+              position: highestTaskPosition + 1,
+              id: responseData.insertId,
+              created: new Date().toLocaleString(),
+            },
           ]);
           socket.emit("newTask", "Hello Server");
           closeAddNewTask();

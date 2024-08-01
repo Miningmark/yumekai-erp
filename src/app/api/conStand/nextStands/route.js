@@ -18,6 +18,9 @@ export async function GET(req) {
       if (row.start_date) {
         row.start_date = convertDateUTCtoCEST(row.start_date);
       }
+      if (row.end_date) {
+        row.end_date = convertDateUTCtoCEST(row.end_date);
+      }
       return row;
     });
 

@@ -11,22 +11,12 @@ const DashboardContainer = styled.div`
 `;
 
 export default function DashBoard() {
-  async function test() {
-    const response = await fetch("/api/aaa", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
-  }
   return (
     <>
       <h1>Dashboard</h1>
       <DashboardContainer>
         <EMailSend />
         <NextFiveConventions />
-        <button onClick={test}>Test</button>
       </DashboardContainer>
     </>
   );
