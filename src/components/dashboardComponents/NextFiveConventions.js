@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { convertDateFormat } from "@/utils/timeFunctions";
 
 const NextFiveContainer = styled.div`
   width: 300px;
@@ -66,7 +67,7 @@ export default function NextFiveConventions() {
         <ConCard key={con.id}>
           <h3>{con.con_name}</h3>
           <p>Ort: {con.location}</p>
-          <p>Datum: {new Date(con.start_date).toLocaleDateString("de-DE")}</p>
+          <p>Datum: {convertDateFormat(con.start_date)}</p>
         </ConCard>
       ))}
     </NextFiveContainer>

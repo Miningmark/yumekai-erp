@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { convertDateFormat } from "@/utils/timeFunctions";
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import { ModalOverlay, ModalContent } from "@/components/styledComponents/ModalComponents";
 
@@ -129,7 +130,7 @@ export default function TaskCardDetail({
             <p onClick={miniModalEdit}>Bearbeiten</p>
           </MiniModal>
           <h2>{title}</h2>
-          <p>{new Date(planned).toLocaleDateString("de-DE")}</p>
+          <p>{convertDateFormat(planned)}</p>
           <p>{description}</p>
 
           {subtasks.map((subtask, index) => (

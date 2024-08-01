@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { convertDateUTCtoCEST, convertTimeStampFormat } from "@/utils/timeFunctions";
 
 /**
   CREATE TABLE posts (
@@ -12,7 +13,7 @@ import { NextResponse } from "next/server";
     subtasks TEXT,
     subtaskschecked TEXT,
     creator VARCHAR(50),
-    created VARCHAR(50),
+    created DATETIME DEFAULT CURRENT_TIMESTAMP,
     position INT 
   );
 
@@ -26,9 +27,9 @@ import { NextResponse } from "next/server";
     subtasks TEXT,
     subtaskschecked TEXT,
     creator VARCHAR(50),
-    created VARCHAR(50),
+    created DATETIME,
     deleted_by VARCHAR(50),
-    deleted_at DATETIME
+    deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
  */
 
@@ -44,13 +45,12 @@ export async function GET(req) {
     const [rows] = await connection.query("SELECT * FROM posts ORDER BY position ASC");
 
     const convertedRows = rows.map((row) => {
-      // Konvertiere das Geburtsdatum
       if (row.planned) {
-        const utcDate = new Date(row.planned);
-        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-        row.planned = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+        row.planned = convertDateUTCtoCEST(row.planned);
       }
-
+      if (row.created) {
+        row.created = convertTimeStampFormat(row.created);
+      }
       return row;
     });
 
@@ -128,7 +128,7 @@ export async function DELETE(req) {
 
       // Insert the task into tasksdeleted with deleted_by and deleted_at
       await conn.query(
-        "INSERT INTO postsdeleted (id, title, planned, status, editor, description, subtasks, subtaskschecked, creator, created, deleted_by, deleted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO postsdeleted (id, title, planned, status, editor, description, subtasks, subtaskschecked, creator, created, deleted_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           task.id,
           task.title,
@@ -141,7 +141,6 @@ export async function DELETE(req) {
           task.creator,
           task.created,
           deletedBy,
-          new Date(), // current timestamp
         ]
       );
 

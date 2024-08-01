@@ -14,20 +14,6 @@ import { getSession } from "@/lib/cockieFunctions";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
 
-const postList = [
-  {
-    id: 1,
-    title: "markus",
-    status: "todo",
-    editor: "Markus",
-    description: "Hallo ich bin eine Beschreibung",
-    subtasks: ["afianfg", "AGaggage", "aewgGg"],
-    subtaskschecked: [true, false, false],
-    creator: "Markus",
-    created: "05.06.2024 21:48:40",
-  },
-];
-
 const KanbanBoard = styled.div`
   margin: 20px;
   display: flex;

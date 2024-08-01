@@ -14,6 +14,7 @@ import {
 import DisplayContactModal from "@/components/contactComponents/ShowContact";
 import { sortedCountries, genders, allColumns } from "@/utils/contacts/helpers";
 import { socket } from "@/app/socket";
+import { convertDateFormat } from "@/utils/timeFunctions";
 
 const ContactTabBackground = styled.div`
   width: calc(100% - 40px);
@@ -356,7 +357,7 @@ export default function Contacts() {
                         }}
                       >
                         {column.id === "birth_date" && contact[column.id]
-                          ? new Date(contact[column.id]).toLocaleDateString("de-DE") // Anzeige als tt.MM.yyyy
+                          ? convertDateFormat(contact[column.id]) // Anzeige als tt.MM.yyyy
                           : Array.isArray(contact[column.id])
                           ? contact[column.id].join(", ")
                           : contact[column.id]}

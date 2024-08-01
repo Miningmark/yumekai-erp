@@ -47,7 +47,7 @@ export default function CommingSoon() {
           <CommingSoonListItem>Login dauer auf 3-7 Tage erhöhen</CommingSoonListItem>
           <CommingSoonListItem>E-Mail benachrichtigung bei neuem Login</CommingSoonListItem>
           <CommingSoonListItem>
-            Eingang neuer Kontaktanfragen anzeigen auf Dashboard{" "}
+            Eingang neuer Kontaktanfragen anzeigen auf Dashboard
           </CommingSoonListItem>
           <CommingSoonListItem>Account freischalten mit E-Mail verifizierung</CommingSoonListItem>
           <CommingSoonListItem>Profilbild Upload</CommingSoonListItem>
@@ -63,6 +63,7 @@ export default function CommingSoon() {
           <CommingSoonListItem>
             News auf Dashboard u.a. was ist Aktuell neu oder geändert
           </CommingSoonListItem>
+          <CommingSoonListItem>Kontakt kategorie Stand-helfer</CommingSoonListItem>
         </ul>
       </SoonContainer>
     </SoonBackground>

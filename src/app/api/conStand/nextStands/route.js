@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { convertDateUTCtoCEST } from "@/utils/timeFunctions";
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
@@ -15,9 +16,7 @@ export async function GET(req) {
     );
     const convertedCons = rows.map((row) => {
       if (row.start_date) {
-        const utcDate = new Date(row.start_date);
-        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-        row.start_date = berlinDate.toISOString().split("T")[0];
+        row.start_date = convertDateUTCtoCEST(row.start_date);
       }
       return row;
     });

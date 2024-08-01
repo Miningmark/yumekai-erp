@@ -15,6 +15,11 @@ import AddNewConventionStand from "@/components/conventionStandComponents/AddNew
 import { socket } from "@/app/socket";
 import { newConStandTemplate, allColumns } from "@/utils/conStand/helpers";
 import { useRouter } from "next/navigation";
+import {
+  convertDateFormat,
+  convertDateUTCtoCEST,
+  convertTimeStampFormat,
+} from "@/utils/timeFunctions";
 
 const ConventionStandTabBackground = styled.div`
   width: calc(100% - 40px);
@@ -314,7 +319,7 @@ export default function ConventionStands() {
                       >
                         {(column.id === "start_date" || column.id === "end_date") &&
                         stand[column.id]
-                          ? new Date(stand[column.id]).toLocaleDateString("de-DE") // Anzeige als tt.MM.yyyy
+                          ? convertDateFormat(stand[column.id]) // Anzeige als tt.MM.yyyy
                           : column.id === "helpers"
                           ? stand.helpers
                               .map((helperID) => {

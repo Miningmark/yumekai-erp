@@ -20,6 +20,10 @@ export const platforms = [
     color: "#00acee",
   },
   {
+    name: "Discord",
+    color: "#7289DA",
+  },
+  {
     name: "Sonstige",
     color: "#006600",
   },

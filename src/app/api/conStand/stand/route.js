@@ -1,5 +1,10 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import {
+  convertDateFormat,
+  convertDateUTCtoCEST,
+  convertTimeStampFormat,
+} from "@/utils/timeFunctions";
 
 /*
 
@@ -33,14 +38,10 @@ export async function GET(req) {
     );
     const convertedCons = rows.map((row) => {
       if (row.start_date) {
-        const utcDate = new Date(row.start_date);
-        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-        row.start_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+        row.start_date = convertDateUTCtoCEST(row.start_date);
       }
       if (row.end_date) {
-        const utcDate = new Date(row.end_date);
-        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-        row.end_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+        row.end_date = convertDateUTCtoCEST(row.end_date);
       }
       if (row.helpers) {
         row.helpers = JSON.parse(row.helpers);

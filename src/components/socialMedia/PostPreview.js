@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { convertDateFormat, convertDateUTCtoCEST } from "@/utils/timeFunctions";
 import { platforms } from "@/utils/socialMedia/platforms";
 
 const TaskCard = styled.div`
@@ -29,7 +29,7 @@ export default function PostPreview({ task, openTaskDetail }) {
     <>
       <TaskCard $postcolor={postColor} onClick={OnOpenTaskDetail}>
         <h4>{title}</h4>
-        <p>{new Date(planned).toLocaleDateString("de-DE")}</p>
+        <p>{convertDateFormat(planned)}</p>
         <p>
           {subtasksDone}/{subtaskschecked.length} Teilaufgaben erledigt
         </p>

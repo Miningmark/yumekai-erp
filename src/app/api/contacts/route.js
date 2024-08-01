@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { NextResponse } from "next/server";
+import { convertDateUTCtoCEST } from "@/utils/timeFunctions";
 
 /*
 
@@ -46,9 +47,7 @@ export async function GET(req) {
     const convertedRows = rows.map((row) => {
       // Konvertiere das Geburtsdatum
       if (row.birth_date) {
-        const utcDate = new Date(row.birth_date);
-        const berlinDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Berlin" }));
-        row.birth_date = berlinDate.toISOString().split("T")[0]; // Konvertiere in das gewünschte Format yyyy-MM-dd
+        row.birth_date = convertDateUTCtoCEST(row.birth_date);
       }
       // Convert category from JSON string to array
       if (typeof row.category === "string") {
