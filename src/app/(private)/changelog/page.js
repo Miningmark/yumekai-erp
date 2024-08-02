@@ -38,7 +38,7 @@ export default function Changelog() {
         <ul>
           <li>Add new role system</li>
           <li>Add last logins ip lookup (country, region)</li>
-          <li>Add Social Media calendar Page</li>
+          <li>Add Social-Media calendar Page</li>
           <li>Fix errors in the time and date output</li>
         </ul>
       </LogContainer>
