@@ -114,7 +114,7 @@ const ConventionStandTabButton = styled.div`
 `;
 
 export default function ConventionStands() {
-  const [stands, setStands] = useState(null);
+  const [stands, setStands] = useState([]);
   const [filteredStands, setFilteredStands] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [activeStand, setActiveStand] = useState(null);

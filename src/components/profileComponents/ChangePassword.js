@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+
+//Components
+import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import {
   LoginIconButton,
   LoginLabel,
   LoginInput,
   LoginInputWrapper,
 } from "@/components/styledComponents/LoginComponents";
-import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import PasswordRequirements from "@/components/miscellaneous/PasswordRequirements";
 import { ErrorMessage, SuccessMessage } from "@/components/styledComponents/miscellaneous";
 
@@ -17,16 +18,11 @@ import { ErrorMessage, SuccessMessage } from "@/components/styledComponents/misc
 import IconVisible from "/public/assets/icons/visibility.svg";
 import IconVisibleOff from "/public/assets/icons/visibility_off.svg";
 
-const PageBackground = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 20px;
+const ChangePasswordWrapper = styled.div`
+  padding: 0 20px 20px 20px;
   background-color: ${({ theme }) => theme.color1};
-  color: ${({ theme }) => theme.textColor};
-  gap: 20px;
-  width: 100vw;
-  height: 100vh;
+  border-radius: 10px;
+  width: 220px;
 `;
 
 function isMinimumLength(password) {
@@ -41,22 +37,38 @@ function hasNumber(password) {
   return /\d/.test(password);
 }
 
-export default function ResetPassword() {
-  const router = useRouter();
+export default function ChangePassword() {
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  async function handleSubmit(event) {
+  function handleCurrentPasswordChange(event) {
+    setCurrentPassword(event.target.value);
+  }
+
+  function handleNewPasswordChange(event) {
+    setNewPassword(event.target.value);
+  }
+
+  function handleConfirmNewPasswordChange(event) {
+    setConfirmNewPassword(event.target.value);
+  }
+
+  async function handlePasswordSubmit(event) {
     event.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
 
     setError(null);
     setSuccess(null);
+
+    if (currentPassword === "") {
+      setError("Bitte gib dein aktuelles Passwort ein.");
+      return;
+    }
 
     if (!isMinimumLength(newPassword)) {
       setError("Das Passwort muss mindestens 8 Zeichen lang sein.");
@@ -78,36 +90,54 @@ export default function ResetPassword() {
       return;
     }
 
-    const response = await fetch("/api/resetPassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token, password: newPassword }),
-    });
+    try {
+      const response = await fetch("/api/users/updatePassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+        credentials: "include",
+      });
 
-    if (response.ok) {
-      setSuccess("Passwort erfolgreich aktualisiert");
-      router.push("/login");
-    } else {
-      setError("Server Fehler. Bitte versuche es später erneut.");
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Fehler beim Aktualisieren des Passworts");
+      }
+
+      alert("Passwort erfolgreich aktualisiert");
+    } catch (error) {
+      //alert(error.message);
+      setError(error.message);
       return;
     }
-  }
-
-  function handleNewPasswordChange(event) {
-    setNewPassword(event.target.value);
-  }
-
-  function handleConfirmNewPasswordChange(event) {
-    setConfirmNewPassword(event.target.value);
+    setSuccess("Passwort erfolgreich aktualisiert");
   }
 
   return (
-    <PageBackground>
-      <h1>Reset Password</h1>
-
-      <form style={{ width: "300px" }} onSubmit={handleSubmit}>
+    <ChangePasswordWrapper>
+      <h2>Passwort ändern</h2>
+      <form onSubmit={handlePasswordSubmit}>
+        <div>
+          <LoginLabel htmlFor="currentPassword">Aktuelles Passwort</LoginLabel>
+          <LoginInputWrapper>
+            <LoginInput
+              type={showOldPassword ? "text" : "password"}
+              id="currentPassword"
+              value={currentPassword}
+              onChange={handleCurrentPasswordChange}
+            />
+            <LoginIconButton
+              type="button"
+              onClick={() => {
+                setShowOldPassword(!showOldPassword);
+              }}
+            >
+              {showOldPassword ? <IconVisibleOff /> : <IconVisible />}
+            </LoginIconButton>
+          </LoginInputWrapper>
+        </div>
+        <br />
         <div>
           <LoginLabel htmlFor="newPassword">Neues Passwort</LoginLabel>
           <LoginInputWrapper>
@@ -151,8 +181,8 @@ export default function ResetPassword() {
         <br />
         {error && <ErrorMessage>{error}</ErrorMessage>}
         {success && <SuccessMessage>{success}</SuccessMessage>}
-        <GreenButton type="submit">Passwort Speichern</GreenButton>
+        <GreenButton type="submit">Passwort ändern</GreenButton>
       </form>
-    </PageBackground>
+    </ChangePasswordWrapper>
   );
 }

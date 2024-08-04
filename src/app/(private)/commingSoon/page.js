@@ -41,7 +41,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>Einstellungen</CommingSoonListItem>
           <CommingSoonListItem>Suchfunktion für Kanbanboard</CommingSoonListItem>
           <CommingSoonListItem>Smartphone Support</CommingSoonListItem>
-          <CommingSoonListItem>Passwort zurücksetzen</CommingSoonListItem>
           <CommingSoonListItem>Farb Legende für Kanban Board</CommingSoonListItem>
           <CommingSoonListItem>Admin Page überarbeiten</CommingSoonListItem>
           <CommingSoonListItem>Login dauer auf 3-7 Tage erhöhen</CommingSoonListItem>
@@ -55,7 +54,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>Individuelles Dashboard</CommingSoonListItem>
           <CommingSoonListItem>Rechnungserstellung und Versand</CommingSoonListItem>
           <CommingSoonListItem>Pretix ticketsystem import</CommingSoonListItem>
-          <CommingSoonListItem>Convention Stand liste mit Team und infos</CommingSoonListItem>
           <CommingSoonListItem>Sponsoren wo abspeichern</CommingSoonListItem>
           <CommingSoonListItem>
             Nerdquiz liste ink. miniwebseite und Druckoptionen
@@ -63,7 +61,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>
             News auf Dashboard u.a. was ist Aktuell neu oder geändert
           </CommingSoonListItem>
-          <CommingSoonListItem>Kontakt kategorie Stand-helfer</CommingSoonListItem>
         </ul>
       </SoonContainer>
     </SoonBackground>

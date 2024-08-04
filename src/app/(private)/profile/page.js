@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession, login, logout } from "@/lib/cockieFunctions";
 
+//Components
 import { StyledButton, GreenButton, RedButton } from "@/components/styledComponents/StyledButton";
 import {
   LoginIconButton,
@@ -12,10 +13,7 @@ import {
   LoginInput,
   LoginInputWrapper,
 } from "@/components/styledComponents/LoginComponents";
-
-// Import SVG icons
-import IconVisible from "/public/assets/icons/visibility.svg";
-import IconVisibleOff from "/public/assets/icons/visibility_off.svg";
+import ChangePassword from "@/components/profileComponents/ChangePassword";
 
 const PageBackground = styled.div`
   display: flex;
@@ -56,51 +54,10 @@ const ChangeSection = styled.section`
   width: 220px;
 `;
 
-const PasswordRequirement = styled.div`
-  color: ${(props) => props.$requirement};
-  font-size: 0.9em;
-`;
-
-const PasswordRequirements = ({ password }) => {
-  const requirements = [
-    {
-      text: "min. 8 Zeichen lang",
-      requirement: password.length >= 8,
-    },
-    {
-      text: "min. 1 Sonderzeichen ",
-      requirement: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    },
-    {
-      text: "min. 1 Zahl",
-      requirement: /\d/.test(password),
-    },
-  ];
-
-  return (
-    <div>
-      {requirements.map((req, index) => (
-        <PasswordRequirement
-          key={index}
-          $requirement={req.requirement ? "var(--success)" : "var(--danger)"}
-        >
-          {req.text}
-        </PasswordRequirement>
-      ))}
-    </div>
-  );
-};
-
 export default function Home() {
   const [session, setSession] = useState({});
   const [email, setEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [logins, setLogins] = useState([]);
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
@@ -126,18 +83,6 @@ export default function Home() {
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
-  }
-
-  function handleCurrentPasswordChange(event) {
-    setCurrentPassword(event.target.value);
-  }
-
-  function handleNewPasswordChange(event) {
-    setNewPassword(event.target.value);
-  }
-
-  function handleConfirmNewPasswordChange(event) {
-    setConfirmNewPassword(event.target.value);
   }
 
   async function handleEmailSubmit(event) {
@@ -172,35 +117,6 @@ export default function Home() {
     }
   }
 
-  async function handlePasswordSubmit(event) {
-    event.preventDefault();
-
-    if (newPassword !== confirmNewPassword) {
-      alert("Das neue Passwort und die Bestätigung stimmen nicht überein.");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/users/updatePassword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Fehler beim Aktualisieren des Passworts");
-      }
-
-      alert("Passwort erfolgreich aktualisiert");
-    } catch (error) {
-      alert(error.message);
-    }
-  }
-
   return (
     <PageBackground>
       <h1>Profil</h1>
@@ -217,73 +133,7 @@ export default function Home() {
           </form>
         </ChangeSection>
 
-        <ChangeSection>
-          <h2>Passwort ändern</h2>
-          <form onSubmit={handlePasswordSubmit}>
-            <div>
-              <LoginLabel htmlFor="currentPassword">Aktuelles Passwort</LoginLabel>
-              <LoginInputWrapper>
-                <LoginInput
-                  type={showOldPassword ? "text" : "password"}
-                  id="currentPassword"
-                  value={currentPassword}
-                  onChange={handleCurrentPasswordChange}
-                />
-                <LoginIconButton
-                  type="button"
-                  onClick={() => {
-                    setShowOldPassword(!showOldPassword);
-                  }}
-                >
-                  {showOldPassword ? <IconVisibleOff /> : <IconVisible />}
-                </LoginIconButton>
-              </LoginInputWrapper>
-            </div>
-            <br />
-            <div>
-              <LoginLabel htmlFor="newPassword">Neues Passwort</LoginLabel>
-              <LoginInputWrapper>
-                <LoginInput
-                  type={showPassword ? "text" : "password"}
-                  id="newPassword"
-                  value={newPassword}
-                  onChange={handleNewPasswordChange}
-                />
-                <LoginIconButton
-                  type="button"
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
-                >
-                  {showPassword ? <IconVisibleOff /> : <IconVisible />}
-                </LoginIconButton>
-              </LoginInputWrapper>
-              <PasswordRequirements password={newPassword} />
-            </div>
-            <br />
-            <div>
-              <LoginLabel htmlFor="confirmNewPassword">Neues Passwort bestätigen</LoginLabel>
-              <LoginInputWrapper>
-                <LoginInput
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmNewPassword"
-                  value={confirmNewPassword}
-                  onChange={handleConfirmNewPasswordChange}
-                />
-                <LoginIconButton
-                  type="button"
-                  onClick={() => {
-                    setShowConfirmPassword(!showConfirmPassword);
-                  }}
-                >
-                  {showConfirmPassword ? <IconVisibleOff /> : <IconVisible />}
-                </LoginIconButton>
-              </LoginInputWrapper>
-            </div>
-            <br />
-            <GreenButton type="submit">Passwort ändern</GreenButton>
-          </form>
-        </ChangeSection>
+        <ChangePassword />
       </AccountChanges>
 
       <Section>

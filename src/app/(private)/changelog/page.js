@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 
+import { changelog } from "@/lib/changelogList";
+
 const LogBackground = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,70 +34,17 @@ export default function Changelog() {
   return (
     <LogBackground>
       <h1>Changelog</h1>
-      <LogContainer>
-        <h2>Add Security functions and new Page</h2>
-        <VersionsNumber>V 0.4</VersionsNumber>
-        <ul>
-          <li>Add new role system</li>
-          <li>Add last logins ip lookup (country, region)</li>
-          <li>Add Social-Media calendar Page</li>
-          <li>Add new contacts column `Standhelfer` and only these are selectable at Infostand </li>
-          <li>Fix errors in the time and date output</li>
-        </ul>
-      </LogContainer>
-      <LogContainer>
-        <h2>Add E-Mail and Security functions</h2>
-        <VersionsNumber>V 0.3</VersionsNumber>
-        <ul>
-          <li>Add E-Mail transmitter</li>
-          <li>Add Password reset function at login page</li>
-          <li>
-            Add Account will be blocked if the password is entered incorrectly 3 times within 5
-            minutes
-          </li>
-          <li>Add different Backend Security features</li>
-          <li>Add Con-Stand Page</li>
-          <li>
-            Add Clicking on the website or Instagram name opens the corresponding page in a new tab
-            (at contacts, con-stand)
-          </li>
-          <li>Add Account has been blocked due to failed login E-mail to user</li>
-          <li>Add Hide unused fields when viewing contact</li>
-          <li>Add first Dashboard module (next Cons)</li>
-        </ul>
-      </LogContainer>
-      <LogContainer>
-        <h2>Add new Pages and functions</h2>
-        <VersionsNumber>V 0.2</VersionsNumber>
-        <ul>
-          <li>Add Contact Page</li>
-          <li>Add Password show Buttons</li>
-          <li>Add Password guidelines</li>
-          <li>Add Delete subtasks when creating a task</li>
-          <li>Add Show Reported Bugs</li>
-          <li>Add Light/Dark-mode</li>
-          <li>Fix Tasks without subtasks suddenly have 1 subtask</li>
-          <li>Fix Confirm login with enter key</li>
-          <li>Fix BugReport Automatic reload of the bug list when a new Bug is added</li>
-          <li>Fix New contacts cannot be changed directly after creation</li>
-          <li>Fix Login Session expires time problems</li>
-          <li>Fix some Graphic Bugs</li>
-          <li>Fix Last logins IP-Adress faulty</li>
-        </ul>
-      </LogContainer>
-      <LogContainer>
-        <h2>Initiale Version</h2>
-        <VersionsNumber>V 0.1</VersionsNumber>
-        <ul>
-          <li>Add Profilepage with E-Mail and Password change</li>
-          <li>Add Kanbanboard</li>
-          <li>Add Adminboard</li>
-          <li>Add Changelog</li>
-          <li>Add Comming Soon</li>
-          <li>Add Bug Report</li>
-          <li>Add YumeKai Survey Evaluation</li>
-        </ul>
-      </LogContainer>
+      {changelog.map((log, index) => (
+        <LogContainer key={index}>
+          <h2>{log.title}</h2>
+          <VersionsNumber>{log.version}</VersionsNumber>
+          <ul>
+            {log.updates.map((update, idx) => (
+              <li key={idx}>{update}</li>
+            ))}
+          </ul>
+        </LogContainer>
+      ))}
     </LogBackground>
   );
 }
