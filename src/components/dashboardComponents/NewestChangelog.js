@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { changelog } from "@/lib/changelogList";
 
 const LatestLogContainer = styled.div`
-  width: 300px;
+  width: 350px;
   padding: 20px;
   background-color: ${({ theme }) => theme.color1};
   color: ${({ theme }) => theme.textColor};

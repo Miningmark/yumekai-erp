@@ -1,13 +1,14 @@
 export const changelog = [
   {
     title: "Add Security functions and new Page",
-    version: "V 0.4",
+    version: "0.4",
     updates: [
       "Add new role system",
       "Add last logins ip lookup (country, region)",
       "Add Social-Media calendar Page",
       "Add new contacts column `Standhelfer` and only these are selectable at Infostand",
       "Add newest changelog on Dashboard",
+      "Add color legend for the Kanbanboard and Social-Media calendar",
       "Fix errors in the time and date output",
       "Fix error when changing password",
       "Fix constand search problems",
@@ -15,7 +16,7 @@ export const changelog = [
   },
   {
     title: "Add E-Mail and Security functions",
-    version: "V 0.3",
+    version: "0.3",
     updates: [
       "Add E-Mail transmitter",
       "Add Password reset function at login page",
@@ -30,7 +31,7 @@ export const changelog = [
   },
   {
     title: "Add new Pages and functions",
-    version: "V 0.2",
+    version: "0.2",
     updates: [
       "Add Contact Page",
       "Add Password show Buttons",
@@ -49,7 +50,7 @@ export const changelog = [
   },
   {
     title: "Initiale Version",
-    version: "V 0.1",
+    version: "0.1",
     updates: [
       "Add Profilepage with E-Mail and Password change",
       "Add Kanbanboard",

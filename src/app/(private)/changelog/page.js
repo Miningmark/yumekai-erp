@@ -37,7 +37,7 @@ export default function Changelog() {
       {changelog.map((log, index) => (
         <LogContainer key={index}>
           <h2>{log.title}</h2>
-          <VersionsNumber>{log.version}</VersionsNumber>
+          <VersionsNumber>V {log.version}</VersionsNumber>
           <ul>
             {log.updates.map((update, idx) => (
               <li key={idx}>{update}</li>

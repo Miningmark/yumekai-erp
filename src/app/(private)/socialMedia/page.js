@@ -13,6 +13,8 @@ import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/socialMedia/loadSo
 import { getSession } from "@/lib/cockieFunctions";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
+import ColorLegend from "@/components/kanbanComponents/ColorLegend";
+import { platforms } from "@/utils/socialMedia/platforms";
 
 const KanbanBoard = styled.div`
   margin: 20px;
@@ -373,6 +375,7 @@ export default function SocialMedia() {
     <>
       <h1>Social Media Kalender</h1>
       <AddButton onClick={() => setNewTaskModalOpen(true)}>Neuer Eintrag</AddButton>
+      <ColorLegend colorsOptions={platforms} />
       <DragDropContext onDragEnd={handleDragEnd}>
         <KanbanBoard>
           {columns.map((column) => (

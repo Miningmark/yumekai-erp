@@ -41,7 +41,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>Einstellungen</CommingSoonListItem>
           <CommingSoonListItem>Suchfunktion für Kanbanboard</CommingSoonListItem>
           <CommingSoonListItem>Smartphone Support</CommingSoonListItem>
-          <CommingSoonListItem>Farb Legende für Kanban Board</CommingSoonListItem>
           <CommingSoonListItem>Admin Page überarbeiten</CommingSoonListItem>
           <CommingSoonListItem>Login dauer auf 3-7 Tage erhöhen</CommingSoonListItem>
           <CommingSoonListItem>E-Mail benachrichtigung bei neuem Login</CommingSoonListItem>
@@ -57,9 +56,6 @@ export default function CommingSoon() {
           <CommingSoonListItem>Sponsoren wo abspeichern</CommingSoonListItem>
           <CommingSoonListItem>
             Nerdquiz liste ink. miniwebseite und Druckoptionen
-          </CommingSoonListItem>
-          <CommingSoonListItem>
-            News auf Dashboard u.a. was ist Aktuell neu oder geändert
           </CommingSoonListItem>
         </ul>
       </SoonContainer>

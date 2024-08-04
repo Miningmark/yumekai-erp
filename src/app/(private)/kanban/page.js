@@ -13,6 +13,7 @@ import { fetchColumns, fetchTasks, fetchUsers } from "@/utils/kanban/loadContent
 import { getSession } from "@/lib/cockieFunctions";
 import { socket } from "@/app/socket";
 import NewColumn from "@/components/kanbanComponents/NewColumn";
+import ColorLegend from "@/components/kanbanComponents/ColorLegend";
 
 const taskList = [
   {
@@ -394,6 +395,7 @@ export default function Kanban() {
     <>
       <h1>ToDo</h1>
       <AddButton onClick={() => setNewTaskModalOpen(true)}>Neuer Eintrag</AddButton>
+      <ColorLegend colorsOptions={users} />
       <DragDropContext onDragEnd={handleDragEnd}>
         <KanbanBoard>
           {columns.map((column) => (
