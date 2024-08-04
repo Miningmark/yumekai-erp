@@ -120,23 +120,45 @@ const columnsByCategory = {
         "created_at",
         "birth_date",
         "discord_name",
+        "stand_helper",
       ].includes(column.id)
   ),
   Künstler: allColumns.filter(
     (column) =>
-      !["id", "nickname", "category", "club", "created_at", "birth_date", "discord_name"].includes(
-        column.id
-      )
+      ![
+        "id",
+        "nickname",
+        "category",
+        "club",
+        "created_at",
+        "birth_date",
+        "discord_name",
+        "stand_helper",
+      ].includes(column.id)
   ),
   Showact: allColumns.filter(
     (column) =>
-      !["id", "nickname", "category", "created_at", "birth_date", "discord_name"].includes(
-        column.id
-      )
+      ![
+        "id",
+        "nickname",
+        "category",
+        "created_at",
+        "birth_date",
+        "discord_name",
+        "stand_helper",
+      ].includes(column.id)
   ),
   Workshop: allColumns.filter(
     (column) =>
-      !["id", "nickname", "category", "created_at", "birth_date", "company"].includes(column.id)
+      ![
+        "id",
+        "nickname",
+        "category",
+        "created_at",
+        "birth_date",
+        "company",
+        "stand_helper",
+      ].includes(column.id)
   ),
   Verein: allColumns.filter(
     (column) =>
@@ -149,10 +171,14 @@ const columnsByCategory = {
         "created_at",
         "birth_date",
         "discord_name",
+        "stand_helper",
       ].includes(column.id)
   ),
   Cosplayer: allColumns.filter(
-    (column) => !["id", "nickname", "category", "created_at", "birth_date"].includes(column.id)
+    (column) =>
+      !["id", "nickname", "category", "created_at", "birth_date", "stand_helper"].includes(
+        column.id
+      )
   ),
   Helfer: allColumns.filter(
     (column) =>
@@ -176,6 +202,8 @@ export default function Contacts() {
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("Händler");
   const [activeContact, setActiveContact] = useState(null);
+
+  console.log(activeContact);
 
   //Suchtext vom stickyMenu
   const search = React.useContext(PageContext);
@@ -251,6 +279,7 @@ export default function Contacts() {
             contact[column.id].toString().toLowerCase().includes(search.toLowerCase())
         )
       );
+
   const columns = !search
     ? columnsByCategory[activeTab]
     : allColumns.filter((column) => !["id", "created_at"].includes(column.id));
@@ -358,6 +387,10 @@ export default function Contacts() {
                       >
                         {column.id === "birth_date" && contact[column.id]
                           ? convertDateFormat(contact[column.id]) // Anzeige als tt.MM.yyyy
+                          : column.id === "stand_helper"
+                          ? contact[column.id]
+                            ? "Ja"
+                            : "Nein"
                           : Array.isArray(contact[column.id])
                           ? contact[column.id].join(", ")
                           : contact[column.id]}

@@ -9,7 +9,10 @@ import {
   DropdownButton,
   DropdownMenu,
   DropdownItem,
-} from "../styledComponents/StyledInputField";
+  InputWrapperCheckbox,
+  InputCheckbox,
+  InputCheckboxLabel,
+} from "@/components/styledComponents/StyledInputField";
 
 export const inputComponentType = {
   given_name: InputOptionInput,
@@ -33,6 +36,7 @@ export const inputComponentType = {
   birth_date: InputOptionInput,
   discord_name: InputOptionInput,
   gender: InputOptionSelect,
+  stand_helper: InputOptionCheckbox,
 };
 
 export const inputComponentConStandType = {
@@ -169,5 +173,25 @@ export function InputOptionSelect({ title, options, inputText, inputChange, edit
         <DropdownLabel>{title}</DropdownLabel>
       </InputWrapper>
     </>
+  );
+}
+
+export function InputOptionCheckbox({ title, inputText, inputChange, editable = true }) {
+  // Handle the change event of the checkbox
+  const handleCheckboxChange = (e) => {
+    inputChange(e.target.checked);
+  };
+
+  return (
+    <InputWrapperCheckbox>
+      <InputCheckbox
+        className="inputField"
+        type="checkbox"
+        checked={inputText}
+        onChange={handleCheckboxChange}
+        disabled={!editable}
+      />
+      <InputCheckboxLabel htmlFor={title}>{title}</InputCheckboxLabel>
+    </InputWrapperCheckbox>
   );
 }

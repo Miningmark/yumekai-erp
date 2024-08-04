@@ -352,7 +352,7 @@ export default function ConventionStands() {
           <AddNewConventionStand
             onAdd={handleAddStand}
             onClose={handleCloseAddConStand}
-            allHelpers={allHelpers}
+            allHelpers={allHelpers.filter((helper) => helper.stand_helper == true)}
           />
         )}
       </ConventionStandTabBackground>

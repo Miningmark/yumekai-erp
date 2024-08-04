@@ -147,7 +147,7 @@ export default function DisplayConventionStandModal({ stand, onClose, onEditStan
           onClose={() => setShowHelperModal(false)}
           onSelectHelpers={handleAddHelpers}
           selectedHelpers={editableStand.helpers}
-          allHelpers={allHelpers}
+          allHelpers={allHelpers.filter((helper) => helper.stand_helper == true)}
         />
       )}
     </>

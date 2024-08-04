@@ -64,9 +64,27 @@ export const InputArea = styled.textarea`
   }
 `;
 
-export const InputWrapper = styled.label`
+export const InputCheckbox = styled.input`
+  font-weight: bold;
+  line-height: 1.1;
+`;
+
+export const InputCheckboxLabel = styled.label`
+  font-weight: bold;
+  line-height: 1.1;
+`;
+
+export const InputWrapper = styled.div`
   position: relative;
   width: calc(100% - 20px);
+`;
+
+export const InputWrapperCheckbox = styled.div`
+  position: relative;
+  width: calc(100% - 20px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 // Stil für das Label des Dropdown-Menüs

@@ -60,6 +60,7 @@ export const allColumns = [
   { id: "birth_date", name: "Geburtsdatum" },
   { id: "discord_name", name: "Discord Name" },
   { id: "gender", name: "Geschlecht" },
+  { id: "stand_helper", name: "Standhelfer" },
 ];
 
 export const newContactTemplate = allColumns.reduce((acc, column) => {

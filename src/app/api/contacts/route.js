@@ -28,7 +28,8 @@ import { convertDateUTCtoCEST } from "@/utils/timeFunctions";
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       birth_date DATE,
       discord_name VARCHAR(50),
-      gender VARCHAR(10)
+      gender VARCHAR(10),
+      stand_helper tinyint(1)
   );
 
 */

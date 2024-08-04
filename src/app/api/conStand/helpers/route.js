@@ -11,7 +11,7 @@ const connection = mysql.createPool({
 export async function GET(req) {
   try {
     const [rows] = await connection.query(
-      "SELECT id, given_name, surname FROM contacts WHERE category LIKE '%Helfer%' ORDER BY surname ASC"
+      "SELECT id, given_name, surname, stand_helper FROM contacts WHERE category LIKE '%Helfer%' ORDER BY surname ASC"
     );
 
     return NextResponse.json(rows, { status: 200 });
