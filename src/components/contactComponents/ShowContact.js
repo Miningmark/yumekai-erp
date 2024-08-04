@@ -20,22 +20,34 @@ import { inputComponentType } from "@/components/contactComponents/InputComponen
 const columnsByCategory = {
   Händler: allColumns.filter(
     (column) =>
-      !["club", "nickname", "artist_name", "birth_date", "discord_name"].includes(column.id)
+      !["club", "nickname", "artist_name", "birth_date", "discord_name", "stand_helper"].includes(
+        column.id
+      )
   ),
   Künstler: allColumns.filter(
-    (column) => !["club", "nickname", "birth_date", "discord_name"].includes(column.id)
+    (column) =>
+      !["club", "nickname", "birth_date", "discord_name", "stand_helper"].includes(column.id)
   ),
   Showact: allColumns.filter(
-    (column) => !["birth_date", "nickname", "discord_name"].includes(column.id)
+    (column) => !["birth_date", "nickname", "discord_name", "stand_helper"].includes(column.id)
   ),
   Workshop: allColumns.filter(
-    (column) => !["birth_date", "nickname", "company"].includes(column.id)
+    (column) => !["birth_date", "nickname", "company", "stand_helper"].includes(column.id)
   ),
   Verein: allColumns.filter(
     (column) =>
-      !["company", "birth_date", "artist_name", "nickname", "discord_name"].includes(column.id)
+      ![
+        "company",
+        "birth_date",
+        "artist_name",
+        "nickname",
+        "discord_name",
+        "stand_helper",
+      ].includes(column.id)
   ),
-  Cosplayer: allColumns.filter((column) => !["nickname", "birth_date"].includes(column.id)),
+  Cosplayer: allColumns.filter(
+    (column) => !["nickname", "birth_date", "stand_helper"].includes(column.id)
+  ),
   Helfer: allColumns.filter(
     (column) => !["company", "club", "website", "artist_name", "instagram"].includes(column.id)
   ),

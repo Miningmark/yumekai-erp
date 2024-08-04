@@ -18,7 +18,7 @@ import { convertDateFormat } from "@/utils/timeFunctions";
 
 const ContactTabBackground = styled.div`
   width: calc(100% - 40px);
-  height: calc(100vh - 190px);
+  height: calc(100vh - 160px);
   margin: 20px;
   padding: 0;
   display: flex;
@@ -62,7 +62,7 @@ const ContactTabCard = styled.div`
   position: absolute;
   top: 30px;
   width: calc(100% - 24px);
-  height: calc(100vh - 190px - 70px);
+  height: calc(100vh - 160px - 70px);
   overflow: auto;
   background-color: ${({ theme }) => theme.color1};
   color: ${({ theme }) => theme.textColor};
@@ -72,7 +72,7 @@ const ContactTabCard = styled.div`
 
 const TableBackground = styled.div`
   position: relative;
-  height: calc(100vh - 190px - 70px);
+  height: calc(100vh - 160px - 70px);
   overflow-x: auto;
 `;
 
@@ -203,8 +203,6 @@ export default function Contacts() {
   const [activeTab, setActiveTab] = useState("Händler");
   const [activeContact, setActiveContact] = useState(null);
 
-  console.log(activeContact);
-
   //Suchtext vom stickyMenu
   const search = React.useContext(PageContext);
 
@@ -330,7 +328,9 @@ export default function Contacts() {
   return (
     <>
       <h1>Kontakte</h1>
-      <GreenButton onClick={() => setShowModal(true)}>Add Contact</GreenButton>
+      <div style={{ position: "absolute", left: "20px", top: "90px" }}>
+        <GreenButton onClick={() => setShowModal(true)}>Add Contact</GreenButton>
+      </div>
       <ContactTabBackground>
         <ContactTabList>
           {!search ? (

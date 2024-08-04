@@ -39,6 +39,7 @@ export default function Changelog() {
           <li>Add new role system</li>
           <li>Add last logins ip lookup (country, region)</li>
           <li>Add Social-Media calendar Page</li>
+          <li>Add new contacts column `Standhelfer` and only these are selectable at Infostand </li>
           <li>Fix errors in the time and date output</li>
         </ul>
       </LogContainer>
