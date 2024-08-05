@@ -49,7 +49,6 @@ const ColorLegendItem = styled.div`
 `;
 
 export default function ColorLegend({ colorsOptions }) {
-  console.log(colorsOptions);
   return (
     <>
       <ColorLegendContainer>Farb Legende</ColorLegendContainer>

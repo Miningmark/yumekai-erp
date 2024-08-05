@@ -26,7 +26,10 @@ export const privateAPIRoutes = [
   { path: "/api/users/updatePassword", roles: ["user", "orga", "admin"] },
   { path: "/api/users/userList", roles: ["user", "orga", "admin"] },
   { path: "/api/users/userListFull", roles: ["admin"] },
-  { path: "/api/conStand", roles: ["user", "orga", "admin"] },
+  { path: "/api/conStand/stand", roles: ["user", "orga", "admin"] },
+  { path: "/api/conStand/helpers", roles: ["user", "orga", "admin"] },
+  { path: "/api/posts/tasks", roles: ["socialmedia", "orga", "admin"] },
+  { path: "/api/posts/columns", roles: ["socialmedia", "orga", "admin"] },
 ];
 
 export const authRoutes = ["/login", "/test/auth/signin", "/reset-password"];

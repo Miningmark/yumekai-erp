@@ -65,8 +65,6 @@ export default function Kanban() {
   const [columnToRename, setColumnToRename] = useState(null);
   const [newColumnModal, setNewColumnModal] = useState(false);
 
-  console.log(tasks);
-
   useEffect(() => {
     async function fetchData() {
       const [usersData, columnsData, tasksData] = await Promise.all([
