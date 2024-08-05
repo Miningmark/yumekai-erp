@@ -217,10 +217,17 @@ export default function Contacts() {
   }, []);
 
   async function fetchContacts() {
-    const response = await fetch("/api/contacts");
-    const data = await response.json();
-    setContacts(data);
-    setFilteredContacts(data);
+    try {
+      const response = await fetch("/api/contacts");
+
+      if (response.ok) {
+        const data = await response.json();
+        setContacts(data);
+        setFilteredContacts(data);
+      }
+    } catch (error) {
+      //console.error(error);
+    }
   }
 
   useEffect(() => {
